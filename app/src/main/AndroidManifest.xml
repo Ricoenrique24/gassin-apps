@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,7 +15,69 @@
         android:theme="@style/Theme.Gassinapps"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.pages.employee.order.show.ShowOrderEmployeeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.employee.user.show.ShowUserEmployeeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.employee.user.edit.EditUserEmployeeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.user.show.ShowUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.user.edit.EditUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.store.show.ShowStoreActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.store.edit.EditStoreActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.store.create.CreateStoreActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.customer.show.ShowCustomerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.customer.edit.EditCustomerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.customer.create.CreateCustomerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.cost.show.ShowCostActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.cost.edit.EditCostActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.cost.create.CreateCostActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.employee.edit.EditEmployeeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.employee.show.ShowEmployeeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.employee.create.CreateEmployeeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.main.ManagerMainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_employee_main" />
+        <activity
+            android:name=".ui.pages.employee.main.EmployeeMainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_manager_main" />
+        <activity
+            android:name=".ui.pages.signin.SignInActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.splashscreen.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

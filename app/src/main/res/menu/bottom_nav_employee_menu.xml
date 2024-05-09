@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home_employee"
+        android:icon="@drawable/ic_home_24dp"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_order_employee"
+        android:icon="@drawable/ic_receipt_24dp"
+        android:title="@string/order" />
+
+    <item
+        android:id="@+id/navigation_more_employee"
+        android:icon="@drawable/ic_more_24dp"
+        android:title="@string/more" />
+</menu>

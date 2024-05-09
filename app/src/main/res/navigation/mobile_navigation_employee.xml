@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation_employee"
+    app:startDestination="@+id/navigation_home_employee">
+
+    <fragment
+        android:id="@+id/navigation_home_employee"
+        android:name="com.naffeid.gassin.ui.pages.employee.main.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home_employee" />
+
+    <fragment
+        android:id="@+id/navigation_order_employee"
+        android:name="com.naffeid.gassin.ui.pages.employee.main.order.OrderFragment"
+        android:label="@string/order"
+        tools:layout="@layout/fragment_order_employee" />
+
+    <fragment
+        android:id="@+id/navigation_more_employee"
+        android:name="com.naffeid.gassin.ui.pages.employee.main.more.MoreFragment"
+        android:label="@string/more"
+        tools:layout="@layout/fragment_more_employee" />
+</navigation>

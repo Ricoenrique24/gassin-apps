@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">gassin-apps</string>
+    <string name="gass">Gass</string>
+    <string name="in">In</string>
+    <string name="logo_app">Logo App</string>
+    <string name="title_activity_manager_main">ManagerMainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_employee_main">EmployeeMainActivity</string>
+    <string name="selamat_datang">Selamat Datang</string>
+    <string name="desc_signin_page">Masuk ke akun anda untuk melanjutkan</string>
+    <string name="email_error">Masukkan email yang sesuai</string>
+    <string name="password_less_characters">Kata sandi tidak boleh kurang dari 8 karakter</string>
+    <string name="enter_email">Masukkan email</string>
+    <string name="enter_password">Masukkan password</string>
+    <string name="btn_login">Masuk</string>
+    <string name="please_fill_in_all_input">Lengkapi terlebih dahulu semua data</string>
+    <string name="login_error">Gagal Login</string>
+    <string name="login_success">Berhasil Login</string>
+    <string name="order">Pesanan</string>
+    <string name="stock">Stok</string>
+    <string name="cost">Biaya</string>
+    <string name="more">Lainnya</string>
+    <string name="pesanan">Pesanan</string>
 </resources>

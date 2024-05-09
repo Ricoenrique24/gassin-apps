@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation_manager"
+    app:startDestination="@+id/navigation_home_manager">
+
+    <fragment
+        android:id="@+id/navigation_home_manager"
+        android:name="com.naffeid.gassin.ui.pages.manager.main.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home_manager" />
+
+    <fragment
+        android:id="@+id/navigation_order_manager"
+        android:name="com.naffeid.gassin.ui.pages.manager.main.order.OrderFragment"
+        android:label="@string/order"
+        tools:layout="@layout/fragment_order_manager" />
+
+    <fragment
+        android:id="@+id/navigation_stock_manager"
+        android:name="com.naffeid.gassin.ui.pages.manager.main.stock.StockFragment"
+        android:label="@string/stock"
+        tools:layout="@layout/fragment_stock_manager" />
+
+    <fragment
+        android:id="@+id/navigation_cost_manager"
+        android:name="com.naffeid.gassin.ui.pages.manager.main.cost.CostFragment"
+        android:label="@string/cost"
+        tools:layout="@layout/fragment_cost_manager" />
+
+    <fragment
+        android:id="@+id/navigation_more_manager"
+        android:name="com.naffeid.gassin.ui.pages.manager.main.more.MoreFragment"
+        android:label="@string/more"
+        tools:layout="@layout/fragment_more_manager" />
+</navigation>

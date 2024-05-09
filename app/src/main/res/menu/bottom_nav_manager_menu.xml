@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home_manager"
+        android:icon="@drawable/ic_home_24dp"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_order_manager"
+        android:icon="@drawable/ic_receipt_24dp"
+        android:title="@string/order" />
+
+    <item
+        android:id="@+id/navigation_stock_manager"
+        android:icon="@drawable/ic_box_24dp"
+        android:title="@string/stock" />
+
+    <item
+        android:id="@+id/navigation_cost_manager"
+        android:icon="@drawable/ic_coin_24dp"
+        android:title="@string/cost" />
+
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@drawable/ic_more_24dp"
+        android:title="@string/title_dashboard" />
+</menu>
