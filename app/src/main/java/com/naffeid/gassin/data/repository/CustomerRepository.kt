@@ -2,30 +2,31 @@ package com.naffeid.gassin.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
-import com.naffeid.gassin.data.model.Store
-import com.naffeid.gassin.data.preference.StorePreference
+import com.naffeid.gassin.data.model.Customer
+import com.naffeid.gassin.data.preference.CustomerPreference
 import com.naffeid.gassin.data.remote.api.ApiService
 import com.naffeid.gassin.data.remote.response.LoginResponse
 import com.naffeid.gassin.data.utils.Result
 import kotlinx.coroutines.flow.Flow
 
-class StoreRepository private constructor(
-    private val storePreference: StorePreference,
+class CustomerRepository private constructor(
+    private val customerPreference: CustomerPreference,
     private val apiService: ApiService
 ) {
 
-    // API Store
-    fun showAllStore(): LiveData<Result<LoginResponse>> = liveData {
+
+    // API Customer
+    fun showAllCustomer(): LiveData<Result<LoginResponse>> = liveData {
         emit(Result.Loading)
         try {
-            val client = apiService.showAllStore()
+            val client = apiService.showAllCustomer()
             emit(Result.Success(client))
         } catch (e: Exception)
         {
             emit(Result.Error(e.message.toString()))
         }
     }
-    fun createNewStore(
+    fun createNewCustomer(
         name: String,
         phone: String,
         address: String,
@@ -34,26 +35,26 @@ class StoreRepository private constructor(
     ): LiveData<Result<LoginResponse>> = liveData {
         emit(Result.Loading)
         try {
-            val client = apiService.createNewStore(name, phone, address, linkMap, price)
+            val client = apiService.createNewCustomer(name, phone, address, linkMap, price)
             emit(Result.Success(client))
         } catch (e: Exception)
         {
             emit(Result.Error(e.message.toString()))
         }
     }
-    fun showStore(
+    fun showCustomer(
         id:String
     ): LiveData<Result<LoginResponse>> = liveData {
         emit(Result.Loading)
         try {
-            val client = apiService.showStore(id)
+            val client = apiService.showCustomer(id)
             emit(Result.Success(client))
         } catch (e: Exception)
         {
             emit(Result.Error(e.message.toString()))
         }
     }
-    fun updateStore(
+    fun updateCustomer(
         id:String,
         name: String,
         phone: String,
@@ -63,17 +64,17 @@ class StoreRepository private constructor(
     ): LiveData<Result<LoginResponse>> = liveData {
         emit(Result.Loading)
         try {
-            val client = apiService.updateStore(id, name, phone, address, linkMap, price)
+            val client = apiService.updateCustomer(id, name, phone, address, linkMap, price)
             emit(Result.Success(client))
         } catch (e: Exception)
         {
             emit(Result.Error(e.message.toString()))
         }
     }
-    fun deleteStore(id:String): LiveData<Result<LoginResponse>> = liveData {
+    fun deleteCustomer(id:String): LiveData<Result<LoginResponse>> = liveData {
         emit(Result.Loading)
         try {
-            val client = apiService.deleteStore(id)
+            val client = apiService.deleteCustomer(id)
             emit(Result.Success(client))
         } catch (e: Exception)
         {
@@ -81,29 +82,28 @@ class StoreRepository private constructor(
         }
     }
 
-    // Store Preference
-    suspend fun saveStore(store: Store) {
-        storePreference.saveStore(store)
+    // Customer Preference
+    suspend fun deleteCustomer() {
+        customerPreference.deleteCustomer()
     }
 
-    fun getStore(): Flow<Store> {
-        return storePreference.getStore()
+    suspend fun saveCustomer(customer: Customer) {
+        customerPreference.saveCustomer(customer)
     }
 
-    suspend fun deleteStore() {
-        storePreference.deleteStore()
+    fun getCustomer(): Flow<Customer> {
+        return customerPreference.getCustomer()
     }
-
 
     companion object {
         @Volatile
-        private var instance: StoreRepository? = null
+        private var instance: CustomerRepository? = null
         fun getInstance(
-            storePreference: StorePreference,
+            customerPreference: CustomerPreference,
             apiService: ApiService
-        ): StoreRepository =
+        ): CustomerRepository =
             instance ?: synchronized(this) {
-                instance ?: StoreRepository(storePreference, apiService)
+                instance ?: CustomerRepository(customerPreference, apiService)
             }.also { instance = it }
     }
 }

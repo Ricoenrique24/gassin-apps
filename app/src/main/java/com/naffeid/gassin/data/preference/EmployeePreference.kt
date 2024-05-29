@@ -23,6 +23,7 @@ class EmployeePreference private constructor(private val employeeDataStore: Data
             preferences[EMAIL_KEY] = employee.email
             preferences[PHONE_KEY] = employee.phone
             preferences[ROLE_KEY] = employee.role
+            preferences[TOKEN_KEY] = employee.token
         }
     }
 
@@ -34,7 +35,8 @@ class EmployeePreference private constructor(private val employeeDataStore: Data
                 preferences[USERNAME_KEY] ?: "",
                 preferences[EMAIL_KEY] ?: "",
                 preferences[PHONE_KEY] ?: "",
-                preferences[ROLE_KEY] ?: ""
+                preferences[ROLE_KEY] ?: "",
+                preferences[TOKEN_KEY] ?: "",
             )
         }
     }
@@ -51,9 +53,10 @@ class EmployeePreference private constructor(private val employeeDataStore: Data
         private val ID_KEY = intPreferencesKey("id")
         private val NAME_KEY = stringPreferencesKey("name")
         private val USERNAME_KEY = stringPreferencesKey("username")
+        private val EMAIL_KEY = stringPreferencesKey("email")
         private val PHONE_KEY = stringPreferencesKey("phone")
         private val ROLE_KEY = stringPreferencesKey("role")
-        private val EMAIL_KEY = stringPreferencesKey("email")
+        private val TOKEN_KEY = stringPreferencesKey("token")
 
         fun getInstance(employeeDataStore: DataStore<Preferences>): EmployeePreference {
             return INSTANCE ?: synchronized(this) {

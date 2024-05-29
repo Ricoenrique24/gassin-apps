@@ -22,14 +22,6 @@ class AuthRepository private constructor(
         }
     }
 
-    fun saveLogin(){
-
-    }
-
-    fun checkRole(){
-
-    }
-
     companion object {
         @Volatile
         private var instance: AuthRepository? = null

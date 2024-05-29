@@ -7,4 +7,5 @@ data class Employee(
     val email: String,
     val phone: String,
     val role: String,
+    val token: String
 )

@@ -38,13 +38,19 @@ class SplashActivity : AppCompatActivity() {
         }, SPLASH_DELAY)
     }
     private fun navigateToMainScreen(role: String) {
-        val intent = when (role) {
-            "employee" -> Intent(this@SplashActivity, EmployeeMainActivity::class.java)
-            "manager" -> Intent(this@SplashActivity, EmployeeMainActivity::class.java)
-            else -> Intent(this@SplashActivity, SignInActivity::class.java)
+        viewModel.checkUserRole(role) { isRoleMatch ->
+            if (isRoleMatch) {
+                val intent = when (role) {
+                    "employee" -> Intent(this@SplashActivity, EmployeeMainActivity::class.java)
+                    "manager" -> Intent(this@SplashActivity, EmployeeMainActivity::class.java)
+                    else -> Intent(this@SplashActivity, SignInActivity::class.java)
+                }
+                startActivity(intent)
+                finish()
+            } else {
+                navigateToSignInScreen()
+            }
         }
-        startActivity(intent)
-        finish()
     }
 
     private fun navigateToSignInScreen() {

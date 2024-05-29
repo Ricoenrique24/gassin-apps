@@ -41,6 +41,12 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         }
     }
 
+    fun getRole(): Flow<String> {
+        return dataStore.data.map { preferences ->
+            preferences[ROLE_KEY] ?: ""
+        }
+    }
+
     suspend fun logout() {
         dataStore.edit { preferences ->
             preferences.clear()
@@ -53,9 +59,9 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         private val ID_KEY = intPreferencesKey("id")
         private val NAME_KEY = stringPreferencesKey("name")
         private val USERNAME_KEY = stringPreferencesKey("username")
+        private val EMAIL_KEY = stringPreferencesKey("email")
         private val PHONE_KEY = stringPreferencesKey("phone")
         private val ROLE_KEY = stringPreferencesKey("role")
-        private val EMAIL_KEY = stringPreferencesKey("email")
         private val TOKEN_KEY = stringPreferencesKey("token")
 
         fun getInstance(dataStore: DataStore<Preferences>): UserPreference {

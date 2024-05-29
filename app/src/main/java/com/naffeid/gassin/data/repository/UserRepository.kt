@@ -3,26 +3,25 @@ package com.naffeid.gassin.data.repository
 import com.naffeid.gassin.data.model.User
 import com.naffeid.gassin.data.preference.UserPreference
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 class UserRepository private constructor(
     private val userPreference: UserPreference
 ) {
-
-    private var token = ""
-
-    fun getToken(): String {
-        getSession()
-        return token
-    }
 
     suspend fun saveSession(user: User) {
         userPreference.saveSession(user)
     }
 
     fun getSession(): Flow<User> {
-        return userPreference.getSession().onEach {
-            token = it.token
+        return userPreference.getSession()
+    }
+
+    fun checkUserRole(role: String): Boolean {
+        return runBlocking {
+            val userRole = userPreference.getRole().first()
+            userRole == role
         }
     }
 
