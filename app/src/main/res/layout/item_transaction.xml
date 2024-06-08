@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
-    android:backgroundTint="@color/white"
     android:clipChildren="false"
+    android:backgroundTint="@color/md_theme_onPrimary"
     android:clipToPadding="false"
     android:orientation="vertical"
     android:paddingHorizontal="12dp"
@@ -25,7 +27,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:text="24-04-2024 13:13:59"
-            android:textColor="@color/greyDark"
             android:fontFamily="@font/poppins_regular"
             android:textSize="12sp" />
 
@@ -41,12 +42,12 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginEnd="16dp"
-                android:backgroundTint="@color/darkGreen"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:orientation="vertical"
                 android:gravity="center"
                 app:cardCornerRadius="12dp"
+                android:backgroundTint="@color/md_theme_primary"
                 android:paddingHorizontal="6dp">
 
                 <ImageView
@@ -72,9 +73,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Pak Sugeng"
-                    android:textColor="@color/greyDark"
                     android:fontFamily="@font/poppins_semi_bold"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:text="@tools:sample/full_names"/>
 
                 <TextView
                     android:id="@+id/tv_status_transaction"
@@ -82,7 +83,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:text="Sedang Diantar"
-                    android:textColor="@color/greyDark"
                     android:fontFamily="@font/poppins_regular"
                     android:textSize="12sp" />
 
@@ -91,7 +91,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1 Tabung Gas 3 Kg"
-                    android:textColor="@color/greyDark"
                     android:fontFamily="@font/poppins_light"
                     android:textSize="10sp" />
             </LinearLayout>
@@ -108,17 +107,16 @@
                     android:layout_marginStart="2dp"
                     android:layout_marginBottom="21dp"
                     android:text="Rp 21,000"
-                    android:textColor="@color/greyDark"
                     android:fontFamily="@font/poppins_regular"
                     android:textSize="12sp" />
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/rvdxi6kk44cl"
+                    android:id="@+id/btn_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/blue"
                     android:gravity="center_horizontal"
                     app:cardCornerRadius="8dp"
+                    android:backgroundTint="@color/custom_blue"
                     android:orientation="vertical">
 
                     <TextView
@@ -128,7 +126,7 @@
                         android:paddingVertical="4dp"
                         android:paddingHorizontal="10dp"
                         android:text="Lihat detail"
-                        android:textColor="@color/white"
+                        android:textColor="@color/md_theme_onPrimary"
                         android:fontFamily="@font/poppins_regular"
                         android:textSize="12sp" />
                 </androidx.cardview.widget.CardView>

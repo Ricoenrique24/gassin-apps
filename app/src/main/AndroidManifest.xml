@@ -12,8 +12,26 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Gassinapps"
+        android:theme="@style/AppTheme"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.pages.manager.restocktransaction.show.ShowReStockTransactionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.restocktransaction.edit.EditReStockTransactionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.restocktransaction.create.CreateReStockTransactionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.usertransaction.show.ShowUserTransactionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.usertransaction.edit.EditUserTransactionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.usertransaction.create.CreateUserTransactionActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.pages.employee.order.show.ShowOrderEmployeeActivity"
             android:exported="false" />
