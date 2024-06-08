@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.naffeid.gassin.databinding.ActivitySplashBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.employee.main.EmployeeMainActivity
+import com.naffeid.gassin.ui.pages.manager.main.ManagerMainActivity
 import com.naffeid.gassin.ui.pages.signin.SignInActivity
 
 class SplashActivity : AppCompatActivity() {
@@ -28,15 +29,17 @@ class SplashActivity : AppCompatActivity() {
 
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
-            viewModel.getSession().observe(this) { user ->
-                if (user.token.isNotEmpty()) {
-                    navigateToMainScreen(user.role)
-                } else {
-                    navigateToSignInScreen()
-                }
-            }
+//            viewModel.getSession().observe(this) { user ->
+//                if (user.token.isNotEmpty()) {
+//                    navigateToMainScreen(user.role)
+//                } else {
+//                    navigateToSignInScreen()
+//                }
+//            }
+            navigateToMainScreenTest()
         }, SPLASH_DELAY)
     }
+
     private fun navigateToMainScreen(role: String) {
         viewModel.checkUserRole(role) { isRoleMatch ->
             if (isRoleMatch) {
@@ -51,6 +54,12 @@ class SplashActivity : AppCompatActivity() {
                 navigateToSignInScreen()
             }
         }
+    }
+
+    private fun navigateToMainScreenTest() {
+        val intent = Intent(this@SplashActivity, ManagerMainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun navigateToSignInScreen() {

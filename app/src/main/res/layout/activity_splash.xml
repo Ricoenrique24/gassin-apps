@@ -38,7 +38,8 @@
                 android:text="@string/gass"
                 android:textColor="@color/white"
                 android:textSize="26sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginEnd="6dp"/>
 
             <TextView
                 android:layout_width="wrap_content"

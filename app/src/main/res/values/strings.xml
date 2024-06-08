@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">gassin-apps</string>
-    <string name="gass">Gass</string>
-    <string name="in">In</string>
+    <string name="gass">Rumah Gas </string>
+    <string name="in">U-33</string>
     <string name="logo_app">Logo App</string>
     <string name="title_activity_manager_main">ManagerMainActivity</string>
     <string name="title_home">Home</string>
@@ -23,4 +23,8 @@
     <string name="cost">Biaya</string>
     <string name="more">Lainnya</string>
     <string name="pesanan">Pesanan</string>
+    <string name="hai_manager">Hai, Manager</string>
+    <string name="bos_gassin">BOS GASSIN</string>
+    <string name="pendapatan_hari_ini">Pendapatan Hari Ini</string>
+    <string name="lainnya">Lainnya</string>
 </resources>

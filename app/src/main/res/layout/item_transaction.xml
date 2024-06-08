@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:backgroundTint="@color/white"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:orientation="vertical"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="17dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="17dp">
+        <TextView
+            android:id="@+id/tv_time_transaction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="24-04-2024 13:13:59"
+            android:textColor="@color/greyDark"
+            android:fontFamily="@font/poppins_regular"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/rrok9kz0l8uc"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="@color/darkGreen"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:gravity="center"
+                app:cardCornerRadius="12dp"
+                android:paddingHorizontal="6dp">
+
+                <ImageView
+                    android:id="@+id/iv_category_transation"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_delivery_24dp" />
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:id="@+id/rso6vlolu0dn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_store_or_customer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pak Sugeng"
+                    android:textColor="@color/greyDark"
+                    android:fontFamily="@font/poppins_semi_bold"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_status_transaction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="Sedang Diantar"
+                    android:textColor="@color/greyDark"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_qty_gas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1 Tabung Gas 3 Kg"
+                    android:textColor="@color/greyDark"
+                    android:fontFamily="@font/poppins_light"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_total_payment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginBottom="21dp"
+                    android:text="Rp 21,000"
+                    android:textColor="@color/greyDark"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textSize="12sp" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/rvdxi6kk44cl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/blue"
+                    android:gravity="center_horizontal"
+                    app:cardCornerRadius="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/rins52u6j60b"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="4dp"
+                        android:paddingHorizontal="10dp"
+                        android:text="Lihat detail"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/poppins_regular"
+                        android:textSize="12sp" />
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</com.google.android.material.card.MaterialCardView>
