@@ -33,7 +33,7 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         viewModel.getSession().observe(viewLifecycleOwner) { user ->
-            if (user.token == null) {
+            if (user.apikey == null) {
                 navigationToSignIn()
             }
             setupView(user)

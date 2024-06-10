@@ -29,14 +29,14 @@ class SplashActivity : AppCompatActivity() {
 
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
-//            viewModel.getSession().observe(this) { user ->
-//                if (user.token.isNotEmpty()) {
-//                    navigateToMainScreen(user.role)
-//                } else {
-//                    navigateToSignInScreen()
-//                }
-//            }
-            navigateToMainScreenTest()
+            viewModel.getSession().observe(this) { user ->
+                if (user.apikey.isNotEmpty()) {
+                    navigateToMainScreen(user.role)
+                } else {
+                    navigateToSignInScreen()
+                }
+            }
+//            navigateToMainScreenTest()
         }, SPLASH_DELAY)
     }
 
@@ -45,7 +45,7 @@ class SplashActivity : AppCompatActivity() {
             if (isRoleMatch) {
                 val intent = when (role) {
                     "employee" -> Intent(this@SplashActivity, EmployeeMainActivity::class.java)
-                    "manager" -> Intent(this@SplashActivity, EmployeeMainActivity::class.java)
+                    "manager" -> Intent(this@SplashActivity, ManagerMainActivity::class.java)
                     else -> Intent(this@SplashActivity, SignInActivity::class.java)
                 }
                 startActivity(intent)

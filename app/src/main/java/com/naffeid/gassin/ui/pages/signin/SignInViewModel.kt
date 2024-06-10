@@ -14,4 +14,10 @@ class SignInViewModel(private val userRepository: UserRepository,private val aut
             userRepository.saveSession(user)
         }
     }
+    fun checkUserRole(role: String, callback: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val isRoleMatch = userRepository.checkUserRole(role)
+            callback(isRoleMatch)
+        }
+    }
 }

@@ -31,21 +31,21 @@ object Injection {
         val userPreference = UserPreference.getInstance(context.dataStore)
         val employeePreference = EmployeePreference.getInstance(context.employeeDataStore)
         val user = runBlocking { userPreference.getSession().first() }
-        val apiService = ApiConfig.getApiService(user.token)
+        val apiService = ApiConfig.getApiService(user.apikey)
         return EmployeeRepository.getInstance(employeePreference, apiService)
     }
     fun provideStoreRepository(context: Context): StoreRepository {
         val userPreference = UserPreference.getInstance(context.dataStore)
         val storePreference = StorePreference.getInstance(context.storeDataStore)
         val user = runBlocking { userPreference.getSession().first() }
-        val apiService = ApiConfig.getApiService(user.token)
+        val apiService = ApiConfig.getApiService(user.apikey)
         return StoreRepository.getInstance(storePreference, apiService)
     }
     fun provideCustomerRepository(context: Context): CustomerRepository {
         val userPreference = UserPreference.getInstance(context.dataStore)
         val customerPreference = CustomerPreference.getInstance(context.customerDataStore)
         val user = runBlocking { userPreference.getSession().first() }
-        val apiService = ApiConfig.getApiService(user.token)
+        val apiService = ApiConfig.getApiService(user.apikey)
         return CustomerRepository.getInstance(customerPreference, apiService)
     }
 }

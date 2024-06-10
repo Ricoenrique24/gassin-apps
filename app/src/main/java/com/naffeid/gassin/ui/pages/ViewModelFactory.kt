@@ -12,6 +12,7 @@ import com.naffeid.gassin.di.Injection
 import com.naffeid.gassin.ui.pages.signin.SignInViewModel
 import com.naffeid.gassin.ui.pages.splashscreen.SplashViewModel
 import com.naffeid.gassin.ui.pages.manager.main.home.HomeViewModel as HomeManagerViewModel
+import com.naffeid.gassin.ui.pages.manager.main.more.MoreViewModel as MoreManagerViewModel
 
 class ViewModelFactory private constructor(
     private val authRepository: AuthRepository,
@@ -29,6 +30,8 @@ class ViewModelFactory private constructor(
             return SignInViewModel(userRepository,authRepository) as T
         } else if (modelClass.isAssignableFrom(HomeManagerViewModel::class.java)) {
             return HomeManagerViewModel(userRepository) as T
+        } else if (modelClass.isAssignableFrom(MoreManagerViewModel::class.java)) {
+            return MoreManagerViewModel(userRepository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

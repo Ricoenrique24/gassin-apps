@@ -1,5 +1,6 @@
 package com.naffeid.gassin.ui.pages.signin
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Patterns
@@ -12,6 +13,8 @@ import com.naffeid.gassin.data.model.User
 import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.databinding.ActivitySignInBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.employee.main.EmployeeMainActivity
+import com.naffeid.gassin.ui.pages.manager.main.ManagerMainActivity
 
 class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding
@@ -23,9 +26,7 @@ class SignInActivity : AppCompatActivity() {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-
-
-
+        validate()
     }
 
     private fun validate() {
@@ -61,8 +62,22 @@ class SignInActivity : AppCompatActivity() {
                     is Result.Success -> {
                         showLoading(false)
                         showAlert(getString(R.string.login_success))
-//                        saveSession()
-//                        startActivity(Intent(this, MainActivity::class.java))
+                        val data = it.data.data
+                        if (data != null) {
+                            val user = User(
+                                id = data.id!!,
+                                name = data.name.toString(),
+                                username = data.username.toString(),
+                                email = data.email.toString(),
+                                phone = data.phone.toString(),
+                                role = data.role.toString(),
+                                apikey = data.apikey.toString(),
+                                tokenfcm = data.tokenFcm.toString()
+                            )
+                            saveSession(user)
+                        }
+
+                        startActivity(Intent(this, ManagerMainActivity::class.java))
 
                         finish()
                     }
@@ -83,5 +98,19 @@ class SignInActivity : AppCompatActivity() {
 
     private fun showAlert(string: String) {
         Snackbar.make(binding.root, string, Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun navigateToMainScreen(role: String) {
+        viewModel.checkUserRole(role) { isRoleMatch ->
+            if (isRoleMatch) {
+                val intent = when (role) {
+                    "employee" -> Intent(this@SignInActivity, EmployeeMainActivity::class.java)
+                    "manager" -> Intent(this@SignInActivity, EmployeeMainActivity::class.java)
+                    else -> Intent(this@SignInActivity, SignInActivity::class.java)
+                }
+                startActivity(intent)
+                finish()
+            }
+        }
     }
 }
