@@ -62,7 +62,7 @@ class SignInActivity : AppCompatActivity() {
                     is Result.Success -> {
                         showLoading(false)
                         showAlert(getString(R.string.login_success))
-                        val data = it.data.data
+                        val data = it.data.loginResult
                         if (data != null) {
                             val user = User(
                                 id = data.id!!,

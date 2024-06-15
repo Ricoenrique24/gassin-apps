@@ -7,9 +7,11 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
     android:clipChildren="false"
-    android:backgroundTint="@color/md_theme_onPrimary"
+    android:background="@color/white"
     android:clipToPadding="false"
-    android:orientation="vertical"
+    app:cardCornerRadius="12dp"
+    app:strokeColor="@color/white"
+    app:strokeWidth="0dp"
     android:paddingHorizontal="12dp"
     android:paddingVertical="17dp">
     <LinearLayout
@@ -47,7 +49,7 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 app:cardCornerRadius="12dp"
-                android:backgroundTint="@color/md_theme_primary"
+                android:backgroundTint="@color/darkGreen"
                 android:paddingHorizontal="6dp">
 
                 <ImageView
@@ -116,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     app:cardCornerRadius="8dp"
-                    android:backgroundTint="@color/custom_blue"
+                    android:backgroundTint="@color/blue"
                     android:orientation="vertical">
 
                     <TextView
@@ -126,7 +128,7 @@
                         android:paddingVertical="4dp"
                         android:paddingHorizontal="10dp"
                         android:text="Lihat detail"
-                        android:textColor="@color/md_theme_onPrimary"
+                        android:textColor="@color/white"
                         android:fontFamily="@font/poppins_regular"
                         android:textSize="12sp" />
                 </androidx.cardview.widget.CardView>

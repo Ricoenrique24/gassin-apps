@@ -9,7 +9,7 @@ import com.naffeid.gassin.data.remote.response.LoginResponse
 import com.naffeid.gassin.data.utils.Result
 import kotlinx.coroutines.flow.Flow
 
-class EmployeeRepository private constructor(
+class EmployeeRepository(
     private val employeePreference: EmployeePreference,
     private val apiService: ApiService
 ) {
@@ -95,15 +95,4 @@ class EmployeeRepository private constructor(
         return employeePreference.getEmployee()
     }
 
-    companion object {
-        @Volatile
-        private var instance: EmployeeRepository? = null
-        fun getInstance(
-            employeePreference: EmployeePreference,
-            apiService: ApiService
-        ): EmployeeRepository =
-            instance ?: synchronized(this) {
-                instance ?: EmployeeRepository(employeePreference, apiService)
-            }.also { instance = it }
-    }
 }

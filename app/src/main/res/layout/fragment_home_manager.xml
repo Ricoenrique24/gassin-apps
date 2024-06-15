@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_theme_onPrimary"
+    android:background="@color/greyLight"
     tools:context=".ui.pages.manager.main.home.HomeFragment">
 
     <LinearLayout
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="@color/md_theme_primary"
+            android:background="@color/darkGreen"
             android:padding="16dp">
 
             <LinearLayout
@@ -31,7 +31,7 @@
                     android:layout_marginBottom="4dp"
                     android:fontFamily="@font/poppins_regular"
                     android:text="@string/hai_manager"
-                    android:textColor="@color/md_theme_onPrimary"
+                    android:textColor="@color/white"
                     android:textSize="12sp" />
 
                 <TextView
@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_semi_bold"
                     android:text="@string/bos_gassin"
-                    android:textColor="@color/md_theme_onPrimary"
+                    android:textColor="@color/white"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -64,9 +64,13 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@android:color/white"
+            app:strokeColor="@color/white"
             app:cardCornerRadius="16dp"
-            app:cardElevation="1dp">
+            app:cardElevation="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -164,7 +168,7 @@
                     android:id="@+id/list_btn_feature"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/md_theme_primary"
+                    android:backgroundTint="@color/darkGreen"
                     app:cardCornerRadius="8dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -179,7 +183,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
                             app:cardCornerRadius="8dp"
-                            android:backgroundTint="@color/md_theme_primary"
+                            android:backgroundTint="@color/darkGreen"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/btn_employee_feature"
                             app:layout_constraintStart_toStartOf="parent"
@@ -198,8 +202,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:layout_marginBottom="4dp"
-                                    android:backgroundTint="@color/md_theme_primary"
-                                    app:strokeColor="@color/md_theme_onPrimary"
+                                    android:backgroundTint="@color/darkGreen"
+                                    app:strokeColor="@color/white"
                                     app:cardCornerRadius="6dp">
 
                                     <ImageView
@@ -214,7 +218,7 @@
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/poppins_medium"
                                     android:text="Agen"
-                                    android:textColor="@color/md_theme_onPrimary"
+                                    android:textColor="@color/white"
                                     android:textSize="11sp" />
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
@@ -225,7 +229,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
-                            android:backgroundTint="@color/md_theme_primary"
+                            android:backgroundTint="@color/darkGreen"
                             app:cardCornerRadius="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/btn_customer_feature"
@@ -245,8 +249,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:layout_marginBottom="4dp"
-                                    android:backgroundTint="@color/md_theme_primary"
-                                    app:strokeColor="@color/md_theme_onPrimary"
+                                    android:backgroundTint="@color/darkGreen"
+                                    app:strokeColor="@color/white"
                                     app:cardCornerRadius="6dp">
 
                                     <ImageView
@@ -260,7 +264,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/poppins_medium"
-                                    android:textColor="@color/md_theme_onPrimary"
+                                    android:textColor="@color/white"
                                     android:text="Karyawan"
                                     android:textSize="11sp" />
                             </LinearLayout>
@@ -272,7 +276,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
-                            android:backgroundTint="@color/md_theme_primary"
+                            android:backgroundTint="@color/darkGreen"
                             app:cardCornerRadius="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/btn_report_feature"
@@ -292,8 +296,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:layout_marginBottom="4dp"
-                                    android:backgroundTint="@color/md_theme_primary"
-                                    app:strokeColor="@color/md_theme_onPrimary"
+                                    android:backgroundTint="@color/darkGreen"
+                                    app:strokeColor="@color/white"
                                     app:cardCornerRadius="6dp">
 
                                     <ImageView
@@ -307,7 +311,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/poppins_medium"
-                                    android:textColor="@color/md_theme_onPrimary"
+                                    android:textColor="@color/white"
                                     android:text="Pelanggan"
                                     android:textSize="11sp" />
                             </LinearLayout>
@@ -319,7 +323,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
-                            android:backgroundTint="@color/md_theme_primary"
+                            android:backgroundTint="@color/darkGreen"
                             app:cardCornerRadius="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -339,8 +343,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:layout_marginBottom="4dp"
-                                    android:backgroundTint="@color/md_theme_primary"
-                                    app:strokeColor="@color/md_theme_onPrimary"
+                                    android:backgroundTint="@color/darkGreen"
+                                    app:strokeColor="@color/white"
                                     app:cardCornerRadius="6dp">
 
                                     <ImageView
@@ -354,7 +358,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/poppins_medium"
-                                    android:textColor="@color/md_theme_onPrimary"
+                                    android:textColor="@color/white"
                                     android:text="Rekap"
                                     android:textSize="11sp" />
                             </LinearLayout>
@@ -375,9 +379,11 @@
                 android:id="@+id/btn_restock_feature"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:strokeColor="@color/darkGreen"
+                android:layout_marginVertical="4dp"
                 app:cardCornerRadius="8dp"
-                app:cardElevation="2dp"
-                android:backgroundTint="@color/md_theme_primary"
+                app:cardElevation="4dp"
+                android:backgroundTint="@color/darkGreen"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_order_feature"
                 app:layout_constraintStart_toStartOf="parent"
@@ -405,14 +411,14 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins_semi_bold"
                             android:text="Kulakan"
-                            android:textColor="@color/md_theme_onPrimary"
+                            android:textColor="@color/white"
                             android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins_regular"
-                            android:textColor="@color/md_theme_onPrimary"
+                            android:textColor="@color/white"
                             android:text="Isi Ulang Tabung"
                             android:textSize="10sp" />
                     </LinearLayout>
@@ -431,9 +437,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:backgroundTint="@color/custom_blue"
+                android:backgroundTint="@color/blue"
+                android:layout_marginVertical="4dp"
+
                 app:cardCornerRadius="8dp"
-                app:cardElevation="2dp"
+                app:cardElevation="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btn_restock_feature"
@@ -460,7 +468,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins_semi_bold"
-                            android:textColor="@color/md_theme_onPrimary"
+                            android:textColor="@color/white"
                             android:text="Pesanan"
                             android:textSize="14sp" />
 
@@ -468,7 +476,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins_regular"
-                            android:textColor="@color/md_theme_onPrimary"
+                            android:textColor="@color/white"
                             android:text="Antar Tabung "
                             android:textSize="10sp" />
                     </LinearLayout>

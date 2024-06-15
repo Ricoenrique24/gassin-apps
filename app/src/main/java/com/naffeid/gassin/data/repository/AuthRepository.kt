@@ -6,7 +6,7 @@ import com.naffeid.gassin.data.remote.api.ApiService
 import com.naffeid.gassin.data.remote.response.LoginResponse
 import com.naffeid.gassin.data.utils.Result
 
-class AuthRepository private constructor(
+class AuthRepository(
     private val apiService: ApiService
 ) {
     fun login(
@@ -22,14 +22,4 @@ class AuthRepository private constructor(
         }
     }
 
-    companion object {
-        @Volatile
-        private var instance: AuthRepository? = null
-        fun getInstance(
-            apiService: ApiService
-        ): AuthRepository =
-            instance ?: synchronized(this) {
-                instance ?: AuthRepository(apiService)
-            }.also { instance = it }
-    }
 }

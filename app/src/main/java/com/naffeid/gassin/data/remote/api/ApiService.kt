@@ -1,6 +1,9 @@
 package com.naffeid.gassin.data.remote.api
 
 import com.naffeid.gassin.data.remote.response.LoginResponse
+import com.naffeid.gassin.data.remote.response.MessageResponse
+import com.naffeid.gassin.data.remote.response.SingleStoreResponse
+import com.naffeid.gassin.data.remote.response.StoreResponse
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -8,6 +11,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
 
@@ -79,25 +83,23 @@ interface ApiService {
     /* End API Employee */
 
     /* Store */
+    @GET("manager/store")
+    suspend fun showAllStore(): StoreResponse
     @FormUrlEncoded
-    @GET("store")
-    suspend fun showAllStore(): LoginResponse
-    @FormUrlEncoded
-    @POST("store")
+    @POST("manager/store")
     suspend fun createNewStore(
         @Field("name") name: String,
         @Field("phone") phone: String,
         @Field("address") address: String,
-        @Field("linkmap") linkMap: String,
+        @Field("link_map") linkMap: String,
         @Field("price") price: String
-    ): LoginResponse
-    @FormUrlEncoded
-    @GET("store/{id}")
+    ): MessageResponse
+    @GET("manager/store/{id}")
     suspend fun showStore(
         @Path("id") id: String
-    ): LoginResponse
+    ): SingleStoreResponse
     @FormUrlEncoded
-    @PUT("store/{id}")
+    @PUT("manager/store/{id}")
     suspend fun updateStore(
         @Path("id") id: String,
         @Field("name") name: String,
@@ -105,12 +107,15 @@ interface ApiService {
         @Field("address") address: String,
         @Field("linkmap") linkMap: String,
         @Field("price") price: String
-    ): LoginResponse
-    @FormUrlEncoded
-    @DELETE("store/{id}")
+    ): SingleStoreResponse
+    @DELETE("manager/store/{id}")
     suspend fun deleteStore(
         @Path("id") id: String
-    ): LoginResponse
+    ): StoreResponse
+    @GET("manager/search/stores")
+    suspend fun searchStore(
+        @Query("q") query: String
+    ): StoreResponse
 
     /* End API Store */
 

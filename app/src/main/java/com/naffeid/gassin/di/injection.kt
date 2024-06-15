@@ -19,33 +19,33 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 object Injection {
-    fun provideAuthRepository(context: Context): AuthRepository {
+    fun provideAuthRepository(): AuthRepository {
         val apiService = ApiConfig.getApiService()
-        return AuthRepository.getInstance(apiService)
+        return AuthRepository(apiService)
     }
     fun provideUserRepository(context: Context): UserRepository {
         val userPreference = UserPreference.getInstance(context.dataStore)
-        return UserRepository.getInstance(userPreference)
+        return UserRepository(userPreference)
     }
     fun provideEmployeeRepository(context: Context): EmployeeRepository {
         val userPreference = UserPreference.getInstance(context.dataStore)
         val employeePreference = EmployeePreference.getInstance(context.employeeDataStore)
         val user = runBlocking { userPreference.getSession().first() }
         val apiService = ApiConfig.getApiService(user.apikey)
-        return EmployeeRepository.getInstance(employeePreference, apiService)
+        return EmployeeRepository(employeePreference, apiService)
     }
     fun provideStoreRepository(context: Context): StoreRepository {
         val userPreference = UserPreference.getInstance(context.dataStore)
         val storePreference = StorePreference.getInstance(context.storeDataStore)
         val user = runBlocking { userPreference.getSession().first() }
         val apiService = ApiConfig.getApiService(user.apikey)
-        return StoreRepository.getInstance(storePreference, apiService)
+        return StoreRepository(storePreference, apiService)
     }
     fun provideCustomerRepository(context: Context): CustomerRepository {
         val userPreference = UserPreference.getInstance(context.dataStore)
         val customerPreference = CustomerPreference.getInstance(context.customerDataStore)
         val user = runBlocking { userPreference.getSession().first() }
         val apiService = ApiConfig.getApiService(user.apikey)
-        return CustomerRepository.getInstance(customerPreference, apiService)
+        return CustomerRepository(customerPreference, apiService)
     }
 }

@@ -28,4 +28,24 @@
     <string name="pendapatan_hari_ini">Pendapatan Hari Ini</string>
     <string name="lainnya">Lainnya</string>
     <string name="cari_pesanan_pelanggan">Cari pesanan pelanggan</string>
+    <string name="cari_agen">Cari Agen</string>
+    <string name="lihat_detail">Lihat detail</string>
+    <string name="agen">Agen</string>
+    <string name="tambah_agen">Tambah Agen</string>
+    <string name="masukkan_nama_agen">Masukkan nama agen</string>
+    <string name="masukkan_link_google_map_alamat_agen">Masukkan link google map alamat agen</string>
+    <string name="masukkan_patokan_alamat_agen">Masukkan patokan alamat agen</string>
+    <string name="masukkan_nomer_telepon_agen">Masukkan nomer telepon agen</string>
+    <string name="masukkan_harga_gas_agenl">Masukkan harga gas agen</string>
+    <string name="tambahkan_agen">Tambahkan Agen</string>
+    <string name="edit_agen">Edit Agen</string>
+    <string name="simpan">Simpan</string>
+    <string name="detail_agen">Detail Agen</string>
+    <string name="nama_agen">Nama Agen</string>
+    <string name="harga_agen">Harga Agen</string>
+    <string name="nomer_telepon_agen">Nomer Telepon Agen</string>
+    <string name="alamat_agen">Alamat Agen</string>
+    <string name="link_map_agen">Link Map Agen</string>
+    <string name="agen_berhasil_dihapus">Agen berhasil dihapus</string>
+    <string name="agen_berhasil_diupdate">Agen berhasil diupdate</string>
 </resources>

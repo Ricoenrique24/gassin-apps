@@ -10,7 +10,9 @@ import androidx.fragment.app.viewModels
 import com.naffeid.gassin.data.model.User
 import com.naffeid.gassin.databinding.FragmentHomeManagerBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.manager.employee.create.CreateEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.restocktransaction.create.CreateReStockTransactionActivity
+import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreActivity
 import com.naffeid.gassin.ui.pages.manager.usertransaction.create.CreateUserTransactionActivity
 import com.naffeid.gassin.ui.pages.signin.SignInActivity
 
@@ -87,21 +89,21 @@ class HomeFragment : Fragment() {
 
     private fun buttonToCustomer() {
         binding.btnCustomerFeature.setOnClickListener {
-            val intent = Intent(requireContext(), CreateReStockTransactionActivity::class.java)
+            val intent = Intent(requireContext(), IndexStoreActivity::class.java)
             startActivity(intent)
         }
     }
 
     private fun buttonToEmployee() {
         binding.btnEmployeeFeature.setOnClickListener {
-            val intent = Intent(requireContext(), CreateReStockTransactionActivity::class.java)
+            val intent = Intent(requireContext(), CreateEmployeeActivity::class.java)
             startActivity(intent)
         }
     }
 
     private fun buttonToStore() {
         binding.btnStoreFeature.setOnClickListener {
-            val intent = Intent(requireContext(), CreateReStockTransactionActivity::class.java)
+            val intent = Intent(requireContext(), IndexStoreActivity::class.java)
             startActivity(intent)
         }
     }

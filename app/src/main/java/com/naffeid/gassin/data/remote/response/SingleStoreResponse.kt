@@ -2,10 +2,10 @@ package com.naffeid.gassin.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
-data class LoginResponse(
+data class SingleStoreResponse(
 
-	@field:SerializedName("loginResult")
-	val loginResult: LoginResult? = null,
+	@field:SerializedName("store")
+	val store: Store? = null,
 
 	@field:SerializedName("error")
 	val error: Boolean? = null,
@@ -14,13 +14,10 @@ data class LoginResponse(
 	val message: String? = null
 )
 
-data class LoginResult(
+data class Store(
 
-	@field:SerializedName("role")
-	val role: String? = null,
-
-	@field:SerializedName("apikey")
-	val apikey: String? = null,
+	@field:SerializedName("address")
+	val address: String? = null,
 
 	@field:SerializedName("updated_at")
 	val updatedAt: String? = null,
@@ -28,21 +25,18 @@ data class LoginResult(
 	@field:SerializedName("phone")
 	val phone: String? = null,
 
+	@field:SerializedName("link_map")
+	val linkMap: String? = null,
+
+	@field:SerializedName("price")
+	val price: String? = null,
+
 	@field:SerializedName("name")
 	val name: String? = null,
-
-	@field:SerializedName("token_fcm")
-	val tokenFcm: Any? = null,
 
 	@field:SerializedName("created_at")
 	val createdAt: String? = null,
 
 	@field:SerializedName("id")
-	val id: Int? = null,
-
-	@field:SerializedName("email")
-	val email: String? = null,
-
-	@field:SerializedName("username")
-	val username: String? = null
+	val id: Int? = null
 )
