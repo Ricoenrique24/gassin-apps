@@ -59,6 +59,17 @@ class ShowStoreActivity : AppCompatActivity() {
             edStoreAddress.setText(store.address)
             edStorePhone.setText(store.phone)
             edStorePrice.setText(store.price)
+            btnEditStore.setOnClickListener {
+                val storeData = ListStoreItem(
+                    id = store.id,
+                    name = store.name,
+                    linkMap = store.linkMap,
+                    address = store.address,
+                    phone = store.phone,
+                    price = store.price
+                )
+                editStore(storeData)
+            }
             btnDeleteStore.setOnClickListener {
                 deleteStore(store.id.toString())
             }
