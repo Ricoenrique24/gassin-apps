@@ -1,5 +1,6 @@
 package com.naffeid.gassin.ui.pages.manager.store.edit
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -12,6 +13,7 @@ import com.naffeid.gassin.data.remote.response.ListStoreItem
 import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.databinding.ActivityEditStoreBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.manager.store.show.ShowStoreActivity
 
 class EditStoreActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditStoreBinding
@@ -72,12 +74,28 @@ class EditStoreActivity : AppCompatActivity() {
                     is Result.Success -> {
                         showLoading(false)
                         showAlert(getString(R.string.agen_berhasil_diupdate))
-                        onBackPressed()
-                        finish()
+                        val store = it.data.store
+                        val storeData = ListStoreItem(
+                            id = store?.id,
+                            name = store?.name,
+                            linkMap = store?.linkMap,
+                            address = store?.address,
+                            phone = store?.phone,
+                            price = store?.price
+                        )
+                        navigateToShowStore(storeData)
                     }
                 }
             }
         }
+    }
+
+    private fun navigateToShowStore(data: ListStoreItem) {
+        val intentToShow = Intent(this@EditStoreActivity, ShowStoreActivity::class.java)
+        intentToShow.putExtra("STOREUPDATED", true)
+        intentToShow.putExtra("STORE", data)
+        startActivity(intentToShow)
+        finish()
     }
 
     private fun setupTobBar() {

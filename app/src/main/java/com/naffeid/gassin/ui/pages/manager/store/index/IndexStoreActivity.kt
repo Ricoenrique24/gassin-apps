@@ -27,6 +27,10 @@ class IndexStoreActivity : AppCompatActivity() {
         binding = ActivityIndexStoreBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+        val updateStore = intent.getBooleanExtra("STOREUPDATED",false)
+        if (updateStore) {
+            showAllStore()
+        }
         setupTobBar()
         setupRecyclerView()
         setupView()

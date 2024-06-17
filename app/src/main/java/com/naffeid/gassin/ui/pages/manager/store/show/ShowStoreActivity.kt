@@ -14,6 +14,7 @@ import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.databinding.ActivityShowStoreBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.store.edit.EditStoreActivity
+import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreActivity
 
 class ShowStoreActivity : AppCompatActivity() {
 
@@ -25,9 +26,13 @@ class ShowStoreActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityShowStoreBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setupTobBar()
         val store = intent.getParcelableExtra<ListStoreItem>("STORE")
+        val updateStore = intent.getBooleanExtra("STOREUPDATED",false)
+        if (updateStore) {
+            if (store != null) setupData(store)
+        }
         if (store != null) setupData(store)
+        setupTobBar(updateStore)
     }
 
     private fun setupData(store: ListStoreItem) {
@@ -92,8 +97,7 @@ class ShowStoreActivity : AppCompatActivity() {
                 is Result.Success -> {
                     showLoading(false)
                     showAlert(getString(R.string.agen_berhasil_dihapus))
-                    onBackPressed()
-                    finish()
+                    navigateToIndexStore()
                 }
 
                 is Result.Error -> {
@@ -105,9 +109,20 @@ class ShowStoreActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupTobBar() {
+    private fun navigateToIndexStore() {
+        val intentToIndex = Intent(this@ShowStoreActivity, IndexStoreActivity::class.java)
+        intentToIndex.putExtra("STOREUPDATED", true)
+        startActivity(intentToIndex)
+        finish()
+    }
+
+    private fun setupTobBar(updateStore: Boolean) {
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            if (updateStore) {
+                navigateToIndexStore()
+            } else {
+                onBackPressed()
+            }
         }
     }
 
