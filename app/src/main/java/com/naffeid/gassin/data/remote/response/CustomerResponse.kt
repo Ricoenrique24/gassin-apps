@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
 data class CustomerResponse(
 
 	@field:SerializedName("listCustomer")
-	val listStore: List<ListCustomerItem> = emptyList(),
+	val listCustomer: List<ListCustomerItem> = emptyList(),
 
 	@field:SerializedName("error")
 	val error: Boolean? = null,
@@ -69,12 +69,12 @@ data class ListCustomerItem(
 		return 0
 	}
 
-	companion object CREATOR : Parcelable.Creator<ListStoreItem> {
-		override fun createFromParcel(parcel: Parcel): ListStoreItem {
-			return ListStoreItem(parcel)
+	companion object CREATOR : Parcelable.Creator<ListCustomerItem> {
+		override fun createFromParcel(parcel: Parcel): ListCustomerItem {
+			return ListCustomerItem(parcel)
 		}
 
-		override fun newArray(size: Int): Array<ListStoreItem?> {
+		override fun newArray(size: Int): Array<ListCustomerItem?> {
 			return arrayOfNulls(size)
 		}
 	}

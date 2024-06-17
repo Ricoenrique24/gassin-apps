@@ -11,7 +11,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.naffeid.gassin.R
 import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.databinding.ActivityCreateStoreBinding
-import com.naffeid.gassin.ui.adapter.StoreAdapter
 import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreActivity
 
@@ -20,7 +19,6 @@ class CreateStoreActivity : AppCompatActivity() {
     private val viewModel by viewModels<CreateStoreViewModel> {
         ViewModelFactory.getInstance(this)
     }
-    private lateinit var storeAdapter: StoreAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateStoreBinding.inflate(layoutInflater)

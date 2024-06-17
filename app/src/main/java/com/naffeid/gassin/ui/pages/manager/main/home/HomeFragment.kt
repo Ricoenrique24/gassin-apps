@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import com.naffeid.gassin.data.model.User
 import com.naffeid.gassin.databinding.FragmentHomeManagerBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.manager.customer.index.IndexCustomerActivity
 import com.naffeid.gassin.ui.pages.manager.employee.create.CreateEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.restocktransaction.create.CreateReStockTransactionActivity
 import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreActivity
@@ -89,7 +90,7 @@ class HomeFragment : Fragment() {
 
     private fun buttonToCustomer() {
         binding.btnCustomerFeature.setOnClickListener {
-            val intent = Intent(requireContext(), IndexStoreActivity::class.java)
+            val intent = Intent(requireContext(), IndexCustomerActivity::class.java)
             startActivity(intent)
         }
     }

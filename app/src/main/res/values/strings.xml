@@ -48,4 +48,22 @@
     <string name="link_map_agen">Link Map Agen</string>
     <string name="agen_berhasil_dihapus">Agen berhasil dihapus</string>
     <string name="agen_berhasil_diupdate">Agen berhasil diupdate</string>
+    <string name="cari_pelanggan">Cari Pelanggan</string>
+    <string name="pelanggan">Pelanggan</string>
+    <string name="tambah_pelanggan">Tambah Pelanggan</string>
+    <string name="masukkan_nama_pelanggan">Masukkan nama pelanggan</string>
+    <string name="masukkan_link_google_map_alamat_pelanggan">Masukkan link google map alamat pelanggan</string>
+    <string name="masukkan_patokan_alamat_pelanggan">Masukkan patokan alamat pelanggan</string>
+    <string name="masukkan_nomer_telepon_pelanggan">Masukkan nomer telepon pelanggan</string>
+    <string name="masukkan_harga_gas_pelangganl">Masukkan harga gas pelanggan</string>
+    <string name="tambahkan_pelanggan">Tambahkan Pelanggan</string>
+    <string name="edit_pelanggan">Edit Pelanggan</string>
+    <string name="detail_pelanggan">Detail Pelanggan</string>
+    <string name="nama_pelanggan">Nama Pelanggan</string>
+    <string name="harga_pelanggan">Harga Pelanggan</string>
+    <string name="nomer_telepon_pelanggan">Nomer Telepon Pelanggan</string>
+    <string name="alamat_pelanggan">Alamat Pelanggan</string>
+    <string name="link_map_pelanggan">Link Map Pelanggan</string>
+    <string name="pelanggan_berhasil_dihapus">Pelanggan berhasil dihapus</string>
+    <string name="pelanggan_berhasil_diupdate">Pelanggan berhasil diupdate</string>
 </resources>

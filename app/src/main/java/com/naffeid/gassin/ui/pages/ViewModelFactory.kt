@@ -14,6 +14,10 @@ import com.naffeid.gassin.data.repository.UserRepository
 import com.naffeid.gassin.di.Injection
 import com.naffeid.gassin.ui.pages.signin.SignInViewModel
 import com.naffeid.gassin.ui.pages.splashscreen.SplashViewModel
+import com.naffeid.gassin.ui.pages.manager.customer.create.CreateCustomerViewModel as CreateCustomerManagerViewModel
+import com.naffeid.gassin.ui.pages.manager.customer.edit.EditCustomerViewModel as EditCustomerManagerViewModel
+import com.naffeid.gassin.ui.pages.manager.customer.index.IndexCustomerViewModel as IndexCustomerManagerViewModel
+import com.naffeid.gassin.ui.pages.manager.customer.show.ShowCustomerViewModel as ShowCustomerManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.main.home.HomeViewModel as HomeManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.main.more.MoreViewModel as MoreManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.store.create.CreateStoreViewModel as CreateStoreManagerViewModel
@@ -47,6 +51,14 @@ class ViewModelFactory private constructor(
             return ShowStoreManagerViewModel(storeRepository) as T
         } else if (modelClass.isAssignableFrom(EditStoreManagerViewModel::class.java)) {
             return EditStoreManagerViewModel(storeRepository) as T
+        } else if (modelClass.isAssignableFrom(IndexCustomerManagerViewModel::class.java)) {
+            return IndexCustomerManagerViewModel(customerRepository) as T
+        } else if (modelClass.isAssignableFrom(CreateCustomerManagerViewModel::class.java)) {
+            return CreateCustomerManagerViewModel(customerRepository) as T
+        } else if (modelClass.isAssignableFrom(ShowCustomerManagerViewModel::class.java)) {
+            return ShowCustomerManagerViewModel(customerRepository) as T
+        } else if (modelClass.isAssignableFrom(EditCustomerManagerViewModel::class.java)) {
+            return EditCustomerManagerViewModel(customerRepository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

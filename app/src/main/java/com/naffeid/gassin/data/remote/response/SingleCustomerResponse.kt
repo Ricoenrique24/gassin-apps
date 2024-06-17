@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 data class SingleCustomerResponse(
 
-	@field:SerializedName("store")
-	val store: Customer? = null,
+	@field:SerializedName("customer")
+	val customer: Customer? = null,
 
 	@field:SerializedName("error")
 	val error: Boolean? = null,
