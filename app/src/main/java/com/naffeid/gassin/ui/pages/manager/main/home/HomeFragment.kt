@@ -11,7 +11,7 @@ import com.naffeid.gassin.data.model.User
 import com.naffeid.gassin.databinding.FragmentHomeManagerBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.customer.index.IndexCustomerActivity
-import com.naffeid.gassin.ui.pages.manager.employee.create.CreateEmployeeActivity
+import com.naffeid.gassin.ui.pages.manager.employee.index.IndexEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.restocktransaction.create.CreateReStockTransactionActivity
 import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreActivity
 import com.naffeid.gassin.ui.pages.manager.usertransaction.create.CreateUserTransactionActivity
@@ -97,7 +97,7 @@ class HomeFragment : Fragment() {
 
     private fun buttonToEmployee() {
         binding.btnEmployeeFeature.setOnClickListener {
-            val intent = Intent(requireContext(), CreateEmployeeActivity::class.java)
+            val intent = Intent(requireContext(), IndexEmployeeActivity::class.java)
             startActivity(intent)
         }
     }

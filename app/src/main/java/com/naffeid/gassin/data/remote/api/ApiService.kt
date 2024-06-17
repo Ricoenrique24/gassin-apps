@@ -1,9 +1,11 @@
 package com.naffeid.gassin.data.remote.api
 
 import com.naffeid.gassin.data.remote.response.CustomerResponse
+import com.naffeid.gassin.data.remote.response.EmployeeResponse
 import com.naffeid.gassin.data.remote.response.LoginResponse
 import com.naffeid.gassin.data.remote.response.MessageResponse
 import com.naffeid.gassin.data.remote.response.SingleCustomerResponse
+import com.naffeid.gassin.data.remote.response.SingleEmployeeResponse
 import com.naffeid.gassin.data.remote.response.SingleStoreResponse
 import com.naffeid.gassin.data.remote.response.StoreResponse
 import retrofit2.http.DELETE
@@ -49,38 +51,48 @@ interface ApiService {
     /* End API Dashboard */
 
     /* Employee */
+    @GET("manager/employee")
+    suspend fun showAllEmployee(): EmployeeResponse
     @FormUrlEncoded
-    @GET("employee")
-    suspend fun showAllEmployee(): LoginResponse
-    @FormUrlEncoded
-    @POST("employee")
+    @POST("manager/employee")
     suspend fun createNewEmployee(
         @Field("name") name: String,
         @Field("username") username: String,
         @Field("email") email: String,
         @Field("password") password: String,
         @Field("phone") phone: String
-    ): LoginResponse
-    @FormUrlEncoded
-    @GET("employee/{id}")
+    ): MessageResponse
+    @GET("manager/employee/{id}")
     suspend fun showEmployee(
         @Path("id") id: String
-    ): LoginResponse
+    ): SingleEmployeeResponse
     @FormUrlEncoded
-    @PUT("employee/{id}")
+    @PUT("manager/employee/{id}")
     suspend fun updateEmployee(
         @Path("id") id: String,
         @Field("name") name: String,
         @Field("username") username: String,
         @Field("email") email: String,
-        @Field("password") password: String,
+        @Field("password") password: String?,
         @Field("phone") phone: String
-    ): LoginResponse
+    ): SingleEmployeeResponse
     @FormUrlEncoded
-    @DELETE("employee/{id}")
+    @PUT("manager/employee/{id}")
+    suspend fun updateEmployeeWithoutPassword(
+        @Path("id") id: String,
+        @Field("name") name: String,
+        @Field("username") username: String,
+        @Field("email") email: String,
+        @Field("phone") phone: String
+    ): SingleEmployeeResponse
+    @DELETE("manager/employee/{id}")
     suspend fun deleteEmployee(
         @Path("id") id: String
-    ): LoginResponse
+    ): EmployeeResponse
+    @GET("manager/search/employee")
+    suspend fun searchEmployee(
+        @Query("q") query: String
+    ): EmployeeResponse
 
     /* End API Employee */
 

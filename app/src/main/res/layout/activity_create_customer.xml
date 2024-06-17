@@ -61,7 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="20dp"
-        app:startIconDrawable="@drawable/ic_shop_24dp"
+        app:startIconDrawable="@drawable/ic_profile_24dp"
         app:startIconTint="@color/darkGreen"
         app:startIconContentDescription="@string/masukkan_nama_pelanggan"
         app:boxBackgroundColor="@color/white"

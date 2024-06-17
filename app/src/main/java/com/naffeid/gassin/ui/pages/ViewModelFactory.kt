@@ -18,6 +18,10 @@ import com.naffeid.gassin.ui.pages.manager.customer.create.CreateCustomerViewMod
 import com.naffeid.gassin.ui.pages.manager.customer.edit.EditCustomerViewModel as EditCustomerManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.customer.index.IndexCustomerViewModel as IndexCustomerManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.customer.show.ShowCustomerViewModel as ShowCustomerManagerViewModel
+import com.naffeid.gassin.ui.pages.manager.employee.create.CreateEmployeeViewModel as CreateEmployeeManagerViewModel
+import com.naffeid.gassin.ui.pages.manager.employee.edit.EditEmployeeViewModel as EditEmployeeManagerViewModel
+import com.naffeid.gassin.ui.pages.manager.employee.index.IndexEmployeeViewModel as IndexEmployeeManagerViewModel
+import com.naffeid.gassin.ui.pages.manager.employee.show.ShowEmployeeViewModel as ShowEmployeeManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.main.home.HomeViewModel as HomeManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.main.more.MoreViewModel as MoreManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.store.create.CreateStoreViewModel as CreateStoreManagerViewModel
@@ -59,6 +63,14 @@ class ViewModelFactory private constructor(
             return ShowCustomerManagerViewModel(customerRepository) as T
         } else if (modelClass.isAssignableFrom(EditCustomerManagerViewModel::class.java)) {
             return EditCustomerManagerViewModel(customerRepository) as T
+        } else if (modelClass.isAssignableFrom(IndexEmployeeManagerViewModel::class.java)) {
+            return IndexEmployeeManagerViewModel(employeeRepository) as T
+        } else if (modelClass.isAssignableFrom(CreateEmployeeManagerViewModel::class.java)) {
+            return CreateEmployeeManagerViewModel(employeeRepository) as T
+        } else if (modelClass.isAssignableFrom(ShowEmployeeManagerViewModel::class.java)) {
+            return ShowEmployeeManagerViewModel(employeeRepository) as T
+        } else if (modelClass.isAssignableFrom(EditEmployeeManagerViewModel::class.java)) {
+            return EditEmployeeManagerViewModel(employeeRepository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

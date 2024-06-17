@@ -66,4 +66,20 @@
     <string name="link_map_pelanggan">Link Map Pelanggan</string>
     <string name="pelanggan_berhasil_dihapus">Pelanggan berhasil dihapus</string>
     <string name="pelanggan_berhasil_diupdate">Pelanggan berhasil diupdate</string>
+    <string name="masukkan_nama_karyawan">Masukkan nama karyawan</string>
+    <string name="masukkan_email_karyawan">Masukkan email karyawan</string>
+    <string name="masukkan_nomor_telepon_karyawan">Masukkan nomor telepon karyawan</string>
+    <string name="konfirmasi_password_karyawan">Konfirmasi password karyawan</string>
+    <string name="masukkan_password_karyawan">Masukkan password karyawan</string>
+    <string name="tambahkan_karyawan">Tambahkan Karyawan</string>
+    <string name="konfirmasi_kata_sandi_tidak_sama_dengan_password">Konfirmasi kata sandi tidak sama dengan password</string>
+    <string name="masukkan_username_karyawan">Masukkan username karyawan</string>
+    <string name="edit_karyawan">Edit Karyawan</string>
+    <string name="ganti_password">Ganti password</string>
+    <string name="format_email_tidak_valid">Format email tidak valid</string>
+    <string name="hapus_karyawan">Hapus Karyawan</string>
+    <string name="karyawan">Karyawan</string>
+    <string name="cari_karyawan">Cari Karyawan</string>
+    <string name="tambah_karyawan">Tambah Karyawan</string>
+    <string name="detail_karyawan">Detail Karyawan</string>
 </resources>

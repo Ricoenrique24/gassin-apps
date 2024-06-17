@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Gassinapps"
         tools:targetApi="31">
         <activity
+            android:name=".ui.pages.manager.employee.index.IndexEmployeeActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.pages.manager.store.index.IndexStoreActivity"
             android:exported="false" />
         <activity
