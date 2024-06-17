@@ -13,6 +13,7 @@ import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.databinding.ActivityIndexStoreBinding
 import com.naffeid.gassin.ui.adapter.StoreAdapter
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.manager.main.ManagerMainActivity
 import com.naffeid.gassin.ui.pages.manager.store.create.CreateStoreActivity
 import com.naffeid.gassin.ui.pages.manager.store.show.ShowStoreActivity
 
@@ -121,7 +122,9 @@ class IndexStoreActivity : AppCompatActivity() {
 
     private fun setupTobBar() {
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            val intentToHome = Intent(this@IndexStoreActivity, ManagerMainActivity::class.java)
+            startActivity(intentToHome)
+            finish()
         }
     }
 

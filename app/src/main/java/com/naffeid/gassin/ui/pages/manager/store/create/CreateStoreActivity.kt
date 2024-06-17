@@ -1,5 +1,6 @@
 package com.naffeid.gassin.ui.pages.manager.store.create
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -12,6 +13,7 @@ import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.databinding.ActivityCreateStoreBinding
 import com.naffeid.gassin.ui.adapter.StoreAdapter
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreActivity
 
 class CreateStoreActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateStoreBinding
@@ -61,12 +63,18 @@ class CreateStoreActivity : AppCompatActivity() {
                     is Result.Success -> {
                         showLoading(false)
                         showAlert(getString(R.string.login_success))
-                        onBackPressed()
-                        finish()
+                        navigateToIndexStore()
                     }
                 }
             }
         }
+    }
+
+    private fun navigateToIndexStore() {
+        val intentToIndex = Intent(this@CreateStoreActivity, IndexStoreActivity::class.java)
+        intentToIndex.putExtra("STOREUPDATED", true)
+        startActivity(intentToIndex)
+        finish()
     }
 
     private fun setupTobBar() {

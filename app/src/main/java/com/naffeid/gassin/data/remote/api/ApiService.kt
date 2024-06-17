@@ -1,7 +1,9 @@
 package com.naffeid.gassin.data.remote.api
 
+import com.naffeid.gassin.data.remote.response.CustomerResponse
 import com.naffeid.gassin.data.remote.response.LoginResponse
 import com.naffeid.gassin.data.remote.response.MessageResponse
+import com.naffeid.gassin.data.remote.response.SingleCustomerResponse
 import com.naffeid.gassin.data.remote.response.SingleStoreResponse
 import com.naffeid.gassin.data.remote.response.StoreResponse
 import retrofit2.http.DELETE
@@ -120,25 +122,23 @@ interface ApiService {
     /* End API Store */
 
     /* Customer */
+    @GET("manager/customer")
+    suspend fun showAllCustomer(): CustomerResponse
     @FormUrlEncoded
-    @GET("customer")
-    suspend fun showAllCustomer(): LoginResponse
-    @FormUrlEncoded
-    @POST("customer")
+    @POST("manager/customer")
     suspend fun createNewCustomer(
         @Field("name") name: String,
         @Field("phone") phone: String,
         @Field("address") address: String,
-        @Field("linkmap") linkMap: String,
+        @Field("link_map") linkMap: String,
         @Field("price") price: String
-    ): LoginResponse
-    @FormUrlEncoded
-    @GET("customer/{id}")
+    ): MessageResponse
+    @GET("manager/customer/{id}")
     suspend fun showCustomer(
         @Path("id") id: String
-    ): LoginResponse
+    ): SingleCustomerResponse
     @FormUrlEncoded
-    @PUT("customer/{id}")
+    @PUT("manager/customer/{id}")
     suspend fun updateCustomer(
         @Path("id") id: String,
         @Field("name") name: String,
@@ -146,12 +146,15 @@ interface ApiService {
         @Field("address") address: String,
         @Field("linkmap") linkMap: String,
         @Field("price") price: String
-    ): LoginResponse
-    @FormUrlEncoded
-    @DELETE("customer/{id}")
+    ): SingleCustomerResponse
+    @DELETE("manager/customer/{id}")
     suspend fun deleteCustomer(
         @Path("id") id: String
-    ): LoginResponse
+    ): CustomerResponse
+    @GET("manager/search/customers")
+    suspend fun searchCustomer(
+        @Query("q") query: String
+    ): CustomerResponse
 
     /* End API Customer */
 

@@ -5,7 +5,9 @@ import androidx.lifecycle.liveData
 import com.naffeid.gassin.data.model.Customer
 import com.naffeid.gassin.data.preference.CustomerPreference
 import com.naffeid.gassin.data.remote.api.ApiService
-import com.naffeid.gassin.data.remote.response.LoginResponse
+import com.naffeid.gassin.data.remote.response.CustomerResponse
+import com.naffeid.gassin.data.remote.response.MessageResponse
+import com.naffeid.gassin.data.remote.response.SingleCustomerResponse
 import com.naffeid.gassin.data.utils.Result
 import kotlinx.coroutines.flow.Flow
 
@@ -16,7 +18,7 @@ class CustomerRepository (
 
 
     // API Customer
-    fun showAllCustomer(): LiveData<Result<LoginResponse>> = liveData {
+    fun showAllCustomer(): LiveData<Result<CustomerResponse>> = liveData {
         emit(Result.Loading)
         try {
             val client = apiService.showAllCustomer()
@@ -32,7 +34,7 @@ class CustomerRepository (
         address: String,
         linkMap: String,
         price: String
-    ): LiveData<Result<LoginResponse>> = liveData {
+    ): LiveData<Result<MessageResponse>> = liveData {
         emit(Result.Loading)
         try {
             val client = apiService.createNewCustomer(name, phone, address, linkMap, price)
@@ -44,7 +46,7 @@ class CustomerRepository (
     }
     fun showCustomer(
         id:String
-    ): LiveData<Result<LoginResponse>> = liveData {
+    ): LiveData<Result<SingleCustomerResponse>> = liveData {
         emit(Result.Loading)
         try {
             val client = apiService.showCustomer(id)
@@ -61,7 +63,7 @@ class CustomerRepository (
         address: String,
         linkMap: String,
         price: String
-    ): LiveData<Result<LoginResponse>> = liveData {
+    ): LiveData<Result<SingleCustomerResponse>> = liveData {
         emit(Result.Loading)
         try {
             val client = apiService.updateCustomer(id, name, phone, address, linkMap, price)
@@ -71,13 +73,22 @@ class CustomerRepository (
             emit(Result.Error(e.message.toString()))
         }
     }
-    fun deleteCustomer(id:String): LiveData<Result<LoginResponse>> = liveData {
+    fun deleteCustomer(id:String): LiveData<Result<CustomerResponse>> = liveData {
         emit(Result.Loading)
         try {
             val client = apiService.deleteCustomer(id)
             emit(Result.Success(client))
         } catch (e: Exception)
         {
+            emit(Result.Error(e.message.toString()))
+        }
+    }
+    fun searchCustomer(query: String): LiveData<Result<CustomerResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val client = apiService.searchCustomer(query)
+            emit(Result.Success(client))
+        } catch (e: Exception) {
             emit(Result.Error(e.message.toString()))
         }
     }
