@@ -13,6 +13,7 @@ import com.naffeid.gassin.data.remote.api.ApiConfig
 import com.naffeid.gassin.data.repository.AuthRepository
 import com.naffeid.gassin.data.repository.CustomerRepository
 import com.naffeid.gassin.data.repository.EmployeeRepository
+import com.naffeid.gassin.data.repository.PurchaseTransactionRepository
 import com.naffeid.gassin.data.repository.StoreRepository
 import com.naffeid.gassin.data.repository.UserRepository
 import kotlinx.coroutines.flow.first
@@ -47,5 +48,11 @@ object Injection {
         val user = runBlocking { userPreference.getSession().first() }
         val apiService = ApiConfig.getApiService(user.apikey)
         return CustomerRepository(customerPreference, apiService)
+    }
+    fun providePurchaseTransactionRepository(context: Context): PurchaseTransactionRepository {
+        val userPreference = UserPreference.getInstance(context.dataStore)
+        val user = runBlocking { userPreference.getSession().first() }
+        val apiService = ApiConfig.getApiService(user.apikey)
+        return PurchaseTransactionRepository(apiService)
     }
 }

@@ -28,10 +28,11 @@ class EditEmployeeActivity : AppCompatActivity() {
         supportActionBar?.hide()
         setupTobBar()
         val employee = intent.getParcelableExtra<ListEmployeeItem>("EMPLOYEE")
-        if (employee != null) setupView(employee)
+        val fromChooseEmployee = intent.getBooleanExtra("FROM-CHOOSE-EMPLOYEE",false)
+        if (employee != null) setupView(employee,fromChooseEmployee)
     }
 
-    private fun setupView(employee: ListEmployeeItem) {
+    private fun setupView(employee: ListEmployeeItem, fromChooseEmployee:Boolean) {
         with(binding) {
             edEmployeeName.setText(employee.name)
             edEmployeeUsername.setText(employee.username)
@@ -47,12 +48,12 @@ class EditEmployeeActivity : AppCompatActivity() {
                 }
             }
             btnUpdateEmployee.setOnClickListener {
-                validate(employee.id.toString())
+                validate(employee.id.toString(),fromChooseEmployee)
             }
         }
     }
 
-    private fun validate(id: String) {
+    private fun validate(id: String, fromChooseEmployee:Boolean) {
         val name = binding.edEmployeeName.text.toString()
         val username = binding.edEmployeeUsername.text.toString()
         val email = binding.edEmployeeEmail.text.toString()
@@ -66,7 +67,7 @@ class EditEmployeeActivity : AppCompatActivity() {
             if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(username) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(confirmPassword) && !TextUtils.isEmpty(phone)) {
                 if (password.length >= 8 && confirmPassword.length >= 8 && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     if (confirmPassword == password) {
-                        updateEmployee(id, name, username, email, password, phone)
+                        updateEmployee(id, name, username, email, password, phone, fromChooseEmployee)
                     } else {
                         showAlert(getString(R.string.konfirmasi_kata_sandi_tidak_sama_dengan_password))
                     }
@@ -79,7 +80,7 @@ class EditEmployeeActivity : AppCompatActivity() {
         } else {
             if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(username) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(phone)) {
                 if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    updateEmployee(id, name, username, email, null, phone)  // Password null jika tidak diubah
+                    updateEmployee(id, name, username, email, null, phone, fromChooseEmployee)  // Password null jika tidak diubah
                 } else {
                     showAlert(getString(R.string.format_email_tidak_valid))
                 }
@@ -89,7 +90,7 @@ class EditEmployeeActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateEmployee(id:String, name: String, username: String, email: String, password: String?, phone: String) {
+    private fun updateEmployee(id:String, name: String, username: String, email: String, password: String?, phone: String, fromChooseEmployee:Boolean) {
         viewModel.updateEmployee(id, name, username, email, password, phone).observe(this) {
             if (it != null) {
                 when (it) {
@@ -114,17 +115,18 @@ class EditEmployeeActivity : AppCompatActivity() {
                             email = employee?.email,
                             phone = employee?.phone
                         )
-                        navigateToShowEmployee(employeeData)
+                        navigateToShowEmployee(employeeData, fromChooseEmployee)
                     }
                 }
             }
         }
     }
 
-    private fun navigateToShowEmployee(data: ListEmployeeItem) {
+    private fun navigateToShowEmployee(data: ListEmployeeItem, fromChooseEmployee:Boolean) {
         val intentToShow = Intent(this@EditEmployeeActivity, ShowEmployeeActivity::class.java)
         intentToShow.putExtra("EMPLOYEEUPDATED", true)
         intentToShow.putExtra("EMPLOYEE", data)
+        intentToShow.putExtra("FROM-CHOOSE-CUSTOMER",fromChooseEmployee)
         startActivity(intentToShow)
         finish()
     }

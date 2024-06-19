@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home_employee"
-        android:name="com.naffeid.gassin.ui.pages.employee.main.home.HomeFragment"
+        android:name="com.naffeid.gassin.ui.pages.employee.main.home.HomeEmployeeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home_employee" />
 
     <fragment
         android:id="@+id/navigation_order_employee"
-        android:name="com.naffeid.gassin.ui.pages.employee.main.order.OrderFragment"
+        android:name="com.naffeid.gassin.ui.pages.employee.main.order.OrderEmployeeFragment"
         android:label="@string/order"
         tools:layout="@layout/fragment_order_employee" />
 
     <fragment
         android:id="@+id/navigation_more_employee"
-        android:name="com.naffeid.gassin.ui.pages.employee.main.more.MoreFragment"
+        android:name="com.naffeid.gassin.ui.pages.employee.main.more.MoreEmployeeFragment"
         android:label="@string/more"
         tools:layout="@layout/fragment_more_employee" />
 </navigation>

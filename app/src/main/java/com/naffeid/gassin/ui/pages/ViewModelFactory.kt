@@ -1,19 +1,22 @@
 package com.naffeid.gassin.ui.pages
 
-//Manager ViewModel
-//Main Manager ViewModel
-//Store ViewModel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.naffeid.gassin.data.repository.AuthRepository
 import com.naffeid.gassin.data.repository.CustomerRepository
 import com.naffeid.gassin.data.repository.EmployeeRepository
+import com.naffeid.gassin.data.repository.PurchaseTransactionRepository
 import com.naffeid.gassin.data.repository.StoreRepository
 import com.naffeid.gassin.data.repository.UserRepository
 import com.naffeid.gassin.di.Injection
+import com.naffeid.gassin.ui.pages.employee.main.home.HomeEmployeeViewModel
+import com.naffeid.gassin.ui.pages.employee.main.more.MoreEmployeeViewModel
 import com.naffeid.gassin.ui.pages.signin.SignInViewModel
 import com.naffeid.gassin.ui.pages.splashscreen.SplashViewModel
+import com.naffeid.gassin.ui.pages.manager.choose.customer.ChooseCustomerViewModel as ChooseCustomerManagerViewModel
+import com.naffeid.gassin.ui.pages.manager.choose.employee.ChooseEmployeeViewModel as ChooseEmployeeManagerViewModel
+import com.naffeid.gassin.ui.pages.manager.choose.store.ChooseStoreViewModel as ChooseStoreManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.customer.create.CreateCustomerViewModel as CreateCustomerManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.customer.edit.EditCustomerViewModel as EditCustomerManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.customer.index.IndexCustomerViewModel as IndexCustomerManagerViewModel
@@ -24,10 +27,12 @@ import com.naffeid.gassin.ui.pages.manager.employee.index.IndexEmployeeViewModel
 import com.naffeid.gassin.ui.pages.manager.employee.show.ShowEmployeeViewModel as ShowEmployeeManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.main.home.HomeViewModel as HomeManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.main.more.MoreViewModel as MoreManagerViewModel
+import com.naffeid.gassin.ui.pages.manager.purchasetransaction.create.CreatePurchaseTransactionViewModel as CreatePurchaseTransactionManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.store.create.CreateStoreViewModel as CreateStoreManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.store.edit.EditStoreViewModel as EditStoreManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreViewModel as IndexStoreManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.store.show.ShowStoreViewModel as ShowStoreManagerViewModel
+
 
 class ViewModelFactory private constructor(
     private val authRepository: AuthRepository,
@@ -35,6 +40,7 @@ class ViewModelFactory private constructor(
     private val employeeRepository: EmployeeRepository,
     private val storeRepository: StoreRepository,
     private val customerRepository: CustomerRepository,
+    private val purchaseTransactionRepository: PurchaseTransactionRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
@@ -71,6 +77,18 @@ class ViewModelFactory private constructor(
             return ShowEmployeeManagerViewModel(employeeRepository) as T
         } else if (modelClass.isAssignableFrom(EditEmployeeManagerViewModel::class.java)) {
             return EditEmployeeManagerViewModel(employeeRepository) as T
+        } else if (modelClass.isAssignableFrom(CreatePurchaseTransactionManagerViewModel::class.java)) {
+            return CreatePurchaseTransactionManagerViewModel(purchaseTransactionRepository,customerRepository,employeeRepository) as T
+        } else if (modelClass.isAssignableFrom(ChooseCustomerManagerViewModel::class.java)) {
+            return ChooseCustomerManagerViewModel(customerRepository) as T
+        } else if (modelClass.isAssignableFrom(ChooseEmployeeManagerViewModel::class.java)) {
+            return ChooseEmployeeManagerViewModel(employeeRepository) as T
+        } else if (modelClass.isAssignableFrom(ChooseStoreManagerViewModel::class.java)) {
+            return ChooseStoreManagerViewModel(storeRepository) as T
+        } else if (modelClass.isAssignableFrom(HomeEmployeeViewModel::class.java)) {
+            return HomeEmployeeViewModel(userRepository) as T
+        } else if (modelClass.isAssignableFrom(MoreEmployeeViewModel::class.java)) {
+            return MoreEmployeeViewModel(userRepository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
@@ -84,6 +102,7 @@ class ViewModelFactory private constructor(
                 Injection.provideEmployeeRepository(context),
                 Injection.provideStoreRepository(context),
                 Injection.provideCustomerRepository(context),
+                Injection.providePurchaseTransactionRepository(context)
             )
         }
     }

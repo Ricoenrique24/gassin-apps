@@ -12,9 +12,9 @@ import com.naffeid.gassin.databinding.FragmentHomeManagerBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.customer.index.IndexCustomerActivity
 import com.naffeid.gassin.ui.pages.manager.employee.index.IndexEmployeeActivity
-import com.naffeid.gassin.ui.pages.manager.restocktransaction.create.CreateReStockTransactionActivity
+import com.naffeid.gassin.ui.pages.manager.resupplytransaction.create.CreateReSupplyTransactionActivity
 import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreActivity
-import com.naffeid.gassin.ui.pages.manager.usertransaction.create.CreateUserTransactionActivity
+import com.naffeid.gassin.ui.pages.manager.purchasetransaction.create.CreatePurchaseTransactionActivity
 import com.naffeid.gassin.ui.pages.signin.SignInActivity
 
 class HomeFragment : Fragment() {
@@ -61,14 +61,14 @@ class HomeFragment : Fragment() {
 
     private fun buttonUserTransactionFeature() {
         binding.btnOrderFeature.setOnClickListener {
-            val intent = Intent(requireContext(), CreateUserTransactionActivity::class.java)
+            val intent = Intent(requireContext(), CreatePurchaseTransactionActivity::class.java)
             startActivity(intent)
         }
     }
 
     private fun buttonReStockFeature() {
         binding.btnRestockFeature.setOnClickListener {
-            val intent = Intent(requireContext(), CreateReStockTransactionActivity::class.java)
+            val intent = Intent(requireContext(), CreateReSupplyTransactionActivity::class.java)
             startActivity(intent)
         }
     }
@@ -83,7 +83,7 @@ class HomeFragment : Fragment() {
 
     private fun buttonToReport() {
         binding.btnReportFeature.setOnClickListener {
-            val intent = Intent(requireContext(), CreateReStockTransactionActivity::class.java)
+            val intent = Intent(requireContext(), CreateReSupplyTransactionActivity::class.java)
             startActivity(intent)
         }
     }

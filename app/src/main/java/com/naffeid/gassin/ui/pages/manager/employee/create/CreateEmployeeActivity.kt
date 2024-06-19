@@ -13,11 +13,11 @@ import com.naffeid.gassin.R
 import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.databinding.ActivityCreateEmployeeBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.manager.choose.employee.ChooseEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.employee.index.IndexEmployeeActivity
 
 class CreateEmployeeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateEmployeeBinding
-
     private val viewModel by viewModels<CreateEmployeeViewModel> {
         ViewModelFactory.getInstance(this)
     }
@@ -26,11 +26,12 @@ class CreateEmployeeActivity : AppCompatActivity() {
         binding = ActivityCreateEmployeeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+        val fromChooseEmployee = intent.getBooleanExtra("FROM-CHOOSE-EMPLOYEE",false)
+        validate(fromChooseEmployee)
         setupTobBar()
-        validate()
     }
 
-    private fun validate() {
+    private fun validate(fromChooseEmployee:Boolean) {
         binding.btnCreateEmployee.setOnClickListener {
             val name = binding.edEmployeeName.text.toString()
             val username = binding.edEmployeeUsername.text.toString()
@@ -42,7 +43,7 @@ class CreateEmployeeActivity : AppCompatActivity() {
             if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(username) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(confirmPassword) && !TextUtils.isEmpty(phone)) {
                 if (password.length >= 8 && confirmPassword.length >= 8 && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     if (confirmPassword == password){
-                        createNewEmployee(name, username, email, password, phone)
+                        createNewEmployee(name, username, email, password, phone, fromChooseEmployee)
                     } else {
                         showAlert(getString(R.string.konfirmasi_kata_sandi_tidak_sama_dengan_password))
                     }
@@ -55,7 +56,7 @@ class CreateEmployeeActivity : AppCompatActivity() {
         }
     }
 
-    private fun createNewEmployee(name: String, username: String, email: String, password: String, phone: String) {
+    private fun createNewEmployee(name: String, username: String, email: String, password: String, phone: String, fromChooseEmployee:Boolean) {
         viewModel.createNewEmployee(name, username, email, password, phone).observe(this) {
             if (it != null) {
                 when (it) {
@@ -72,13 +73,23 @@ class CreateEmployeeActivity : AppCompatActivity() {
                     is Result.Success -> {
                         showLoading(false)
                         showAlert(getString(R.string.login_success))
-                        navigateToIndexEmployee()
+                        if (fromChooseEmployee){
+                            navigateToChooseEmployee()
+                        } else {
+                            navigateToIndexEmployee()
+                        }
                     }
                 }
             }
         }
     }
 
+    private fun navigateToChooseEmployee() {
+        val intentToIndex = Intent(this@CreateEmployeeActivity, ChooseEmployeeActivity::class.java)
+        intentToIndex.putExtra("EMPLOYEEUPDATED", true)
+        startActivity(intentToIndex)
+        finish()
+    }
     private fun navigateToIndexEmployee() {
         val intentToIndex = Intent(this@CreateEmployeeActivity, IndexEmployeeActivity::class.java)
         intentToIndex.putExtra("EMPLOYEEUPDATED", true)

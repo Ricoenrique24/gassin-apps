@@ -13,8 +13,10 @@ import com.naffeid.gassin.data.remote.response.ListEmployeeItem
 import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.databinding.ActivityShowEmployeeBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.manager.choose.employee.ChooseEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.employee.edit.EditEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.employee.index.IndexEmployeeActivity
+import com.naffeid.gassin.data.model.Employee as EmployeeModel
 
 class ShowEmployeeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShowEmployeeBinding
@@ -27,14 +29,15 @@ class ShowEmployeeActivity : AppCompatActivity() {
         setContentView(binding.root)
         val employee = intent.getParcelableExtra<ListEmployeeItem>("EMPLOYEE")
         val updateEmployee = intent.getBooleanExtra("EMPLOYEEUPDATED",false)
+        val fromChooseEmployee = intent.getBooleanExtra("FROM-CHOOSE-EMPLOYEE",false)
         if (updateEmployee) {
-            if (employee != null) setupData(employee)
+            if (employee != null) setupData(employee, updateEmployee,fromChooseEmployee)
         }
-        if (employee != null) setupData(employee)
-        setupTobBar(updateEmployee)
+        if (employee != null) setupData(employee, updateEmployee,fromChooseEmployee)
+        setupTobBar(updateEmployee,fromChooseEmployee)
     }
 
-    private fun setupData(employee: ListEmployeeItem) {
+    private fun setupData(employee: ListEmployeeItem, updateEmployee:Boolean, fromChooseEmployee:Boolean) {
         val id = employee.id.toString()
         viewModel.showEmployee(id).observe(this) { result ->
             when (result) {
@@ -45,7 +48,28 @@ class ShowEmployeeActivity : AppCompatActivity() {
                 is Result.Success -> {
                     showLoading(false)
                     val employeeData = result.data.employee
-                    if(employeeData !=null) setupView(employeeData)
+                    if (updateEmployee) {
+                        viewModel.getEmployee().observe(this) { employee ->
+                            if (employee.isNotEmpty()) {
+                                val idEmployee = employee.id.toString()
+                                if (id == idEmployee) {
+                                    viewModel.deleteEmployee()
+                                    val dataEmployee = EmployeeModel(
+                                        id = employeeData?.id ?: 0,
+                                        name = employeeData?.name ?: "",
+                                        username = employeeData?.username ?: "",
+                                        email = employeeData?.email ?: "",
+                                        phone = employeeData?.phone ?: "",
+                                        role = employeeData?.role ?: "",
+                                        token = employeeData?.apikey ?: ""
+                                    )
+                                    viewModel.saveEmployee(dataEmployee)
+                                }
+                            }
+                        }
+                    }
+                    if(employeeData !=null) setupView(employeeData,fromChooseEmployee)
+
                 }
 
                 is Result.Error -> {
@@ -56,7 +80,7 @@ class ShowEmployeeActivity : AppCompatActivity() {
             }
         }
     }
-    private fun setupView(employee: Employee) {
+    private fun setupView(employee: Employee, fromChooseEmployee:Boolean) {
         with(binding){
             edEmployeeName.setText(employee.name)
             edEmployeeUsername.setText(employee.username)
@@ -70,21 +94,29 @@ class ShowEmployeeActivity : AppCompatActivity() {
                     email = employee.email,
                     phone = employee.phone
                 )
-                editEmployee(employeeData)
+                editEmployee(employeeData,fromChooseEmployee)
             }
             btnDeleteEmployee.setOnClickListener {
-                deleteEmployee(employee.id.toString())
+                deleteEmployee(employee.id.toString(),fromChooseEmployee)
             }
         }
     }
 
-    private fun editEmployee(data: ListEmployeeItem) {
-        val intentToDetail = Intent(this@ShowEmployeeActivity, EditEmployeeActivity::class.java)
-        intentToDetail.putExtra("EMPLOYEE", data)
-        startActivity(intentToDetail)
+    private fun editEmployee(data: ListEmployeeItem, fromChooseEmployee:Boolean) {
+        if (fromChooseEmployee) {
+            val intentToDetail = Intent(this@ShowEmployeeActivity, EditEmployeeActivity::class.java)
+            intentToDetail.putExtra("EMPLOYEE", data)
+            intentToDetail.putExtra("FROM-CHOOSE-EMPLOYEE",true)
+            startActivity(intentToDetail)
+        } else {
+            val intentToDetail = Intent(this@ShowEmployeeActivity, EditEmployeeActivity::class.java)
+            intentToDetail.putExtra("EMPLOYEE", data)
+            intentToDetail.putExtra("FROM-CHOOSE-EMPLOYEE",false)
+            startActivity(intentToDetail)
+        }
     }
 
-    private fun deleteEmployee(id: String) {
+    private fun deleteEmployee(id: String, fromChooseEmployee:Boolean) {
         viewModel.deleteEmployee(id).observe(this) { result ->
             when (result) {
                 is Result.Loading -> {
@@ -94,7 +126,19 @@ class ShowEmployeeActivity : AppCompatActivity() {
                 is Result.Success -> {
                     showLoading(false)
                     showAlert(getString(R.string.agen_berhasil_dihapus))
-                    navigateToIndexEmployee()
+                    viewModel.getEmployee().observe(this) { employee ->
+                        if (employee.isNotEmpty()) {
+                            val idEmployee = employee.id.toString()
+                            if (id == idEmployee) {
+                                viewModel.deleteEmployee()
+                            }
+                        }
+                    }
+                    if (fromChooseEmployee){
+                        navigateToChooseEmployee()
+                    } else {
+                        navigateToIndexEmployee()
+                    }
                 }
 
                 is Result.Error -> {
@@ -106,17 +150,31 @@ class ShowEmployeeActivity : AppCompatActivity() {
         }
     }
 
+    private fun EmployeeModel.isNotEmpty(): Boolean {
+        return this != EmployeeModel(0, "", "", "", "", "","")
+    }
+
     private fun navigateToIndexEmployee() {
         val intentToIndex = Intent(this@ShowEmployeeActivity, IndexEmployeeActivity::class.java)
         intentToIndex.putExtra("EMPLOYEEUPDATED", true)
         startActivity(intentToIndex)
         finish()
     }
+    private fun navigateToChooseEmployee() {
+        val intentToChooseEmployee = Intent(this@ShowEmployeeActivity, ChooseEmployeeActivity::class.java)
+        intentToChooseEmployee.putExtra("EMPLOYEEUPDATED", true)
+        startActivity(intentToChooseEmployee)
+        finish()
+    }
 
-    private fun setupTobBar(updateEmployee: Boolean) {
+    private fun setupTobBar(updateEmployee: Boolean, fromChooseEmployee:Boolean) {
         binding.btnBack.setOnClickListener {
             if (updateEmployee) {
-                navigateToIndexEmployee()
+                if (fromChooseEmployee){
+                    navigateToChooseEmployee()
+                } else {
+                    navigateToIndexEmployee()
+                }
             } else {
                 onBackPressed()
             }

@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import com.naffeid.gassin.data.model.User
 import com.naffeid.gassin.databinding.FragmentMoreManagerBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
-import com.naffeid.gassin.ui.pages.manager.restocktransaction.create.CreateReStockTransactionActivity
+import com.naffeid.gassin.ui.pages.manager.resupplytransaction.create.CreateReSupplyTransactionActivity
 import com.naffeid.gassin.ui.pages.signin.SignInActivity
 
 class MoreFragment : Fragment() {
@@ -58,28 +58,28 @@ class MoreFragment : Fragment() {
 
     private fun buttonToReport() {
         binding.btnReportFeature.setOnClickListener {
-            val intent = Intent(requireContext(), CreateReStockTransactionActivity::class.java)
+            val intent = Intent(requireContext(), CreateReSupplyTransactionActivity::class.java)
             startActivity(intent)
         }
     }
 
     private fun buttonToCustomer() {
         binding.btnCustomerFeature.setOnClickListener {
-            val intent = Intent(requireContext(), CreateReStockTransactionActivity::class.java)
+            val intent = Intent(requireContext(), CreateReSupplyTransactionActivity::class.java)
             startActivity(intent)
         }
     }
 
     private fun buttonToEmployee() {
         binding.btnEmployeeFeature.setOnClickListener {
-            val intent = Intent(requireContext(), CreateReStockTransactionActivity::class.java)
+            val intent = Intent(requireContext(), CreateReSupplyTransactionActivity::class.java)
             startActivity(intent)
         }
     }
 
     private fun buttonToStore() {
         binding.btnStoreFeature.setOnClickListener {
-            val intent = Intent(requireContext(), CreateReStockTransactionActivity::class.java)
+            val intent = Intent(requireContext(), CreateReSupplyTransactionActivity::class.java)
             startActivity(intent)
         }
     }

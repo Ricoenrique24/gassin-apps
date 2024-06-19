@@ -20,7 +20,7 @@ data class Employee(
 	val role: String? = null,
 
 	@field:SerializedName("apikey")
-	val apikey: Any? = null,
+	val apikey: String? = null,
 
 	@field:SerializedName("updated_at")
 	val updatedAt: String? = null,

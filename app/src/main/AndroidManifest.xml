@@ -16,6 +16,15 @@
         android:theme="@style/Theme.Gassinapps"
         tools:targetApi="31">
         <activity
+            android:name=".ui.pages.manager.choose.store.ChooseStoreActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.choose.employee.ChooseEmployeeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.choose.customer.ChooseCustomerActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.pages.manager.employee.index.IndexEmployeeActivity"
             android:exported="false" />
         <activity
@@ -25,22 +34,22 @@
             android:name=".ui.pages.manager.customer.index.IndexCustomerActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.pages.manager.restocktransaction.show.ShowReStockTransactionActivity"
+            android:name=".ui.pages.manager.resupplytransaction.show.ShowReSupplyTransactionActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.pages.manager.restocktransaction.edit.EditReStockTransactionActivity"
+            android:name=".ui.pages.manager.resupplytransaction.edit.EditReSupplyTransactionActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.pages.manager.restocktransaction.create.CreateReStockTransactionActivity"
+            android:name=".ui.pages.manager.resupplytransaction.create.CreateReSupplyTransactionActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.pages.manager.usertransaction.show.ShowUserTransactionActivity"
+            android:name=".ui.pages.manager.purchasetransaction.show.ShowPurchaseTransactionActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.pages.manager.usertransaction.edit.EditUserTransactionActivity"
+            android:name=".ui.pages.manager.purchasetransaction.edit.EditPurchaseTransactionActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.pages.manager.usertransaction.create.CreateUserTransactionActivity"
+            android:name=".ui.pages.manager.purchasetransaction.create.CreatePurchaseTransactionActivity"
             android:exported="false" />
         <activity
             android:name=".ui.pages.employee.order.show.ShowOrderEmployeeActivity"

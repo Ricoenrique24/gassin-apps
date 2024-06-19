@@ -4,8 +4,10 @@ import com.naffeid.gassin.data.remote.response.CustomerResponse
 import com.naffeid.gassin.data.remote.response.EmployeeResponse
 import com.naffeid.gassin.data.remote.response.LoginResponse
 import com.naffeid.gassin.data.remote.response.MessageResponse
+import com.naffeid.gassin.data.remote.response.PurchaseResponse
 import com.naffeid.gassin.data.remote.response.SingleCustomerResponse
 import com.naffeid.gassin.data.remote.response.SingleEmployeeResponse
+import com.naffeid.gassin.data.remote.response.SinglePurchaseResponse
 import com.naffeid.gassin.data.remote.response.SingleStoreResponse
 import com.naffeid.gassin.data.remote.response.StoreResponse
 import retrofit2.http.DELETE
@@ -41,9 +43,11 @@ interface ApiService {
     @FormUrlEncoded
     @GET("dashboard/availablestockquantity")
     suspend fun availableStockQuantity(): LoginResponse
+
     @FormUrlEncoded
     @GET("dashboard/revenuetoday")
     suspend fun revenueToday(): LoginResponse
+
     @FormUrlEncoded
     @GET("dashboard/downloadtransactionrecap")
     suspend fun downloadTransactionRecap(): LoginResponse
@@ -53,6 +57,7 @@ interface ApiService {
     /* Employee */
     @GET("manager/employee")
     suspend fun showAllEmployee(): EmployeeResponse
+
     @FormUrlEncoded
     @POST("manager/employee")
     suspend fun createNewEmployee(
@@ -62,10 +67,12 @@ interface ApiService {
         @Field("password") password: String,
         @Field("phone") phone: String
     ): MessageResponse
+
     @GET("manager/employee/{id}")
     suspend fun showEmployee(
         @Path("id") id: String
     ): SingleEmployeeResponse
+
     @FormUrlEncoded
     @PUT("manager/employee/{id}")
     suspend fun updateEmployee(
@@ -76,6 +83,7 @@ interface ApiService {
         @Field("password") password: String?,
         @Field("phone") phone: String
     ): SingleEmployeeResponse
+
     @FormUrlEncoded
     @PUT("manager/employee/{id}")
     suspend fun updateEmployeeWithoutPassword(
@@ -85,10 +93,12 @@ interface ApiService {
         @Field("email") email: String,
         @Field("phone") phone: String
     ): SingleEmployeeResponse
+
     @DELETE("manager/employee/{id}")
     suspend fun deleteEmployee(
         @Path("id") id: String
     ): EmployeeResponse
+
     @GET("manager/search/employee")
     suspend fun searchEmployee(
         @Query("q") query: String
@@ -99,6 +109,7 @@ interface ApiService {
     /* Store */
     @GET("manager/store")
     suspend fun showAllStore(): StoreResponse
+
     @FormUrlEncoded
     @POST("manager/store")
     suspend fun createNewStore(
@@ -108,10 +119,12 @@ interface ApiService {
         @Field("link_map") linkMap: String,
         @Field("price") price: String
     ): MessageResponse
+
     @GET("manager/store/{id}")
     suspend fun showStore(
         @Path("id") id: String
     ): SingleStoreResponse
+
     @FormUrlEncoded
     @PUT("manager/store/{id}")
     suspend fun updateStore(
@@ -122,10 +135,12 @@ interface ApiService {
         @Field("linkmap") linkMap: String,
         @Field("price") price: String
     ): SingleStoreResponse
+
     @DELETE("manager/store/{id}")
     suspend fun deleteStore(
         @Path("id") id: String
     ): StoreResponse
+
     @GET("manager/search/stores")
     suspend fun searchStore(
         @Query("q") query: String
@@ -136,6 +151,7 @@ interface ApiService {
     /* Customer */
     @GET("manager/customer")
     suspend fun showAllCustomer(): CustomerResponse
+
     @FormUrlEncoded
     @POST("manager/customer")
     suspend fun createNewCustomer(
@@ -145,10 +161,12 @@ interface ApiService {
         @Field("link_map") linkMap: String,
         @Field("price") price: String
     ): MessageResponse
+
     @GET("manager/customer/{id}")
     suspend fun showCustomer(
         @Path("id") id: String
     ): SingleCustomerResponse
+
     @FormUrlEncoded
     @PUT("manager/customer/{id}")
     suspend fun updateCustomer(
@@ -156,13 +174,15 @@ interface ApiService {
         @Field("name") name: String,
         @Field("phone") phone: String,
         @Field("address") address: String,
-        @Field("linkmap") linkMap: String,
+        @Field("link_map") linkMap: String,
         @Field("price") price: String
     ): SingleCustomerResponse
+
     @DELETE("manager/customer/{id}")
     suspend fun deleteCustomer(
         @Path("id") id: String
     ): CustomerResponse
+
     @GET("manager/search/customers")
     suspend fun searchCustomer(
         @Query("q") query: String
@@ -170,4 +190,45 @@ interface ApiService {
 
     /* End API Customer */
 
+    /* Purchase Transaction */
+    @GET("manager/purchase")
+    suspend fun showAllPurchaseTransaction(): PurchaseResponse
+
+    @FormUrlEncoded
+    @POST("manager/purchase")
+    suspend fun createNewPurchaseTransaction(
+        @Field("id_customer") idCustomer: String,
+        @Field("id_user") idUser: String,
+        @Field("qty") qty: String,
+        @Field("total_payment") totalPayment: String
+    ): MessageResponse
+
+    @GET("manager/purchase/{id}")
+    suspend fun showPurchaseTransaction(
+        @Path("id") id: String
+    ): SinglePurchaseResponse
+
+    @FormUrlEncoded
+    @PUT("manager/purchase/{id}")
+    suspend fun updatePurchaseTransaction(
+        @Path("id") id: String,
+        @Field("id_customer") idCustomer: String,
+        @Field("id_user") idUser: String,
+        @Field("qty") qty: String,
+        @Field("total_payment") totalPayment: String,
+        @Field("status") status: String,
+        @Field("note") note: String
+    ): SinglePurchaseResponse
+
+    @DELETE("manager/purchase/{id}")
+    suspend fun deletePurchaseTransaction(
+        @Path("id") id: String
+    ): PurchaseResponse
+
+    @GET("manager/search/purchases")
+    suspend fun searchPurchaseTransaction(
+        @Query("q") query: String
+    ): PurchaseResponse
+
+    /* End API Customer */
 }

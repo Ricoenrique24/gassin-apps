@@ -13,7 +13,6 @@ import com.naffeid.gassin.data.remote.response.ListCustomerItem
 import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.databinding.ActivityEditCustomerBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
-import com.naffeid.gassin.ui.pages.manager.customer.edit.EditCustomerViewModel
 import com.naffeid.gassin.ui.pages.manager.customer.show.ShowCustomerActivity
 
 class EditCustomerActivity : AppCompatActivity() {
@@ -28,10 +27,11 @@ class EditCustomerActivity : AppCompatActivity() {
         supportActionBar?.hide()
         setupTobBar()
         val customer = intent.getParcelableExtra<ListCustomerItem>("CUSTOMER")
-        if (customer != null) setupView(customer)
+        val fromChooseCustomer = intent.getBooleanExtra("FROM-CHOOSE-CUSTOMER",false)
+        if (customer != null) setupView(customer,fromChooseCustomer)
     }
 
-    private fun setupView(customer: ListCustomerItem) {
+    private fun setupView(customer: ListCustomerItem, fromChooseCustomer:Boolean) {
         with(binding) {
             edCustomerName.setText(customer.name)
             edCustomerLinkMap.setText(customer.linkMap)
@@ -39,12 +39,12 @@ class EditCustomerActivity : AppCompatActivity() {
             edCustomerPhone.setText(customer.phone)
             edCustomerPrice.setText(customer.price)
             btnUpdateCustomer.setOnClickListener {
-                validate(customer.id.toString())
+                validate(customer.id.toString(), fromChooseCustomer)
             }
         }
     }
 
-    private fun validate(id: String) {
+    private fun validate(id: String, fromChooseCustomer:Boolean) {
         val name = binding.edCustomerName.text.toString()
         val linkMap = binding.edCustomerLinkMap.text.toString()
         val address = binding.edCustomerAddress.text.toString()
@@ -52,13 +52,13 @@ class EditCustomerActivity : AppCompatActivity() {
         val price = binding.edCustomerPrice.text.toString()
 
         if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(linkMap) && !TextUtils.isEmpty(address) && !TextUtils.isEmpty(phone) && !TextUtils.isEmpty(price)) {
-            updateCustomer(id, name, phone, address, linkMap, price)
+            updateCustomer(id, name, phone, address, linkMap, price, fromChooseCustomer)
         } else {
             showAlert(getString(R.string.please_fill_in_all_input))
         }
     }
 
-    private fun updateCustomer(id:String,name: String, phone: String, address: String, linkMap: String, price: String) {
+    private fun updateCustomer(id:String,name: String, phone: String, address: String, linkMap: String, price: String, fromChooseCustomer:Boolean) {
         viewModel.updateCustomer(id, name, phone, address, linkMap, price).observe(this) {
             if (it != null) {
                 when (it) {
@@ -84,17 +84,18 @@ class EditCustomerActivity : AppCompatActivity() {
                             phone = customer?.phone,
                             price = customer?.price
                         )
-                        navigateToShowCustomer(customerData)
+                        navigateToShowCustomer(customerData,fromChooseCustomer)
                     }
                 }
             }
         }
     }
 
-    private fun navigateToShowCustomer(data: ListCustomerItem) {
+    private fun navigateToShowCustomer(data: ListCustomerItem, fromChooseCustomer:Boolean) {
         val intentToShow = Intent(this@EditCustomerActivity, ShowCustomerActivity::class.java)
         intentToShow.putExtra("CUSTOMERUPDATED", true)
         intentToShow.putExtra("CUSTOMER", data)
+        intentToShow.putExtra("FROM-CHOOSE-CUSTOMER",fromChooseCustomer)
         startActivity(intentToShow)
         finish()
     }

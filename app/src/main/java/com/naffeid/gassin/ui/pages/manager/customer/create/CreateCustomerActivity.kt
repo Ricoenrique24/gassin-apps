@@ -12,6 +12,7 @@ import com.naffeid.gassin.R
 import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.databinding.ActivityCreateCustomerBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.manager.choose.customer.ChooseCustomerActivity
 import com.naffeid.gassin.ui.pages.manager.customer.index.IndexCustomerActivity
 
 class CreateCustomerActivity : AppCompatActivity() {
@@ -24,11 +25,12 @@ class CreateCustomerActivity : AppCompatActivity() {
         binding = ActivityCreateCustomerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+        val fromChooseCustomer = intent.getBooleanExtra("FROM-CHOOSE-CUSTOMER",false)
+        validate(fromChooseCustomer)
         setupTobBar()
-        validate()
     }
 
-    private fun validate() {
+    private fun validate(fromChooseCustomer:Boolean) {
         binding.btnCreateCustomer.setOnClickListener {
             val name = binding.edCustomerName.text.toString()
             val linkMap = binding.edCustomerLinkMap.text.toString()
@@ -37,14 +39,14 @@ class CreateCustomerActivity : AppCompatActivity() {
             val price = binding.edCustomerPrice.text.toString()
 
             if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(linkMap) && !TextUtils.isEmpty(address) && !TextUtils.isEmpty(phone) && !TextUtils.isEmpty(price)) {
-                createCustomer(name, phone, address, linkMap, price)
+                createCustomer(name, phone, address, linkMap, price, fromChooseCustomer)
             } else {
                 showAlert(getString(R.string.please_fill_in_all_input))
             }
         }
     }
 
-    private fun createCustomer(name: String, phone: String, address: String, linkMap: String, price: String) {
+    private fun createCustomer(name: String, phone: String, address: String, linkMap: String, price: String,fromChooseCustomer:Boolean) {
         viewModel.createNewCustomer(name, phone, address, linkMap, price).observe(this) {
             if (it != null) {
                 when (it) {
@@ -60,14 +62,24 @@ class CreateCustomerActivity : AppCompatActivity() {
 
                     is Result.Success -> {
                         showLoading(false)
-                        showAlert(getString(R.string.login_success))
-                        navigateToIndexCustomer()
+                        showAlert(it.data.message.toString())
+                        if (fromChooseCustomer){
+                            navigateToChooseCustomer()
+                        } else {
+                            navigateToIndexCustomer()
+                        }
                     }
                 }
             }
         }
     }
 
+    private fun navigateToChooseCustomer() {
+        val intentToChooseCustomer = Intent(this@CreateCustomerActivity, ChooseCustomerActivity::class.java)
+        intentToChooseCustomer.putExtra("CUSTOMERUPDATED", true)
+        startActivity(intentToChooseCustomer)
+        finish()
+    }
     private fun navigateToIndexCustomer() {
         val intentToIndex = Intent(this@CreateCustomerActivity, IndexCustomerActivity::class.java)
         intentToIndex.putExtra("CUSTOMERUPDATED", true)

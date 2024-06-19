@@ -82,4 +82,26 @@
     <string name="cari_karyawan">Cari Karyawan</string>
     <string name="tambah_karyawan">Tambah Karyawan</string>
     <string name="detail_karyawan">Detail Karyawan</string>
+    <string name="hai_karyawan">Hai, Karyawan</string>
+    <string name="transaksi_aktif">Transaksi Aktif</string>
+    <string name="lihat_semua">Lihat semua</string>
+    <string name="tambah_pesanan">Tambah Pesanan</string>
+    <string name="pilih_pelanggan">Pilih pelanggan</string>
+    <string name="ganti">Ganti</string>
+    <string name="jumlah_tabung_gas">Jumlah Tabung Gas</string>
+    <string name="masukkan_jumlah_tabung_gas_yang_dipesan_pelanggan">Masukkan jumlah tabung gas yang dipesan pelanggan</string>
+    <string name="ringkasan_pembayaran">Ringkasan pembayaran</string>
+    <string name="harga">Harga Satuan</string>
+    <string name="total_pembayaran">Total pembayaran</string>
+    <string name="pilih_karyawan">Pilih karyawan</string>
+    <string name="pelanggan_belum_dipilih">Belum dipilih</string>
+    <string name="pilih_pelanggan_terlebih_dahulu">Pilih pelanggan terlebih dahulu</string>
+    <string name="karyawan_belum_dipilih">Belum dipilih</string>
+    <string name="pilih_karyawan_terlebih_dahulu">Pilih karyawan terlebih dahulu</string>
+    <string name="transaksi_antar_gas_berhasil_dibuat">Transaksi antar gas berhasil dibuat</string>
+    <string name="pilih_toko">Pilih toko</string>
+    <string name="pilih_agen">Pilih agen</string>
+    <string name="berhasil_memilih_customer">Berhasil memilih customer</string>
+    <string name="berhasil_memilih_employee">Berhasil memilih karyawan</string>
+    <string name="berhasil_memilih_store">Berhasil memilih agen</string>
 </resources>
