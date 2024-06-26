@@ -7,7 +7,9 @@
     <color name="secondary">#55D400</color>
     <color name="grey">#9CA3AF</color>
     <color name="greySecond">#EEEFF2</color>
+    <color name="semiTransparentGray">#7C7C7C7C</color>
     <color name="greyLight">#F8F8F8</color>
+    <color name="greyDivider">#D9D9D9</color>
     <color name="greyDark">#403E3E</color>
     <color name="blue">#0088AA</color>
 </resources>

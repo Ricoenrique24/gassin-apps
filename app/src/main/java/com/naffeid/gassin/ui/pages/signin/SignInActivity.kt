@@ -75,11 +75,8 @@ class SignInActivity : AppCompatActivity() {
                                 tokenfcm = data.tokenFcm.toString()
                             )
                             saveSession(user)
+                            navigateToMainScreen(user.role)
                         }
-
-                        startActivity(Intent(this, ManagerMainActivity::class.java))
-
-                        finish()
                     }
                 }
             }
@@ -101,16 +98,12 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun navigateToMainScreen(role: String) {
-        viewModel.checkUserRole(role) { isRoleMatch ->
-            if (isRoleMatch) {
-                val intent = when (role) {
-                    "employee" -> Intent(this@SignInActivity, EmployeeMainActivity::class.java)
-                    "manager" -> Intent(this@SignInActivity, EmployeeMainActivity::class.java)
-                    else -> Intent(this@SignInActivity, SignInActivity::class.java)
-                }
-                startActivity(intent)
-                finish()
-            }
+        if (role == "employee") {
+            startActivity(Intent(this@SignInActivity, EmployeeMainActivity::class.java))
+            finish()
+        } else if (role == "manager") {
+            startActivity(Intent(this@SignInActivity, ManagerMainActivity::class.java))
+            finish()
         }
     }
 }

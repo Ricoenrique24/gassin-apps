@@ -16,6 +16,12 @@
         android:theme="@style/Theme.Gassinapps"
         tools:targetApi="31">
         <activity
+            android:name=".ui.pages.manager.resupplytransaction.confirmation.ConfirmationResupplyTransactionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pages.manager.purchasetransaction.confirmation.ConfirmationPurchaseTransactionActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.pages.manager.choose.store.ChooseStoreActivity"
             android:exported="false" />
         <activity

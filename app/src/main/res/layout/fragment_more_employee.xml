@@ -6,7 +6,7 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:background="@color/greyLight"
 android:orientation="vertical"
-tools:context=".ui.pages.manager.main.more.MoreFragment">
+tools:context=".ui.pages.employee.main.more.MoreEmployeeFragment">
 
 <com.google.android.material.card.MaterialCardView
     android:layout_width="match_parent"

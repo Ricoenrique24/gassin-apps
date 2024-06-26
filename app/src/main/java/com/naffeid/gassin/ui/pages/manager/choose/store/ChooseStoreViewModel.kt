@@ -21,8 +21,7 @@ class ChooseStoreViewModel(private val storeRepository: StoreRepository) : ViewM
             storeRepository.saveStore(store)
         }
     }
-
-    fun deleteStore() {
+    fun deleteStore(){
         viewModelScope.launch {
             storeRepository.deleteStore()
         }

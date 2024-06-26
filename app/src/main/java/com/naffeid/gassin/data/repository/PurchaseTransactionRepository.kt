@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.naffeid.gassin.data.remote.api.ApiService
 import com.naffeid.gassin.data.remote.response.MessageResponse
-import com.naffeid.gassin.data.remote.response.PurchaseResponse
+import com.naffeid.gassin.data.remote.response.PurchaseTransactionResponse
 import com.naffeid.gassin.data.remote.response.SinglePurchaseResponse
 import com.naffeid.gassin.data.utils.Result
 
@@ -13,7 +13,7 @@ class PurchaseTransactionRepository(
 ) {
 
     // API Purchase Transaction
-    fun showAllPurchaseTransaction(): LiveData<Result<PurchaseResponse>> = liveData {
+    fun showAllPurchaseTransaction(): LiveData<Result<PurchaseTransactionResponse>> = liveData {
         emit(Result.Loading)
         try {
             val client = apiService.showAllPurchaseTransaction()
@@ -68,7 +68,7 @@ class PurchaseTransactionRepository(
         }
     }
 
-    fun deletePurchaseTransaction(id: String): LiveData<Result<PurchaseResponse>> = liveData {
+    fun deletePurchaseTransaction(id: String): LiveData<Result<PurchaseTransactionResponse>> = liveData {
         emit(Result.Loading)
         try {
             val client = apiService.deletePurchaseTransaction(id)
@@ -78,7 +78,7 @@ class PurchaseTransactionRepository(
         }
     }
 
-    fun searchPurchaseTransaction(query: String): LiveData<Result<PurchaseResponse>> = liveData {
+    fun searchPurchaseTransaction(query: String): LiveData<Result<PurchaseTransactionResponse>> = liveData {
         emit(Result.Loading)
         try {
             val client = apiService.searchPurchaseTransaction(query)

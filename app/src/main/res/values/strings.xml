@@ -104,4 +104,25 @@
     <string name="berhasil_memilih_customer">Berhasil memilih customer</string>
     <string name="berhasil_memilih_employee">Berhasil memilih karyawan</string>
     <string name="berhasil_memilih_store">Berhasil memilih agen</string>
+    <string name="konfirmasi_pesanan">Konfirmasi Pesanan</string>
+    <string name="detail_pesanan">Detail Pesanan</string>
+    <string name="status_pesanan">Status Pesanan</string>
+    <string name="ubah_pesanan">Ubah Pesanan</string>
+    <string name="batalkan_pesanan">Batalkan Pesanan</string>
+    <string name="konfirmasi_pembelian">Konfirmasi Pembelian</string>
+    <string name="agen_belum_dipilih">Agen belum dipilih</string>
+    <string name="pilih_agen_terlebih_dahulu">Pilih agen terlebih dahulu</string>
+    <string name="tambah_pembelian">Tambah Pembelian</string>
+    <string name="detail_pembelian">Detail Pembelian</string>
+    <string name="ubah_pembelian">Ubah Pembelian</string>
+    <string name="batalkan_pembelian">Batalkan Pembelian</string>
+    <string name="status_pembelian">Status Pembelian</string>
+    <string name="cari_pembelian_agen">Cari Pembelian</string>
+    <string name="masukkan_jumlah_tabung_gas_yang_ingin_dibeli">Masukkan jumlah tabung gas yang ingin dibeli</string>
+    <string name="berangkat">Berangkat</string>
+    <string name="terkendala">Terkendala</string>
+    <string name="berangkat_k">Berangkat</string>
+    <string name="sudah_diantar">Sudah diantar</string>
+    <string name="sudah_dibeli">Sudah dibeli</string>
+    <string name="ajukan_biaya_operasional">Ajukan Biaya Operasional</string>
 </resources>

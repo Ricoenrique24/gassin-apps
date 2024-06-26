@@ -4,12 +4,16 @@ import com.naffeid.gassin.data.remote.response.CustomerResponse
 import com.naffeid.gassin.data.remote.response.EmployeeResponse
 import com.naffeid.gassin.data.remote.response.LoginResponse
 import com.naffeid.gassin.data.remote.response.MessageResponse
-import com.naffeid.gassin.data.remote.response.PurchaseResponse
+import com.naffeid.gassin.data.remote.response.PurchaseTransactionResponse
+import com.naffeid.gassin.data.remote.response.ResupplyTransactionResponse
 import com.naffeid.gassin.data.remote.response.SingleCustomerResponse
 import com.naffeid.gassin.data.remote.response.SingleEmployeeResponse
 import com.naffeid.gassin.data.remote.response.SinglePurchaseResponse
+import com.naffeid.gassin.data.remote.response.SingleResupplyResponse
 import com.naffeid.gassin.data.remote.response.SingleStoreResponse
+import com.naffeid.gassin.data.remote.response.SingleTransactionResponse
 import com.naffeid.gassin.data.remote.response.StoreResponse
+import com.naffeid.gassin.data.remote.response.TransactionResponse
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -99,7 +103,7 @@ interface ApiService {
         @Path("id") id: String
     ): EmployeeResponse
 
-    @GET("manager/search/employee")
+    @GET("manager/employees/search")
     suspend fun searchEmployee(
         @Query("q") query: String
     ): EmployeeResponse
@@ -141,7 +145,7 @@ interface ApiService {
         @Path("id") id: String
     ): StoreResponse
 
-    @GET("manager/search/stores")
+    @GET("manager/stores/search")
     suspend fun searchStore(
         @Query("q") query: String
     ): StoreResponse
@@ -183,7 +187,7 @@ interface ApiService {
         @Path("id") id: String
     ): CustomerResponse
 
-    @GET("manager/search/customers")
+    @GET("manager/customers/search")
     suspend fun searchCustomer(
         @Query("q") query: String
     ): CustomerResponse
@@ -192,7 +196,7 @@ interface ApiService {
 
     /* Purchase Transaction */
     @GET("manager/purchase")
-    suspend fun showAllPurchaseTransaction(): PurchaseResponse
+    suspend fun showAllPurchaseTransaction(): PurchaseTransactionResponse
 
     @FormUrlEncoded
     @POST("manager/purchase")
@@ -223,12 +227,66 @@ interface ApiService {
     @DELETE("manager/purchase/{id}")
     suspend fun deletePurchaseTransaction(
         @Path("id") id: String
-    ): PurchaseResponse
+    ): PurchaseTransactionResponse
 
-    @GET("manager/search/purchases")
+    @GET("manager/purchases/search")
     suspend fun searchPurchaseTransaction(
         @Query("q") query: String
-    ): PurchaseResponse
+    ): PurchaseTransactionResponse
 
-    /* End API Customer */
+    /* End API Purchase */
+
+    /* Resupply Transaction */
+    @GET("manager/resupply")
+    suspend fun showAllResupplyTransaction(): ResupplyTransactionResponse
+
+    @FormUrlEncoded
+    @POST("manager/resupply")
+    suspend fun createNewResupplyTransaction(
+        @Field("id_store") idStore: String,
+        @Field("id_user") idUser: String,
+        @Field("qty") qty: String,
+        @Field("total_payment") totalPayment: String
+    ): MessageResponse
+
+    @GET("manager/resupply/{id}")
+    suspend fun showResupplyTransaction(
+        @Path("id") id: String
+    ): SingleResupplyResponse
+
+    @FormUrlEncoded
+    @PUT("manager/resupply/{id}")
+    suspend fun updateResupplyTransaction(
+        @Path("id") id: String,
+        @Field("id_store") idStore: String,
+        @Field("id_user") idUser: String,
+        @Field("qty") qty: String,
+        @Field("total_payment") totalPayment: String,
+        @Field("status") status: String,
+        @Field("note") note: String
+    ): SingleResupplyResponse
+
+    @DELETE("manager/resupply/{id}")
+    suspend fun deleteResupplyTransaction(
+        @Path("id") id: String
+    ): ResupplyTransactionResponse
+
+    @GET("manager/resupplys/search")
+    suspend fun searchResupplyTransaction(
+        @Query("q") query: String
+    ): ResupplyTransactionResponse
+
+    /* End API Resupply */
+
+    /* Transaction */
+    @GET("employee/transaction")
+    suspend fun showAllTransaction(): TransactionResponse
+
+    @GET("employee/transaction/{id}")
+    suspend fun showTransaction(
+        @Path("id") id: String,
+        @Query("type") type: String
+    ): SingleTransactionResponse
+
+    /* End API Transaction */
 }

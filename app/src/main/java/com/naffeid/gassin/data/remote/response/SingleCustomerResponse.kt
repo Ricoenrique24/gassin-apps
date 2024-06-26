@@ -1,5 +1,7 @@
 package com.naffeid.gassin.data.remote.response
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
 data class SingleCustomerResponse(
@@ -39,4 +41,41 @@ data class Customer(
 
 	@field:SerializedName("id")
 	val id: Int? = null
-)
+) : Parcelable {
+	constructor(parcel: Parcel) : this(
+		parcel.readString(),
+		parcel.readString(),
+		parcel.readString(),
+		parcel.readString(),
+		parcel.readString(),
+		parcel.readString(),
+		parcel.readString(),
+		parcel.readValue(Int::class.java.classLoader) as? Int
+	) {
+	}
+
+	override fun writeToParcel(parcel: Parcel, flags: Int) {
+		parcel.writeString(address)
+		parcel.writeString(updatedAt)
+		parcel.writeString(phone)
+		parcel.writeString(linkMap)
+		parcel.writeString(price)
+		parcel.writeString(name)
+		parcel.writeString(createdAt)
+		parcel.writeValue(id)
+	}
+
+	override fun describeContents(): Int {
+		return 0
+	}
+
+	companion object CREATOR : Parcelable.Creator<Customer> {
+		override fun createFromParcel(parcel: Parcel): Customer {
+			return Customer(parcel)
+		}
+
+		override fun newArray(size: Int): Array<Customer?> {
+			return arrayOfNulls(size)
+		}
+	}
+}

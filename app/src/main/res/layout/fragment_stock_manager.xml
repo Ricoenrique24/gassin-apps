@@ -1,131 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/greyLight"
+tools:context=".ui.pages.manager.main.stock.StockFragment">
+
+<androidx.cardview.widget.CardView
+    android:id="@+id/appbar"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".ui.pages.employee.main.more.MoreEmployeeFragment">
+    android:layout_height="wrap_content"
+    android:elevation="4dp"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
 
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/appbar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:orientation="vertical"
+        android:layout_marginHorizontal="16dp"
+        android:gravity="start|center_horizontal">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <com.google.android.material.search.SearchBar
                 android:id="@+id/searchBar"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:hint="@string/cari_pesanan_pelanggan"
-                app:layout_constraintEnd_toStartOf="@+id/filterButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/searchView" />
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:hint="@string/cari_pembelian_agen"
+                app:backgroundTint="@color/greyLight"/>
 
             <ImageButton
                 android:id="@+id/filterButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
                 android:src="@drawable/ic_filter_24dp"
-                app:layout_constraintBottom_toBottomOf="@id/searchBar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/searchBar" />
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
 
-            <HorizontalScrollView
-                android:layout_width="match_parent"
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            app:layout_constraintTop_toBottomOf="@id/searchBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="4dp"
-                app:layout_constraintEnd_toEndOf="@+id/filterButton"
-                app:layout_constraintStart_toStartOf="@+id/searchBar"
-                app:layout_constraintTop_toBottomOf="@id/searchBar">
+                app:singleSelection="true">
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroup"
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_allTransaction"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    app:singleSelection="true">
+                    android:text="Semua"
+                    app:chipBackgroundColor="@color/greyLight"
+                    app:chipIconVisible="false" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_allTransaction"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Semua"
-                        app:chipIconVisible="false" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_proccess_transaction"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Diproses"
+                    app:chipBackgroundColor="@color/greyLight"
+                    app:chipIconVisible="false" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_proccess_transaction"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Diproses"
-                        app:chipIconVisible="false" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_delivery_transaction"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Diantar"
+                    app:chipBackgroundColor="@color/greyLight"
+                    app:chipIconVisible="false" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_delivery_transaction"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Diantar"
-                        app:chipIconVisible="false" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_success_transaction"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Selesai"
+                    app:chipBackgroundColor="@color/greyLight"
+                    app:chipIconVisible="false" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_success_transaction"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Selesai"
-                        app:chipIconVisible="false" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_cancel_transaction"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Batal"
+                    app:chipBackgroundColor="@color/greyLight"
+                    app:chipIconVisible="false" />
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
+<com.google.android.material.search.SearchView
+    android:id="@+id/searchView"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:hint="@string/cari_agen"
+    app:backgroundTint="@color/white"
+    app:layout_anchor="@id/appbar"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+</com.google.android.material.search.SearchView>
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_cancel_transaction"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Batal"
-                        app:chipIconVisible="false" />
-                </com.google.android.material.chip.ChipGroup>
-            </HorizontalScrollView>
+<androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/rv_stock_transaction"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:layout_margin="16dp"
+    android:clipToPadding="false"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/appbar"
+    tools:listitem="@layout/item_resupply_transaction"/>
 
-            <com.google.android.material.search.SearchView
-                android:id="@+id/searchView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:hint="@string/cari_pesanan_pelanggan"
-                app:layout_anchor="@id/searchBar"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+<ProgressBar
+    android:id="@+id/progress_bar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toBottomOf="@id/rv_stock_transaction"
+    app:layout_constraintStart_toStartOf="@id/rv_stock_transaction"
+    app:layout_constraintEnd_toEndOf="@id/rv_stock_transaction"
+    app:layout_constraintBottom_toTopOf="@id/rv_stock_transaction" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_order_transaction"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appbar"
-        tools:listitem="@layout/item_transaction" />
+<com.google.android.material.floatingactionbutton.FloatingActionButton
+    android:id="@+id/btn_add_resupply"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|end"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="16dp"
+    android:contentDescription="@string/tambah_agen"
+    android:backgroundTint="@color/darkGreen"
+    app:tint="@android:color/white"
+    app:srcCompat="@android:drawable/ic_input_add"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

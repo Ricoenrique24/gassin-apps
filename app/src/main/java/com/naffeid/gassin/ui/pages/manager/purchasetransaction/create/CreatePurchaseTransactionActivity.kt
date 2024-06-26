@@ -2,20 +2,21 @@ package com.naffeid.gassin.ui.pages.manager.purchasetransaction.create
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
 import com.naffeid.gassin.R
 import com.naffeid.gassin.data.model.Customer
 import com.naffeid.gassin.data.model.Employee
-import com.naffeid.gassin.data.utils.Result
+import com.naffeid.gassin.data.utils.Rupiah
 import com.naffeid.gassin.databinding.ActivityCreatePurchaseTransactionBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.choose.customer.ChooseCustomerActivity
 import com.naffeid.gassin.ui.pages.manager.choose.employee.ChooseEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.main.ManagerMainActivity
+import com.naffeid.gassin.ui.pages.manager.purchasetransaction.confirmation.ConfirmationPurchaseTransactionActivity
 
 class CreatePurchaseTransactionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreatePurchaseTransactionBinding
@@ -116,12 +117,14 @@ class CreatePurchaseTransactionActivity : AppCompatActivity() {
 
     private fun setupPayment() {
         viewModel.getCustomer().observe(this) { customer ->
-            binding.tvPriceOneGas.text = customer.price.toString()
+            val price = customer.price.toDoubleOrNull() ?: 0.0
+            binding.tvPriceOneGas.text = Rupiah.convertToRupiah(price)
 
             viewModel.updateGasPriceFromCustomerPrice(customer.price)
 
             viewModel.totalPayment.observe(this) { totalPayment ->
-                binding.tvTotalPayment.text = totalPayment.toString()
+                val total = totalPayment.toDouble()
+                binding.tvTotalPayment.text = Rupiah.convertToRupiah(total)
             }
         }
         viewModel.quantity.observe(this) { qty ->
@@ -138,11 +141,9 @@ class CreatePurchaseTransactionActivity : AppCompatActivity() {
                             viewModel.quantity.observe(this) { quantity ->
                                 viewModel.totalPayment.observe(this) { totalPayment ->
                                     if (quantity != 0) {
-                                        val idCustomer = customer.id.toString()
-                                        val idUser = employee.id.toString()
                                         val qty = quantity.toString()
                                         val paymentTotal =  totalPayment.toString()
-                                        createNewPurchaseTransaction(idCustomer, idUser, qty, paymentTotal)
+                                        confirmationPurchaseTransaction(qty, paymentTotal)
                                     }
                                 }
                             }
@@ -153,28 +154,11 @@ class CreatePurchaseTransactionActivity : AppCompatActivity() {
         }
     }
 
-    private fun createNewPurchaseTransaction(idCustomer: String, idUser: String,  qty: String, totalPayment: String) {
-        viewModel.createNewPurchaseTransaction(idCustomer, idUser, qty, totalPayment).observe(this) {
-            if (it != null) {
-                when (it) {
-                    Result.Loading -> {
-                        showLoading(true)
-                    }
-
-                    is Result.Error -> {
-                        showLoading(false)
-                        showAlert(it.error)
-                        Log.e("error search store:", it.error.toString())
-                    }
-
-                    is Result.Success -> {
-                        showLoading(false)
-                        showAlert(getString(R.string.transaksi_antar_gas_berhasil_dibuat))
-                        navigateToHome()
-                    }
-                }
-            }
-        }
+    private fun confirmationPurchaseTransaction(qty: String, totalPayment: String) {
+        val intentToConfirm = Intent(this@CreatePurchaseTransactionActivity, ConfirmationPurchaseTransactionActivity::class.java)
+        intentToConfirm.putExtra("QUANTITY-PURCHASE", qty)
+        intentToConfirm.putExtra("TOTAL-PURCHASE", totalPayment)
+        startActivity(intentToConfirm)
     }
 
     private fun navigateToHome() {
@@ -207,7 +191,7 @@ class CreatePurchaseTransactionActivity : AppCompatActivity() {
     }
 
     private fun showAlert(string: String) {
-        Snackbar.make(binding.root, string, Snackbar.LENGTH_LONG).show()
+        Toast.makeText(this, string, LENGTH_LONG).show()
     }
 
     private fun Customer.isNotEmpty(): Boolean {

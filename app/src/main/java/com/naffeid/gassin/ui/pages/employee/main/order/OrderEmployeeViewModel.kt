@@ -1,13 +1,18 @@
 package com.naffeid.gassin.ui.pages.employee.main.order
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import com.naffeid.gassin.data.model.User
+import com.naffeid.gassin.data.repository.TransactionRepository
+import com.naffeid.gassin.data.repository.UserRepository
 
-class OrderEmployeeViewModel : ViewModel() {
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is purchasetransaction Fragment"
+class OrderEmployeeViewModel(
+    private val userRepository: UserRepository,
+    private val transactionRepository: TransactionRepository
+) : ViewModel() {
+    fun getSession(): LiveData<User> {
+        return userRepository.getSession().asLiveData()
     }
-    val text: LiveData<String> = _text
+    fun showAllTransaction() = transactionRepository.showAllTransaction()
 }

@@ -99,8 +99,8 @@
                         android:clipChildren="false"
                         android:clipToPadding="false"
                         app:cardCornerRadius="12dp"
-                        app:strokeColor="@color/grey"
-                        app:strokeWidth="1dp">
+                        app:strokeColor="@color/semiTransparentGray"
+                        app:strokeWidth="0.5dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -338,7 +338,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:layout_marginVertical="16dp"
-                        android:background="@color/grey" />
+                        android:background="@color/greyDivider" />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -393,8 +393,8 @@
                         android:clipChildren="false"
                         android:clipToPadding="false"
                         app:cardCornerRadius="12dp"
-                        app:strokeColor="@color/grey"
-                        app:strokeWidth="1dp">
+                        app:strokeColor="@color/semiTransparentGray"
+                        app:strokeWidth="0.5dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
