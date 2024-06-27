@@ -11,11 +11,12 @@ class AuthRepository(
 ) {
     fun login(
         userEmail: String,
-        userPassword: String
+        userPassword: String,
+        userFcmToken:String
     ): LiveData<Result<LoginResponse>> = liveData {
         emit(Result.Loading)
         try {
-            val response = apiService.login(userEmail, userPassword)
+            val response = apiService.login(userEmail, userPassword, userFcmToken)
             emit(Result.Success(response))
         } catch (e: Exception) {
             emit(Result.Error(e.message.toString()))

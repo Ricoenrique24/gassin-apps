@@ -125,4 +125,6 @@
     <string name="sudah_diantar">Sudah diantar</string>
     <string name="sudah_dibeli">Sudah dibeli</string>
     <string name="ajukan_biaya_operasional">Ajukan Biaya Operasional</string>
+    <string name="cari_transaksi">Cari Transaksi</string>
+    <string name="gagal_mengambil_token_firebase_cloud_messaging">Gagal mengambil token firebase cloud messaging</string>
 </resources>

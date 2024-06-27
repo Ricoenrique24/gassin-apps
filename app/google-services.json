@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "835885788259",
+    "project_id": "gassin-apps",
+    "storage_bucket": "gassin-apps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835885788259:android:ed262fa0d6a699ab28dc56",
+        "android_client_info": {
+          "package_name": "com.naffeid.gassin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCTMcD_4PEM3s-y0y1glQE1h0MphKyIAQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -8,6 +8,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.messaging.FirebaseMessaging
 import com.naffeid.gassin.R
 import com.naffeid.gassin.data.model.User
 import com.naffeid.gassin.data.utils.Result
@@ -36,7 +37,14 @@ class SignInActivity : AppCompatActivity() {
 
             if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
                 if (password.length >= 8 && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    login(email, password)
+                    FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val fcmToken = task.result
+                            login(email, password, fcmToken)
+                        } else {
+                            showAlert(getString(R.string.gagal_mengambil_token_firebase_cloud_messaging))
+                        }
+                    }
                 } else {
                     showAlert(getString(R.string.password_less_characters))
                 }
@@ -46,8 +54,8 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    private fun login(email: String, password: String) {
-        viewModel.login(email, password).observe(this) {
+    private fun login(email: String, password: String, fcmToken:String) {
+        viewModel.login(email, password, fcmToken).observe(this) {
             if (it != null) {
                 when (it) {
                     Result.Loading -> {

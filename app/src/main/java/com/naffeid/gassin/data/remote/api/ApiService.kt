@@ -30,7 +30,8 @@ interface ApiService {
     @POST("auth/login")
     suspend fun login(
         @Field("email") email: String,
-        @Field("password") password: String
+        @Field("password") password: String,
+        @Field("token_fcm") fcmToken: String
     ): LoginResponse
 
     @FormUrlEncoded

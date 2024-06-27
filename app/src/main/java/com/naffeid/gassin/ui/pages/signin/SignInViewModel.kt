@@ -8,7 +8,7 @@ import com.naffeid.gassin.data.repository.UserRepository
 import kotlinx.coroutines.launch
 
 class SignInViewModel(private val userRepository: UserRepository,private val authRepository: AuthRepository) : ViewModel() {
-    fun login(email: String, password: String) = authRepository.login(email, password)
+    fun login(email: String, password: String, fcmToken:String) = authRepository.login(email, password, fcmToken)
     fun saveSession(user: User) {
         viewModelScope.launch {
             userRepository.saveSession(user)

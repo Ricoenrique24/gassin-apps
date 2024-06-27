@@ -3,6 +3,7 @@ plugins {
 	id("org.jetbrains.kotlin.android")
 	id ("kotlin-kapt")
 	id ("kotlin-parcelize")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -58,6 +59,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.activity:activity:1.9.0")
+    implementation("com.google.firebase:firebase-messaging:24.0.0")
 
     /* Testing */
 	testImplementation("junit:junit:4.13.2")

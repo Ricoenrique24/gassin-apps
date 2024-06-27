@@ -1,10 +1,14 @@
 package com.naffeid.gassin.ui.pages.splashscreen
 
+import android.Manifest
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -19,6 +23,16 @@ class SplashActivity : AppCompatActivity() {
     private val viewModel by viewModels<SplashViewModel> {
         ViewModelFactory.getInstance(this)
     }
+    private val requestNotificationPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                Toast.makeText(this, "Notifications permission granted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Notifications permission rejected", Toast.LENGTH_SHORT).show()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +41,10 @@ class SplashActivity : AppCompatActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+
+        if (Build.VERSION.SDK_INT >= 33) {
+            requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
 
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
