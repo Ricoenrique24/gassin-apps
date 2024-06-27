@@ -85,31 +85,33 @@ class ShowOrderEmployeeActivity : AppCompatActivity() {
 
     private fun setupStatusButton(transaction: Transaction) {
         val statusTransaction = transaction.statusTransaction!!.id
-        val typeTransaction = transaction.type
+        val typeTransaction = transaction.type.toString()
+        val idTransaction = transaction.id.toString()
+        val note = ""
 
         if (statusTransaction == 1) {
             with(binding){
                 btnCancelTransaction.visibility = View.GONE
                 btnUpdateTransaction.text = getString(R.string.berangkat)
                 btnUpdateTransaction.setOnClickListener {
-                    showAlert(getString(R.string.berangkat))
+                    inProgressTransaction(idTransaction, typeTransaction)
                 }
             }
         } else if (statusTransaction == 2) {
             with(binding){
                 btnCancelTransaction.visibility = View.VISIBLE
                 btnCancelTransaction.setOnClickListener {
-                    showAlert(getString(R.string.terkendala))
+                    cancelledTransaction(idTransaction, typeTransaction, note)
                 }
                 if (typeTransaction == "purchase"){
                     btnUpdateTransaction.text = getString(R.string.sudah_diantar)
                     btnUpdateTransaction.setOnClickListener {
-                        showAlert(getString(R.string.sudah_diantar))
+                        completedTransaction(idTransaction, typeTransaction)
                     }
                 } else if (typeTransaction == "resupply"){
                     btnUpdateTransaction.text = getString(R.string.sudah_dibeli)
                     btnUpdateTransaction.setOnClickListener {
-                        showAlert(getString(R.string.sudah_dibeli))
+                        completedTransaction(idTransaction, typeTransaction)
                     }
                 }
 
@@ -127,6 +129,71 @@ class ShowOrderEmployeeActivity : AppCompatActivity() {
             with(binding){
                 btnCancelTransaction.visibility = View.GONE
                 btnUpdateTransaction.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun inProgressTransaction(id:String, type:String){
+        viewModel.inProgressTransaction(id, type).observe(this) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    showLoading(true)
+                }
+
+                is Result.Success -> {
+                    showLoading(false)
+                    showAlert(result.data.message.toString())
+                    setupData(id,type)
+                }
+
+                is Result.Error -> {
+                    showLoading(false)
+                    showAlert(result.error)
+                    Log.e("error customer:", result.error.toString())
+                }
+            }
+        }
+    }
+    private fun completedTransaction(id:String, type:String){
+        viewModel.completedTransaction(id, type).observe(this) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    showLoading(true)
+                }
+
+                is Result.Success -> {
+                    showLoading(false)
+                    showAlert(result.data.message.toString())
+                    setupData(id,type)
+                }
+
+                is Result.Error -> {
+                    showLoading(false)
+                    showAlert(result.error)
+                    Log.e("error customer:", result.error.toString())
+                }
+            }
+        }
+    }
+
+    private fun cancelledTransaction(id:String, type:String, note:String){
+        viewModel.cancelledTransaction(id, type, note).observe(this) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    showLoading(true)
+                }
+
+                is Result.Success -> {
+                    showLoading(false)
+                    showAlert(result.data.message.toString())
+                    setupData(id,type)
+                }
+
+                is Result.Error -> {
+                    showLoading(false)
+                    showAlert(result.error)
+                    Log.e("error customer:", result.error.toString())
+                }
             }
         }
     }

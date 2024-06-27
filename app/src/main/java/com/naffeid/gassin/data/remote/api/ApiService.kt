@@ -289,5 +289,22 @@ interface ApiService {
         @Query("type") type: String
     ): SingleTransactionResponse
 
+    @GET("employee/transactions/inProgress/{id}")
+    suspend fun inProgressTransaction(
+        @Path("id") id: String,
+        @Query("type") type: String
+    ): MessageResponse
+    @GET("employee/transactions/completed/{id}")
+    suspend fun completedTransaction(
+        @Path("id") id: String,
+        @Query("type") type: String
+    ): MessageResponse
+    @GET("employee/transactions/cancelled/{id}")
+    suspend fun cancelledTransaction(
+        @Path("id") id: String,
+        @Query("type") type: String,
+        @Field("note") note: String,
+    ): MessageResponse
+
     /* End API Transaction */
 }
