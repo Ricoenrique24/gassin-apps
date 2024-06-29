@@ -95,12 +95,6 @@
             android:name=".ui.pages.manager.cost.show.ShowCostActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.pages.manager.cost.edit.EditCostActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.pages.manager.cost.create.CreateCostActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.pages.manager.employee.edit.EditEmployeeActivity"
             android:exported="false" />
         <activity

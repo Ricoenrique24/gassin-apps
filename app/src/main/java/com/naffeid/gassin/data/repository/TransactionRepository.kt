@@ -35,6 +35,26 @@ class TransactionRepository(
         }
     }
 
+    fun showAllActiveTransaction(): LiveData<Result<TransactionResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val client = apiService.showAllActiveTransaction()
+            emit(Result.Success(client))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message.toString()))
+        }
+    }
+
+    fun showAllActiveTransactionManager(): LiveData<Result<TransactionResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val client = apiService.showAllActiveTransactionManager()
+            emit(Result.Success(client))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message.toString()))
+        }
+    }
+
     fun inProgressTransaction(
         id: String,
         type:String

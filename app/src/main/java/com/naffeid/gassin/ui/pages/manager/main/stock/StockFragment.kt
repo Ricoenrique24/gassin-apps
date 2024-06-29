@@ -9,7 +9,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.radiobutton.MaterialRadioButton
 import com.google.android.material.snackbar.Snackbar
+import com.naffeid.gassin.R
 import com.naffeid.gassin.data.remote.response.ListResupplyItem
 import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.databinding.FragmentStockManagerBinding
@@ -28,6 +31,8 @@ class StockFragment : Fragment() {
         ViewModelFactory.getInstance(requireActivity())
     }
     private lateinit var resupplyTransactionAdapter: ResupplyTransactionAdapter
+    private var statusTransaction: String = "all"
+    private var filterBy: String = "all"
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,11 +67,61 @@ class StockFragment : Fragment() {
                 }
                 false
             }
+            // Setup ChipGroup for status filter
+            chipGroup.setOnCheckedChangeListener { group, checkedId ->
+                when (checkedId) {
+                    R.id.chip_all_stock_transaction -> applyStatusFilter("all")
+                    R.id.chip_pending_stock_transaction -> applyStatusFilter("1")
+                    R.id.chip_process_stock_transaction -> applyStatusFilter("2")
+                    R.id.chip_completed_stock_transaction -> applyStatusFilter("3")
+                    R.id.chip_cancel_stock_transaction -> applyStatusFilter("4")
+                }
+            }
+            filterButton.setOnClickListener {
+                showFilterBottomSheet()
+            }
+            btnAddResupply.setOnClickListener {
+                val intent = Intent(requireContext(), CreateReSupplyTransactionActivity::class.java)
+                startActivity(intent)
+            }
         }
-        binding.btnAddResupply.setOnClickListener {
-            val intent = Intent(requireContext(), CreateReSupplyTransactionActivity::class.java)
-            startActivity(intent)
+    }
+    private fun applyStatusFilter(status: String) {
+        // Update statusTransaction variable
+        statusTransaction = status
+        showFilteredResupplyTransaction()
+    }
+
+    private fun showFilterBottomSheet() {
+        val bottomSheet = BottomSheetDialog(requireContext())
+        val view = layoutInflater.inflate(R.layout.time_filter_bottom_sheet, null)
+        bottomSheet.setContentView(view)
+
+        view.findViewById<MaterialRadioButton>(R.id.radioAll).setOnClickListener {
+            filterBy = "all"
+            showFilteredResupplyTransaction()
+            bottomSheet.dismiss()
         }
+
+        view.findViewById<MaterialRadioButton>(R.id.radioDay).setOnClickListener {
+            filterBy = "day"
+            showFilteredResupplyTransaction()
+            bottomSheet.dismiss()
+        }
+
+        view.findViewById<MaterialRadioButton>(R.id.radioWeek).setOnClickListener {
+            filterBy = "week"
+            showFilteredResupplyTransaction()
+            bottomSheet.dismiss()
+        }
+
+        view.findViewById<MaterialRadioButton>(R.id.radioMonth).setOnClickListener {
+            filterBy = "month"
+            showFilteredResupplyTransaction()
+            bottomSheet.dismiss()
+        }
+
+        bottomSheet.show()
     }
 
     private fun setupRecyclerView() {
@@ -123,6 +178,27 @@ class StockFragment : Fragment() {
                     showLoading(false)
                     showAlert(result.error)
                     Log.e("error search store:", result.error.toString())
+                }
+            }
+        }
+    }
+    private fun showFilteredResupplyTransaction() {
+        viewModel.showFilteredResupplyTransaction(statusTransaction, filterBy).observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    showLoading(true)
+                }
+
+                is Result.Success -> {
+                    showLoading(false)
+                    val listResupply = result.data.listResupply
+                    resupplyTransactionAdapter.submitList(listResupply)
+                }
+
+                is Result.Error -> {
+                    showLoading(false)
+                    showAlert(result.error)
+                    Log.e("error search customer:", result.error.toString())
                 }
             }
         }

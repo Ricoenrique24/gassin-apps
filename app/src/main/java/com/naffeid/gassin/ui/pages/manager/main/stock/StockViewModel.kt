@@ -21,4 +21,6 @@ class StockViewModel(
 
         fun showStore(id:String) = storeRepository.showStore(id)
         fun searchResupplyTransaction(query: String) = resupplyTransactionRepository.searchResupplyTransaction(query)
+    fun showFilteredResupplyTransaction(status: String, filterBy:String) = resupplyTransactionRepository.showFilteredResupplyTransaction(status, filterBy)
+
 }

@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.naffeid.gassin.data.repository.AuthRepository
 import com.naffeid.gassin.data.repository.CustomerRepository
+import com.naffeid.gassin.data.repository.DashboardRepository
 import com.naffeid.gassin.data.repository.EmployeeRepository
+import com.naffeid.gassin.data.repository.OperationTransactionRepository
 import com.naffeid.gassin.data.repository.PurchaseTransactionRepository
 import com.naffeid.gassin.data.repository.ResupplyTransactionRepository
 import com.naffeid.gassin.data.repository.StoreRepository
@@ -21,6 +23,7 @@ import com.naffeid.gassin.ui.pages.splashscreen.SplashViewModel
 import com.naffeid.gassin.ui.pages.manager.choose.customer.ChooseCustomerViewModel as ChooseCustomerManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.choose.employee.ChooseEmployeeViewModel as ChooseEmployeeManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.choose.store.ChooseStoreViewModel as ChooseStoreManagerViewModel
+import com.naffeid.gassin.ui.pages.manager.cost.show.ShowCostViewModel as ShowCostManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.customer.create.CreateCustomerViewModel as CreateCustomerManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.customer.edit.EditCustomerViewModel as EditCustomerManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.customer.index.IndexCustomerViewModel as IndexCustomerManagerViewModel
@@ -29,6 +32,7 @@ import com.naffeid.gassin.ui.pages.manager.employee.create.CreateEmployeeViewMod
 import com.naffeid.gassin.ui.pages.manager.employee.edit.EditEmployeeViewModel as EditEmployeeManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.employee.index.IndexEmployeeViewModel as IndexEmployeeManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.employee.show.ShowEmployeeViewModel as ShowEmployeeManagerViewModel
+import com.naffeid.gassin.ui.pages.manager.main.cost.CostViewModel as CostManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.main.home.HomeViewModel as HomeManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.main.more.MoreViewModel as MoreManagerViewModel
 import com.naffeid.gassin.ui.pages.manager.main.order.OrderViewModel as OrderManagerViewModel
@@ -53,7 +57,9 @@ class ViewModelFactory private constructor(
     private val customerRepository: CustomerRepository,
     private val purchaseTransactionRepository: PurchaseTransactionRepository,
     private val resupplyTransactionRepository: ResupplyTransactionRepository,
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository,
+    private val operationTransactionRepository: OperationTransactionRepository,
+    private val dashboardRepository: DashboardRepository
 ) :
     ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
@@ -63,11 +69,13 @@ class ViewModelFactory private constructor(
         } else if (modelClass.isAssignableFrom(SignInViewModel::class.java)) {
             return SignInViewModel(userRepository, authRepository) as T
         } else if (modelClass.isAssignableFrom(HomeManagerViewModel::class.java)) {
-            return HomeManagerViewModel(userRepository) as T
+            return HomeManagerViewModel(userRepository, dashboardRepository, transactionRepository) as T
         } else if (modelClass.isAssignableFrom(OrderManagerViewModel::class.java)) {
             return OrderManagerViewModel(userRepository, purchaseTransactionRepository, customerRepository) as T
         } else if (modelClass.isAssignableFrom(StockManagerViewModel::class.java)) {
             return StockManagerViewModel(userRepository, resupplyTransactionRepository, storeRepository) as T
+        } else if (modelClass.isAssignableFrom(CostManagerViewModel::class.java)) {
+            return CostManagerViewModel(userRepository, operationTransactionRepository) as T
         } else if (modelClass.isAssignableFrom(MoreManagerViewModel::class.java)) {
             return MoreManagerViewModel(userRepository) as T
         } else if (modelClass.isAssignableFrom(IndexStoreManagerViewModel::class.java)) {
@@ -106,6 +114,8 @@ class ViewModelFactory private constructor(
             return ShowPurchaseTransactionManagerViewModel(purchaseTransactionRepository) as T
         } else if (modelClass.isAssignableFrom(ShowResupplyTransactionManagerViewModel::class.java)) {
             return ShowResupplyTransactionManagerViewModel(resupplyTransactionRepository) as T
+        } else if (modelClass.isAssignableFrom(ShowCostManagerViewModel::class.java)) {
+            return ShowCostManagerViewModel(userRepository, operationTransactionRepository) as T
         } else if (modelClass.isAssignableFrom(ChooseCustomerManagerViewModel::class.java)) {
             return ChooseCustomerManagerViewModel(customerRepository) as T
         } else if (modelClass.isAssignableFrom(ChooseEmployeeManagerViewModel::class.java)) {
@@ -119,7 +129,7 @@ class ViewModelFactory private constructor(
         } else if (modelClass.isAssignableFrom(MoreEmployeeViewModel::class.java)) {
             return MoreEmployeeViewModel(userRepository) as T
         } else if (modelClass.isAssignableFrom(ShowOrderEmployeeViewModel::class.java)) {
-            return ShowOrderEmployeeViewModel(transactionRepository) as T
+            return ShowOrderEmployeeViewModel(transactionRepository, operationTransactionRepository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
@@ -135,7 +145,9 @@ class ViewModelFactory private constructor(
                 Injection.provideCustomerRepository(context),
                 Injection.providePurchaseTransactionRepository(context),
                 Injection.provideResupplyTransactionRepository(context),
-                Injection.provideTransactionRepository(context)
+                Injection.provideTransactionRepository(context),
+                Injection.provideOperationTransactionRepository(context),
+                Injection.provideDashboardRepository(context)
             )
         }
     }

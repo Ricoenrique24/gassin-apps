@@ -4,14 +4,18 @@ import com.naffeid.gassin.data.remote.response.CustomerResponse
 import com.naffeid.gassin.data.remote.response.EmployeeResponse
 import com.naffeid.gassin.data.remote.response.LoginResponse
 import com.naffeid.gassin.data.remote.response.MessageResponse
+import com.naffeid.gassin.data.remote.response.OperationTransactionResponse
 import com.naffeid.gassin.data.remote.response.PurchaseTransactionResponse
 import com.naffeid.gassin.data.remote.response.ResupplyTransactionResponse
+import com.naffeid.gassin.data.remote.response.RevenueResponse
 import com.naffeid.gassin.data.remote.response.SingleCustomerResponse
 import com.naffeid.gassin.data.remote.response.SingleEmployeeResponse
+import com.naffeid.gassin.data.remote.response.SingleOperationResponse
 import com.naffeid.gassin.data.remote.response.SinglePurchaseResponse
 import com.naffeid.gassin.data.remote.response.SingleResupplyResponse
 import com.naffeid.gassin.data.remote.response.SingleStoreResponse
 import com.naffeid.gassin.data.remote.response.SingleTransactionResponse
+import com.naffeid.gassin.data.remote.response.StockResponse
 import com.naffeid.gassin.data.remote.response.StoreResponse
 import com.naffeid.gassin.data.remote.response.TransactionResponse
 import retrofit2.http.DELETE
@@ -45,16 +49,13 @@ interface ApiService {
     /* End API Authentication */
 
     /* Dashboard */
-    @FormUrlEncoded
-    @GET("dashboard/availablestockquantity")
-    suspend fun availableStockQuantity(): LoginResponse
+    @GET("manager/dashboard/getAvailableStockQuantity")
+    suspend fun availableStockQuantity(): StockResponse
 
-    @FormUrlEncoded
-    @GET("dashboard/revenuetoday")
-    suspend fun revenueToday(): LoginResponse
+    @GET("manager/dashboard/getRevenueToday")
+    suspend fun revenueToday(): RevenueResponse
 
-    @FormUrlEncoded
-    @GET("dashboard/downloadtransactionrecap")
+    @GET("manager/dashboard/downloadtransactionrecap")
     suspend fun downloadTransactionRecap(): LoginResponse
 
     /* End API Dashboard */
@@ -235,6 +236,12 @@ interface ApiService {
         @Query("q") query: String
     ): PurchaseTransactionResponse
 
+    @GET("manager/purchases/filter")
+    suspend fun showFilteredPurchaseTransaction(
+        @Query("status") status: String,
+        @Query("filterBy") filterBy: String
+    ): PurchaseTransactionResponse
+
     /* End API Purchase */
 
     /* Resupply Transaction */
@@ -277,6 +284,12 @@ interface ApiService {
         @Query("q") query: String
     ): ResupplyTransactionResponse
 
+    @GET("manager/resupplys/filter")
+    suspend fun showFilteredResupplyTransaction(
+        @Query("status") status: String,
+        @Query("filterBy") filterBy: String
+    ): ResupplyTransactionResponse
+
     /* End API Resupply */
 
     /* Transaction */
@@ -288,6 +301,11 @@ interface ApiService {
         @Path("id") id: String,
         @Query("type") type: String
     ): SingleTransactionResponse
+    @GET("manager/transaction")
+    suspend fun showAllActiveTransactionManager(): TransactionResponse
+
+    @GET("employee/transactions/active")
+    suspend fun showAllActiveTransaction(): TransactionResponse
 
     @GET("employee/transactions/inProgress/{id}")
     suspend fun inProgressTransaction(
@@ -303,8 +321,53 @@ interface ApiService {
     suspend fun cancelledTransaction(
         @Path("id") id: String,
         @Query("type") type: String,
-        @Field("note") note: String,
+        @Query("note") note: String,
     ): MessageResponse
 
     /* End API Transaction */
+
+    /* Operation Transaction */
+    @GET("manager/operation")
+    suspend fun showAllOperationTransaction(): OperationTransactionResponse
+
+    @FormUrlEncoded
+    @POST("employee/operation")
+    suspend fun createNewOperationTransaction(
+        @Field("id_transaction") idTransaction: String,
+        @Field("note") note: String,
+        @Field("total_payment") totalPayment: String,
+        @Field("type") type: String
+    ): MessageResponse
+    @GET("employee/operation/{id}")
+    suspend fun showOperationTransaction(
+        @Path("id") id: String,
+        @Query("type") type: String
+    ): SingleOperationResponse
+
+    @GET("manager/operation/{id}")
+    suspend fun showOperationTransactionManager(
+        @Path("id") id: String,
+        @Query("type") type: String
+    ): SingleOperationResponse
+
+    @FormUrlEncoded
+    @PUT("manager/operation/{id}")
+    suspend fun updateOperationTransaction(
+        @Path("id") id: String,
+        @Field("type") type: String,
+        @Field("verified") verified: Int
+    ): SingleOperationResponse
+
+    @GET("manager/operations/search")
+    suspend fun searchOperationTransaction(
+        @Query("q") query: String
+    ): OperationTransactionResponse
+
+    @GET("manager/operations/filter")
+    suspend fun showFilteredOperationTransaction(
+        @Query("status") status: String,
+        @Query("filterBy") filterBy: String
+    ): OperationTransactionResponse
+
+    /* End API Operation */
 }

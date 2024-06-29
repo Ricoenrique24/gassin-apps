@@ -14,5 +14,5 @@ class HomeEmployeeViewModel(
     fun getSession(): LiveData<User> {
         return userRepository.getSession().asLiveData()
     }
-    fun showAllTransaction() = transactionRepository.showAllTransaction()
+    fun showAllActiveTransaction() = transactionRepository.showAllActiveTransaction()
 }

@@ -33,10 +33,10 @@
                 <com.google.android.material.search.SearchBar
                     android:id="@+id/searchBar"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:hint="@string/cari_pesanan_pelanggan"
-                    app:backgroundTint="@color/greyLight"/>
+                    android:hint="@string/cari_pelanggan"
+                    app:backgroundTint="@color/greyLight" />
 
                 <ImageButton
                     android:id="@+id/filterButton"
@@ -68,34 +68,42 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Semua"
-                        app:chipBackgroundColor="@color/greyLight"
+                        app:chipBackgroundColor="@color/bg_chip"
+                        android:checkable="true"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:checked="true"
+                        android:textColor="@color/text_chip"
                         app:chipIconVisible="false" />
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_proccess_transaction"
+                        android:id="@+id/chip_pending_transaction"
                         style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Diproses"
-                        app:chipBackgroundColor="@color/greyLight"
+                        android:text="Menunggu"
+                        app:chipBackgroundColor="@color/bg_chip"
+                        android:textColor="@color/text_chip"
                         app:chipIconVisible="false" />
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_delivery_transaction"
+                        android:id="@+id/chip_process_transaction"
                         style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Diantar"
-                        app:chipBackgroundColor="@color/greyLight"
+                        android:text="Proses"
+                        android:textColor="@color/text_chip"
+                        app:chipBackgroundColor="@color/bg_chip"
                         app:chipIconVisible="false" />
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_success_transaction"
+                        android:id="@+id/chip_completed_transaction"
                         style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Selesai"
-                        app:chipBackgroundColor="@color/greyLight"
+                        android:textColor="@color/text_chip"
+                        app:chipBackgroundColor="@color/bg_chip"
                         app:chipIconVisible="false" />
 
                     <com.google.android.material.chip.Chip
@@ -104,7 +112,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Batal"
-                        app:chipBackgroundColor="@color/greyLight"
+                        android:textColor="@color/text_chip"
+                        app:chipBackgroundColor="@color/bg_chip"
                         app:chipIconVisible="false" />
                 </com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
@@ -125,9 +134,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_order_transaction"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="84dp"
         android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -135,7 +146,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar"
         tools:listitem="@layout/item_purchase_transaction"/>
-
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
@@ -151,7 +161,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="88dp"
         android:contentDescription="@string/tambah_pelanggan"
         android:backgroundTint="@color/darkGreen"
         app:tint="@android:color/white"

@@ -61,6 +61,12 @@ class OrderEmployeeFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireActivity())
             adapter = transactionAdapter
         }
+        val swipeRefreshLayout = binding.swipeRefreshLayout
+
+        swipeRefreshLayout.setOnRefreshListener {
+            showAllTransaction()
+            swipeRefreshLayout.isRefreshing = false
+        }
     }
 
     private fun showAllTransaction() {

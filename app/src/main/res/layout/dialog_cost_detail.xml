@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:gravity="center_vertical|center_horizontal"
+            android:fontFamily="@font/poppins_medium"
+            android:text="@string/biaya_operasional"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:gravity="center_vertical|center_horizontal"
+                android:fontFamily="@font/poppins_medium"
+                android:textColor="@color/grey"
+                android:text="@string/berikut_detail_informasi_pengajuan_biaya_operasional"
+                android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/poppins_semi_bold"
+                    android:layout_gravity="start"
+                    android:textAlignment="textStart"
+                    android:gravity="center"
+                    android:text="@string/deskripsi_biaya_operasional"
+                    android:textColor="@color/greyDark"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_cost_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:layout_gravity="start"
+                    android:textAlignment="textStart"
+                    android:gravity="center_horizontal"
+                    android:text="Tambal Ban"
+                    android:textColor="@color/greyDark"
+                    android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textAlignment="textStart"
+                android:fontFamily="@font/poppins_semi_bold"
+                android:layout_gravity="start"
+                android:gravity="center_horizontal"
+                android:text="@string/biaya_operasional"
+                android:textColor="@color/greyDark"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_cost_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/poppins_regular"
+                android:layout_gravity="start"
+                android:textAlignment="textStart"
+                android:gravity="center_horizontal"
+                android:text="Rp 21.000"
+                android:textColor="@color/greyDark"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textAlignment="textStart"
+                android:fontFamily="@font/poppins_semi_bold"
+                android:layout_gravity="start"
+                android:gravity="center_horizontal"
+                android:text="@string/status_pengajuan"
+                android:textColor="@color/greyDark"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_cost_verified"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/poppins_regular"
+                android:layout_gravity="start"
+                android:textAlignment="textStart"
+                android:gravity="center_horizontal"
+                android:text="Diterima"
+                android:textColor="@color/greyDark"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:gravity="center_horizontal|center_vertical">
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_close"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/poppins_semi_bold"
+                android:paddingVertical="10dp"
+                android:text="@string/tutup"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="14sp"
+                app:backgroundTint="@color/white"
+                app:strokeColor="@android:color/holo_red_light"
+                app:strokeWidth="2dp" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

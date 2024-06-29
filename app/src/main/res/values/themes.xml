@@ -8,4 +8,15 @@
     </style>
 
     <style name="Theme.Gassinapps" parent="Base.Theme.Gassinapps" />
+
+    <style name="CustomDialogTheme" parent="Theme.Material3.DayNight.Dialog">
+        <item name="colorPrimary">@color/darkGreen</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="android:fontFamily">@font/poppins_regular</item>
+        <item name="android:textColorHint">@color/black</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
 </resources>

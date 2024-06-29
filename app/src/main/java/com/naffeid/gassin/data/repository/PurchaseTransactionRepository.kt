@@ -87,4 +87,14 @@ class PurchaseTransactionRepository(
             emit(Result.Error(e.message.toString()))
         }
     }
+
+    fun showFilteredPurchaseTransaction(status: String, filterBy:String): LiveData<Result<PurchaseTransactionResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val client = apiService.showFilteredPurchaseTransaction(status, filterBy)
+            emit(Result.Success(client))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message.toString()))
+        }
+    }
 }

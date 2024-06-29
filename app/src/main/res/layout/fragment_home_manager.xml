@@ -15,8 +15,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:background="@color/darkGreen"
+            android:orientation="horizontal"
             android:padding="16dp">
 
             <LinearLayout
@@ -68,9 +68,9 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="16dp"
             android:backgroundTint="@android:color/white"
-            app:strokeColor="@color/white"
             app:cardCornerRadius="16dp"
-            app:cardElevation="4dp">
+            app:cardElevation="4dp"
+            app:strokeColor="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -108,12 +108,12 @@
                                 android:src="@drawable/ic_moneys_24dp" />
 
                             <TextView
-                                android:id="@+id/tvrevenuetodaycount"
+                                android:id="@+id/tv_revenue_today"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="6dp"
                                 android:fontFamily="@font/poppins_semi_bold"
-                                android:text="Rp 3.000.000"
+                                android:text="Rp 0"
                                 android:textSize="20sp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -146,12 +146,12 @@
                                 android:src="@drawable/logosmall" />
 
                             <TextView
-                                android:id="@+id/tv_revenue_today"
+                                android:id="@+id/tv_available_stock"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="6dp"
                                 android:fontFamily="@font/poppins_semi_bold"
-                                android:text="10"
+                                android:text="0"
                                 android:textSize="20sp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -182,8 +182,8 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
-                            app:cardCornerRadius="8dp"
                             android:backgroundTint="@color/darkGreen"
+                            app:cardCornerRadius="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/btn_employee_feature"
                             app:layout_constraintStart_toStartOf="parent"
@@ -203,8 +203,8 @@
                                     android:layout_gravity="center"
                                     android:layout_marginBottom="4dp"
                                     android:backgroundTint="@color/darkGreen"
-                                    app:strokeColor="@color/white"
-                                    app:cardCornerRadius="6dp">
+                                    app:cardCornerRadius="6dp"
+                                    app:strokeColor="@color/white">
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -250,8 +250,8 @@
                                     android:layout_gravity="center"
                                     android:layout_marginBottom="4dp"
                                     android:backgroundTint="@color/darkGreen"
-                                    app:strokeColor="@color/white"
-                                    app:cardCornerRadius="6dp">
+                                    app:cardCornerRadius="6dp"
+                                    app:strokeColor="@color/white">
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -264,8 +264,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/poppins_medium"
-                                    android:textColor="@color/white"
                                     android:text="Karyawan"
+                                    android:textColor="@color/white"
                                     android:textSize="11sp" />
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
@@ -297,8 +297,8 @@
                                     android:layout_gravity="center"
                                     android:layout_marginBottom="4dp"
                                     android:backgroundTint="@color/darkGreen"
-                                    app:strokeColor="@color/white"
-                                    app:cardCornerRadius="6dp">
+                                    app:cardCornerRadius="6dp"
+                                    app:strokeColor="@color/white">
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -311,8 +311,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/poppins_medium"
-                                    android:textColor="@color/white"
                                     android:text="Pelanggan"
+                                    android:textColor="@color/white"
                                     android:textSize="11sp" />
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
@@ -344,8 +344,8 @@
                                     android:layout_gravity="center"
                                     android:layout_marginBottom="4dp"
                                     android:backgroundTint="@color/darkGreen"
-                                    app:strokeColor="@color/white"
-                                    app:cardCornerRadius="6dp">
+                                    app:cardCornerRadius="6dp"
+                                    app:strokeColor="@color/white">
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -358,8 +358,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/poppins_medium"
-                                    android:textColor="@color/white"
                                     android:text="Rekap"
+                                    android:textColor="@color/white"
                                     android:textSize="11sp" />
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
@@ -379,15 +379,15 @@
                 android:id="@+id/btn_restock_feature"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:strokeColor="@color/darkGreen"
                 android:layout_marginVertical="4dp"
+                android:backgroundTint="@color/darkGreen"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
-                android:backgroundTint="@color/darkGreen"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_order_feature"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/darkGreen"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
@@ -418,8 +418,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins_regular"
-                            android:textColor="@color/white"
                             android:text="Isi Ulang Tabung"
+                            android:textColor="@color/white"
                             android:textSize="10sp" />
                     </LinearLayout>
 
@@ -436,9 +436,9 @@
                 android:id="@+id/btn_order_feature"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginVertical="4dp"
                 android:layout_marginStart="16dp"
                 android:backgroundTint="@color/blue"
-                android:layout_marginVertical="4dp"
 
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
@@ -468,16 +468,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins_semi_bold"
-                            android:textColor="@color/white"
                             android:text="Pesanan"
+                            android:textColor="@color/white"
                             android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins_regular"
-                            android:textColor="@color/white"
                             android:text="Antar Tabung "
+                            android:textColor="@color/white"
                             android:textSize="10sp" />
                     </LinearLayout>
 
@@ -492,7 +492,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
-            android:id="@+id/rw6dll00agmm"
+            android:id="@+id/title_transaction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
@@ -503,8 +503,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Transaksi Aktif"
                 android:fontFamily="@font/poppins_regular"
+                android:text="Transaksi Aktif"
                 android:textSize="12sp" />
 
             <View
@@ -516,16 +516,34 @@
                 android:id="@+id/tv_all_transaction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lihat semua"
                 android:fontFamily="@font/poppins_regular"
+                android:text="Lihat semua"
                 android:textSize="12sp" />
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:layout_constraintBottom_toBottomOf="@+id/rv_transaction"
+            app:layout_constraintEnd_toEndOf="@+id/rv_transaction"
+            app:layout_constraintStart_toStartOf="@+id/rv_transaction"
+            app:layout_constraintTop_toTopOf="@+id/rv_transaction" />
+
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_transaction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            tools:listitem="@layout/item_transaction"/>
-
+            android:layout_marginBottom="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_transaction" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="56dp"/>
     </LinearLayout>
 
 </ScrollView>

@@ -65,14 +65,19 @@ class HomeEmployeeFragment : Fragment() {
                 startActivity(intentToDetail)
             }
         })
+        val swipeRefreshLayout = binding.swipeRefreshLayout
         binding.rvTransaction.apply {
             layoutManager = LinearLayoutManager(requireActivity())
             adapter = transactionAdapter
         }
+        swipeRefreshLayout.setOnRefreshListener {
+            showAllTransaction()
+            swipeRefreshLayout.isRefreshing = false
+        }
     }
 
     private fun showAllTransaction() {
-        viewModel.showAllTransaction().observe(viewLifecycleOwner) { result ->
+        viewModel.showAllActiveTransaction().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Loading -> {
                     showLoading(true)

@@ -12,7 +12,9 @@ import com.naffeid.gassin.data.preference.storeDataStore
 import com.naffeid.gassin.data.remote.api.ApiConfig
 import com.naffeid.gassin.data.repository.AuthRepository
 import com.naffeid.gassin.data.repository.CustomerRepository
+import com.naffeid.gassin.data.repository.DashboardRepository
 import com.naffeid.gassin.data.repository.EmployeeRepository
+import com.naffeid.gassin.data.repository.OperationTransactionRepository
 import com.naffeid.gassin.data.repository.PurchaseTransactionRepository
 import com.naffeid.gassin.data.repository.ResupplyTransactionRepository
 import com.naffeid.gassin.data.repository.StoreRepository
@@ -68,5 +70,17 @@ object Injection {
         val user = runBlocking { userPreference.getSession().first() }
         val apiService = ApiConfig.getApiService(user.apikey)
         return TransactionRepository(apiService)
+    }
+    fun provideOperationTransactionRepository(context: Context): OperationTransactionRepository {
+        val userPreference = UserPreference.getInstance(context.dataStore)
+        val user = runBlocking { userPreference.getSession().first() }
+        val apiService = ApiConfig.getApiService(user.apikey)
+        return OperationTransactionRepository(apiService)
+    }
+    fun provideDashboardRepository(context: Context): DashboardRepository {
+        val userPreference = UserPreference.getInstance(context.dataStore)
+        val user = runBlocking { userPreference.getSession().first() }
+        val apiService = ApiConfig.getApiService(user.apikey)
+        return DashboardRepository(apiService)
     }
 }

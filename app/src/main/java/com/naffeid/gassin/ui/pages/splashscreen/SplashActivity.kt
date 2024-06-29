@@ -28,7 +28,7 @@ class SplashActivity : AppCompatActivity() {
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                Toast.makeText(this, "Notifications permission granted", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this, "Notifications permission granted", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "Notifications permission rejected", Toast.LENGTH_SHORT).show()
             }

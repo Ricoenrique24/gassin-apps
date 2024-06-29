@@ -21,5 +21,5 @@ class OrderViewModel(
 
     fun showCustomer(id:String) = customerRepository.showCustomer(id)
     fun searchPurchaseTransaction(query: String) = purchaseTransactionRepository.searchPurchaseTransaction(query)
-
+    fun showFilteredPurchaseTransaction(status: String, filterBy:String) = purchaseTransactionRepository.showFilteredPurchaseTransaction(status, filterBy)
 }

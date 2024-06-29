@@ -189,6 +189,7 @@
                         android:textSize="16sp" />
 
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cd_info"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -379,7 +380,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_cancel_transaction"
-                    android:visibility="visible"
+                    android:visibility="invisible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_semi_bold"
@@ -396,7 +397,7 @@
                     android:id="@+id/btn_update_transaction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="visible"
+                    android:visibility="invisible"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/poppins_semi_bold"
                     android:paddingHorizontal="24dp"

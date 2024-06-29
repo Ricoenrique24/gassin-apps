@@ -1,20 +1,14 @@
-package com.naffeid.gassin.ui.pages.manager.main.cost
+package com.naffeid.gassin.ui.pages.manager.cost.show
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import com.naffeid.gassin.data.model.User
 import com.naffeid.gassin.data.repository.OperationTransactionRepository
 import com.naffeid.gassin.data.repository.UserRepository
 
-class CostViewModel(
+class ShowCostViewModel(
     private val userRepository: UserRepository,
     private val operationTransactionRepository: OperationTransactionRepository
 ) : ViewModel() {
-    fun getSession(): LiveData<User> {
-        return userRepository.getSession().asLiveData()
-    }
-    fun showAllOperationTransaction() = operationTransactionRepository.showAllOperationTransaction()
+    fun showOperationTransactionManager(id:String, type:String) = operationTransactionRepository.showOperationTransactionManager(id, type)
     fun searchOperationTransaction(query:String) = operationTransactionRepository.searchOperationTransaction(query)
-
+    fun updateOperationTransaction(idTransaction:String, typeTransaction:String, verified:Boolean) = operationTransactionRepository.updateOperationTransaction(idTransaction,typeTransaction,verified)
 }
