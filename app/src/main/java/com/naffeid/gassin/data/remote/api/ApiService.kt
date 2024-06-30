@@ -221,9 +221,7 @@ interface ApiService {
         @Field("id_customer") idCustomer: String,
         @Field("id_user") idUser: String,
         @Field("qty") qty: String,
-        @Field("total_payment") totalPayment: String,
-        @Field("status") status: String,
-        @Field("note") note: String
+        @Field("total_payment") totalPayment: String
     ): SinglePurchaseResponse
 
     @DELETE("manager/purchase/{id}")
@@ -241,7 +239,10 @@ interface ApiService {
         @Query("status") status: String,
         @Query("filterBy") filterBy: String
     ): PurchaseTransactionResponse
-
+    @GET("manager/purchases/cancelled/{id}")
+    suspend fun cancelledPurchaseTransaction(
+        @Path("id") id: String
+    ): MessageResponse
     /* End API Purchase */
 
     /* Resupply Transaction */
@@ -269,9 +270,7 @@ interface ApiService {
         @Field("id_store") idStore: String,
         @Field("id_user") idUser: String,
         @Field("qty") qty: String,
-        @Field("total_payment") totalPayment: String,
-        @Field("status") status: String,
-        @Field("note") note: String
+        @Field("total_payment") totalPayment: String
     ): SingleResupplyResponse
 
     @DELETE("manager/resupply/{id}")
@@ -289,6 +288,10 @@ interface ApiService {
         @Query("status") status: String,
         @Query("filterBy") filterBy: String
     ): ResupplyTransactionResponse
+    @GET("manager/resupplys/cancelled/{id}")
+    suspend fun cancelledResupplyTransaction(
+        @Path("id") id: String
+    ): MessageResponse
 
     /* End API Resupply */
 
@@ -307,17 +310,17 @@ interface ApiService {
     @GET("employee/transactions/active")
     suspend fun showAllActiveTransaction(): TransactionResponse
 
-    @GET("employee/transactions/inProgress/{id}")
+    @GET("employee/transaction/inProgress/{id}")
     suspend fun inProgressTransaction(
         @Path("id") id: String,
         @Query("type") type: String
     ): MessageResponse
-    @GET("employee/transactions/completed/{id}")
+    @GET("employee/transaction/completed/{id}")
     suspend fun completedTransaction(
         @Path("id") id: String,
         @Query("type") type: String
     ): MessageResponse
-    @GET("employee/transactions/cancelled/{id}")
+    @GET("employee/transaction/cancelled/{id}")
     suspend fun cancelledTransaction(
         @Path("id") id: String,
         @Query("type") type: String,

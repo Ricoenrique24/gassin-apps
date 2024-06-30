@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">gassin-apps</string>
+    <string name="app_name">Rumah Gas U-33</string>
     <string name="gass">Rumah Gas </string>
     <string name="in">U-33</string>
     <string name="logo_app">Logo App</string>
@@ -157,4 +157,6 @@
     <string name="detail_biaya_operasional">Detail Biaya Operasional</string>
     <string name="ringkasan_biaya">Ringkasan biaya</string>
     <string name="keterangan_pengeluaran">Keterangan pengeluaran</string>
+    <string name="simpan_pesanan">Simpan Pesanan</string>
+    <string name="simpan_pembelian">Simpan Pembelian</string>
 </resources>

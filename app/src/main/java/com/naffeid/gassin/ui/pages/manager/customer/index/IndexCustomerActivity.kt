@@ -15,7 +15,6 @@ import com.naffeid.gassin.ui.adapter.CustomerAdapter
 import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.customer.create.CreateCustomerActivity
 import com.naffeid.gassin.ui.pages.manager.customer.show.ShowCustomerActivity
-import com.naffeid.gassin.ui.pages.manager.main.ManagerMainActivity
 
 class IndexCustomerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityIndexCustomerBinding
@@ -122,9 +121,7 @@ class IndexCustomerActivity : AppCompatActivity() {
 
     private fun setupTobBar() {
         binding.btnBack.setOnClickListener {
-            val intentToHome = Intent(this@IndexCustomerActivity, ManagerMainActivity::class.java)
-            startActivity(intentToHome)
-            finish()
+            onBackPressed()
         }
     }
 

@@ -10,7 +10,10 @@ import androidx.fragment.app.viewModels
 import com.naffeid.gassin.data.model.User
 import com.naffeid.gassin.databinding.FragmentMoreManagerBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.manager.customer.index.IndexCustomerActivity
+import com.naffeid.gassin.ui.pages.manager.employee.index.IndexEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.resupplytransaction.create.CreateReSupplyTransactionActivity
+import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreActivity
 import com.naffeid.gassin.ui.pages.signin.SignInActivity
 
 class MoreFragment : Fragment() {
@@ -65,21 +68,21 @@ class MoreFragment : Fragment() {
 
     private fun buttonToCustomer() {
         binding.btnCustomerFeature.setOnClickListener {
-            val intent = Intent(requireContext(), CreateReSupplyTransactionActivity::class.java)
+            val intent = Intent(requireContext(), IndexCustomerActivity::class.java)
             startActivity(intent)
         }
     }
 
     private fun buttonToEmployee() {
         binding.btnEmployeeFeature.setOnClickListener {
-            val intent = Intent(requireContext(), CreateReSupplyTransactionActivity::class.java)
+            val intent = Intent(requireContext(), IndexEmployeeActivity::class.java)
             startActivity(intent)
         }
     }
 
     private fun buttonToStore() {
         binding.btnStoreFeature.setOnClickListener {
-            val intent = Intent(requireContext(), CreateReSupplyTransactionActivity::class.java)
+            val intent = Intent(requireContext(), IndexStoreActivity::class.java)
             startActivity(intent)
         }
     }

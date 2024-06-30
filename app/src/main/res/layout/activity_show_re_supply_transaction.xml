@@ -463,30 +463,15 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <Button
-                android:id="@+id/btn_edit_resupply"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="32dp"
-                android:fontFamily="@font/poppins_semi_bold"
-                android:paddingHorizontal="24dp"
-                android:paddingVertical="10dp"
-                android:text="@string/ubah_pembelian"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ed_store_price_layout" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_cancel_resupply"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="40dp"
                 android:fontFamily="@font/poppins_semi_bold"
                 android:paddingHorizontal="24dp"
+                app:cornerRadius="10dp"
                 android:paddingVertical="10dp"
                 android:text="@string/batalkan_pembelian"
                 android:textColor="@android:color/holo_red_light"
@@ -494,6 +479,22 @@
                 app:backgroundTint="@color/greyLight"
                 app:strokeColor="@android:color/holo_red_light"
                 app:strokeWidth="2dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_edit_resupply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="40dp"
+                android:layout_marginHorizontal="16dp"
+                android:fontFamily="@font/poppins_semi_bold"
+                android:paddingHorizontal="24dp"
+                app:cornerRadius="10dp"
+                android:paddingVertical="10dp"
+                android:text="@string/ubah_pembelian"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ed_store_price_layout" />
         </LinearLayout>
     </ScrollView>
 

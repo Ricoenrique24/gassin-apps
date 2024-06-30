@@ -33,7 +33,7 @@ class ShowReSupplyTransactionActivity : AppCompatActivity() {
             if (idResupply != null) setupData(idResupply)
         }
         if (idResupply != null) setupData(idResupply)
-        setupTobBar(updateResupply)
+        setupTobBar()
     }
 
     private fun setupData(id: String) {
@@ -70,25 +70,70 @@ class ShowReSupplyTransactionActivity : AppCompatActivity() {
             tvQtyGasTotal.text = resupply.qty.toString()
             tvTotalPayment.text = Rupiah.convertToRupiah(resupply.totalPayment?.toDoubleOrNull()!!)
             tvPriceOneGas.text = Rupiah.convertToRupiah(resupply.totalPayment.toDoubleOrNull()!! / resupply.qty!!)
-            binding.btnEditResupply.setOnClickListener {
-                val resupplyData = ListResupplyItem(
-                    id = resupply.id,
-                    note = resupply.note.toString(),
-                    idStore = resupply.idStore,
-                    qty = resupply.qty,
-                    statusTransaction = resupply.statusTransaction,
-                    idUser = resupply.idUser,
-                    user = resupply.user,
-                    totalPayment = resupply.totalPayment,
-                    status = resupply.status,
-                    store = resupply.store
 
-                )
-                editResupplyTransaction(resupplyData)
-            }
-            binding.btnCancelResupply.setOnClickListener {
-                val id = resupply.id.toString()
-                deleteResupplyTransaction(id)
+            val statusTransaction = resupply.status
+            when(statusTransaction) {
+                "1" -> {
+                    btnEditResupply.visibility = View.VISIBLE
+                    btnCancelResupply.visibility = View.VISIBLE
+                    btnCancelResupply.setOnClickListener {
+                        val id = resupply.id.toString()
+                        cancelledResupplyTransaction(id)
+                    }
+                    btnEditResupply.setOnClickListener {
+                        val resupplyData = ListResupplyItem(
+                            id = resupply.id,
+                            note = resupply.note.toString(),
+                            idStore = resupply.idStore,
+                            qty = resupply.qty,
+                            statusTransaction = resupply.statusTransaction,
+                            idUser = resupply.idUser,
+                            user = resupply.user,
+                            totalPayment = resupply.totalPayment,
+                            status = resupply.status,
+                            store = resupply.store
+
+                        )
+                        editResupplyTransaction(resupplyData)
+                    }
+                }
+                "2" -> {
+                    btnEditResupply.visibility = View.VISIBLE
+                    btnCancelResupply.visibility = View.VISIBLE
+                    btnCancelResupply.setOnClickListener {
+                        val id = resupply.id.toString()
+                        cancelledResupplyTransaction(id)
+                    }
+                    btnEditResupply.setOnClickListener {
+                        val resupplyData = ListResupplyItem(
+                            id = resupply.id,
+                            note = resupply.note.toString(),
+                            idStore = resupply.idStore,
+                            qty = resupply.qty,
+                            statusTransaction = resupply.statusTransaction,
+                            idUser = resupply.idUser,
+                            user = resupply.user,
+                            totalPayment = resupply.totalPayment,
+                            status = resupply.status,
+                            store = resupply.store
+
+                        )
+                        editResupplyTransaction(resupplyData)
+                    }
+                }
+                "3" -> {
+                    btnCancelResupply.visibility = View.GONE
+                    btnEditResupply.visibility = View.GONE
+                }
+                "4" -> {
+                    btnCancelResupply.visibility = View.GONE
+                    btnEditResupply.visibility = View.GONE
+                }
+                else -> {
+                    btnCancelResupply.visibility = View.GONE
+                    btnEditResupply.visibility = View.GONE
+                }
+
             }
         }
     }
@@ -98,8 +143,8 @@ class ShowReSupplyTransactionActivity : AppCompatActivity() {
         intentToDetail.putExtra("RESUPPLY", data.id.toString())
         startActivity(intentToDetail)
     }
-    private fun deleteResupplyTransaction(id: String) {
-        viewModel.deleteResupplyTransaction(id).observe(this){ result->
+    private fun cancelledResupplyTransaction(id: String) {
+        viewModel.cancelledResupplyTransaction(id).observe(this){ result->
             when (result) {
                 is Result.Loading -> {
                     showLoading(true)
@@ -120,7 +165,7 @@ class ShowReSupplyTransactionActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupTobBar(updateResupply: Boolean) {
+    private fun setupTobBar() {
         binding.btnBack.setOnClickListener {
             onBackPressed()
         }

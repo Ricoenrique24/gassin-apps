@@ -55,13 +55,11 @@ class PurchaseTransactionRepository(
         idCustomer: String,
         idUser: String,
         qty: String,
-        totalPayment: String,
-        status: String,
-        note: String
+        totalPayment: String
     ): LiveData<Result<SinglePurchaseResponse>> = liveData {
         emit(Result.Loading)
         try {
-            val client = apiService.updatePurchaseTransaction(id, idCustomer, idUser, qty, totalPayment, status, note)
+            val client = apiService.updatePurchaseTransaction(id, idCustomer, idUser, qty, totalPayment)
             emit(Result.Success(client))
         } catch (e: Exception) {
             emit(Result.Error(e.message.toString()))
@@ -92,6 +90,16 @@ class PurchaseTransactionRepository(
         emit(Result.Loading)
         try {
             val client = apiService.showFilteredPurchaseTransaction(status, filterBy)
+            emit(Result.Success(client))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message.toString()))
+        }
+    }
+
+    fun cancelledPurchaseTransaction(id: String): LiveData<Result<MessageResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val client = apiService.cancelledPurchaseTransaction(id)
             emit(Result.Success(client))
         } catch (e: Exception) {
             emit(Result.Error(e.message.toString()))

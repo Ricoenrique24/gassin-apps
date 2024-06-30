@@ -8,4 +8,5 @@ class ShowResupplyTransactionViewModel(
 ) : ViewModel() {
     fun showResupplyTransaction(id:String) = resupplyTransactionRepository.showResupplyTransaction(id)
     fun deleteResupplyTransaction(id: String) = resupplyTransactionRepository.deleteResupplyTransaction(id)
+    fun cancelledResupplyTransaction(id: String) = resupplyTransactionRepository.cancelledResupplyTransaction(id)
 }

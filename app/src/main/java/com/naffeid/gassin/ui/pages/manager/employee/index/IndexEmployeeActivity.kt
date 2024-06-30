@@ -15,7 +15,6 @@ import com.naffeid.gassin.ui.adapter.EmployeeAdapter
 import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.employee.create.CreateEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.employee.show.ShowEmployeeActivity
-import com.naffeid.gassin.ui.pages.manager.main.ManagerMainActivity
 
 class IndexEmployeeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityIndexEmployeeBinding
@@ -122,9 +121,7 @@ class IndexEmployeeActivity : AppCompatActivity() {
 
     private fun setupTobBar() {
         binding.btnBack.setOnClickListener {
-            val intentToHome = Intent(this@IndexEmployeeActivity, ManagerMainActivity::class.java)
-            startActivity(intentToHome)
-            finish()
+            onBackPressed()
         }
     }
 

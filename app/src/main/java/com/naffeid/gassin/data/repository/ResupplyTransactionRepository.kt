@@ -55,13 +55,11 @@ class ResupplyTransactionRepository(
         idStore: String,
         idUser: String,
         qty: String,
-        totalPayment: String,
-        status: String,
-        note: String
+        totalPayment: String
     ): LiveData<Result<SingleResupplyResponse>> = liveData {
         emit(Result.Loading)
         try {
-            val client = apiService.updateResupplyTransaction(id, idStore, idUser, qty, totalPayment, status, note)
+            val client = apiService.updateResupplyTransaction(id, idStore, idUser, qty, totalPayment)
             emit(Result.Success(client))
         } catch (e: Exception) {
             emit(Result.Error(e.message.toString()))
@@ -92,6 +90,16 @@ class ResupplyTransactionRepository(
         emit(Result.Loading)
         try {
             val client = apiService.showFilteredResupplyTransaction(status, filterBy)
+            emit(Result.Success(client))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message.toString()))
+        }
+    }
+
+    fun cancelledResupplyTransaction(id: String): LiveData<Result<MessageResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val client = apiService.cancelledResupplyTransaction(id)
             emit(Result.Success(client))
         } catch (e: Exception) {
             emit(Result.Error(e.message.toString()))

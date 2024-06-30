@@ -8,4 +8,5 @@ class ShowPurchaseTransactionViewModel(
 ) : ViewModel() {
     fun showPurchaseTransaction(id:String) = purchaseTransactionRepository.showPurchaseTransaction(id)
     fun deletePurchaseTransaction(id: String) = purchaseTransactionRepository.deletePurchaseTransaction(id)
+    fun cancelledPurchaseTransaction(id: String) = purchaseTransactionRepository.cancelledPurchaseTransaction(id)
 }

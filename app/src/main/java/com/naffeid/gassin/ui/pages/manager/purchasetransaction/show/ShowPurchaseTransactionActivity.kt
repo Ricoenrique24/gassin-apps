@@ -31,7 +31,7 @@ class ShowPurchaseTransactionActivity : AppCompatActivity() {
             if (idPurchase != null) setupData(idPurchase)
         }
         if (idPurchase != null) setupData(idPurchase)
-        setupTobBar(updatePurchase)
+        setupTobBar()
     }
 
     private fun setupData(id: String) {
@@ -68,26 +68,72 @@ class ShowPurchaseTransactionActivity : AppCompatActivity() {
             tvQtyGasTotal.text = purchase.qty.toString()
             tvTotalPayment.text = Rupiah.convertToRupiah(purchase.totalPayment?.toDoubleOrNull()!!)
             tvPriceOneGas.text = Rupiah.convertToRupiah(purchase.totalPayment.toDoubleOrNull()!! / purchase.qty!!)
-            btnEditPurchase.setOnClickListener {
-                val purchaseData = ListPurchaseItem(
-                    id = purchase.id,
-                    note = purchase.note.toString(),
-                    idCustomer = purchase.idCustomer,
-                    qty = purchase.qty,
-                    statusTransaction = purchase.statusTransaction,
-                    idUser = purchase.idUser,
-                    user = purchase.user,
-                    totalPayment = purchase.totalPayment,
-                    status = purchase.status,
-                    customer = purchase.customer
 
-                )
-                editPurchaseTransaction(purchaseData)
+            val statusTransaction = purchase.status
+            when(statusTransaction) {
+                "1" -> {
+                    btnEditPurchase.visibility = View.VISIBLE
+                    btnCancelPurchase.visibility = View.VISIBLE
+                    btnCancelPurchase.setOnClickListener {
+                        val id = purchase.id.toString()
+                        cancelledPurchaseTransaction(id)
+                    }
+                    btnEditPurchase.setOnClickListener {
+                        val purchaseData = ListPurchaseItem(
+                            id = purchase.id,
+                            note = purchase.note.toString(),
+                            idCustomer = purchase.idCustomer,
+                            qty = purchase.qty,
+                            statusTransaction = purchase.statusTransaction,
+                            idUser = purchase.idUser,
+                            user = purchase.user,
+                            totalPayment = purchase.totalPayment,
+                            status = purchase.status,
+                            customer = purchase.customer
+
+                        )
+                        editPurchaseTransaction(purchaseData)
+                    }
+                }
+                "2" -> {
+                    btnEditPurchase.visibility = View.VISIBLE
+                    btnCancelPurchase.visibility = View.VISIBLE
+                    btnCancelPurchase.setOnClickListener {
+                        val id = purchase.id.toString()
+                        cancelledPurchaseTransaction(id)
+                    }
+                    btnEditPurchase.setOnClickListener {
+                        val purchaseData = ListPurchaseItem(
+                            id = purchase.id,
+                            note = purchase.note.toString(),
+                            idCustomer = purchase.idCustomer,
+                            qty = purchase.qty,
+                            statusTransaction = purchase.statusTransaction,
+                            idUser = purchase.idUser,
+                            user = purchase.user,
+                            totalPayment = purchase.totalPayment,
+                            status = purchase.status,
+                            customer = purchase.customer
+
+                        )
+                        editPurchaseTransaction(purchaseData)
+                    }
+                }
+                "3" -> {
+                    btnCancelPurchase.visibility = View.GONE
+                    btnEditPurchase.visibility = View.GONE
+                }
+                "4" -> {
+                    btnCancelPurchase.visibility = View.GONE
+                    btnEditPurchase.visibility = View.GONE
+                }
+                else -> {
+                    btnCancelPurchase.visibility = View.GONE
+                    btnEditPurchase.visibility = View.GONE
+                }
+
             }
-            btnCancelPurchase.setOnClickListener {
-                val id = purchase.id.toString()
-                deletePurchaseTransaction(id)
-            }
+
         }
     }
 
@@ -96,8 +142,8 @@ class ShowPurchaseTransactionActivity : AppCompatActivity() {
         intentToDetail.putExtra("PURCHASE", data.id.toString())
         startActivity(intentToDetail)
     }
-    private fun deletePurchaseTransaction(id: String) {
-        viewModel.deletePurchaseTransaction(id).observe(this){ result->
+    private fun cancelledPurchaseTransaction(id: String) {
+        viewModel.cancelledPurchaseTransaction(id).observe(this){ result->
             when (result) {
                 is Result.Loading -> {
                     showLoading(true)
@@ -118,7 +164,7 @@ class ShowPurchaseTransactionActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupTobBar(updatePurchase: Boolean) {
+    private fun setupTobBar() {
         binding.btnBack.setOnClickListener {
             onBackPressed()
         }
