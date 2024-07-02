@@ -33,7 +33,7 @@ class CreatePurchaseTransactionActivity : AppCompatActivity() {
             setupView()
             validate()
         }
-        setupTobBar()
+        setupTopBar()
         setupView()
         validate()
     }
@@ -169,19 +169,23 @@ class CreatePurchaseTransactionActivity : AppCompatActivity() {
 
     private fun navigateToChooseCustomer() {
         val intentToChooseCustomer= Intent(this@CreatePurchaseTransactionActivity, ChooseCustomerActivity::class.java)
+        intentToChooseCustomer.putExtra("FROM-CREATE-PURCHASE",true)
         startActivity(intentToChooseCustomer)
         finish()
     }
 
     private fun navigateToChooseEmployee() {
         val intentToChooseEmployee = Intent(this@CreatePurchaseTransactionActivity, ChooseEmployeeActivity::class.java)
+        intentToChooseEmployee.putExtra("FROM-CREATE-PURCHASE",true)
         startActivity(intentToChooseEmployee)
         finish()
     }
 
-    private fun setupTobBar() {
+    private fun setupTopBar() {
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            val intentToHome = Intent(this@CreatePurchaseTransactionActivity, ManagerMainActivity::class.java)
+            startActivity(intentToHome)
+            finish()
         }
     }
 

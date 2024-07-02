@@ -28,16 +28,19 @@ class ShowCustomerActivity : AppCompatActivity() {
         binding = ActivityShowCustomerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val customer = intent.getParcelableExtra<ListCustomerItem>("CUSTOMER")
-        val updateCustomer = intent.getBooleanExtra("CUSTOMERUPDATED",false)
+        val fromCreatePurchase = intent.getBooleanExtra("FROM-CREATE-PURCHASE",false)
         val fromChooseCustomer = intent.getBooleanExtra("FROM-CHOOSE-CUSTOMER",false)
-        if (updateCustomer) {
-            if (customer != null) setupData(customer,updateCustomer,fromChooseCustomer)
+        val fromIndexCustomer = intent.getBooleanExtra("FROM-INDEX-CUSTOMER",false)
+        val fromEditCustomer = intent.getBooleanExtra("FROM-EDIT-CUSTOMER",false)
+
+        if (fromEditCustomer) {
+            if (customer != null) setupData(customer, fromCreatePurchase, fromChooseCustomer, fromIndexCustomer, true)
         }
-        if (customer != null) setupData(customer,updateCustomer,fromChooseCustomer)
-        setupTobBar(updateCustomer,fromChooseCustomer)
+        if (customer != null) setupData(customer, fromCreatePurchase, fromChooseCustomer, fromIndexCustomer, fromEditCustomer)
+        setupTopBar(fromCreatePurchase, fromChooseCustomer, fromIndexCustomer)
     }
 
-    private fun setupData(customer: ListCustomerItem, updateCustomer:Boolean, fromChooseCustomer:Boolean) {
+    private fun setupData(customer: ListCustomerItem, fromCreatePurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer: Boolean, fromEditCustomer:Boolean) {
         val id = customer.id.toString()
         viewModel.showCustomer(id).observe(this) { result ->
             when (result) {
@@ -48,7 +51,7 @@ class ShowCustomerActivity : AppCompatActivity() {
                 is Result.Success -> {
                     showLoading(false)
                     val customerData = result.data.customer
-                    if (updateCustomer) {
+                    if (fromEditCustomer) {
                         viewModel.getCustomer().observe(this) { customer ->
                             if (customer.isNotEmpty()) {
                                 val idCustomer = customer.id.toString()
@@ -67,7 +70,7 @@ class ShowCustomerActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    if(customerData !=null) setupView(customerData,fromChooseCustomer)
+                    if(customerData !=null) setupView(customerData,fromCreatePurchase, fromChooseCustomer, fromIndexCustomer)
 
                 }
 
@@ -79,7 +82,7 @@ class ShowCustomerActivity : AppCompatActivity() {
             }
         }
     }
-    private fun setupView(customer: Customer,fromChooseCustomer:Boolean) {
+    private fun setupView(customer: Customer, fromCreatePurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer: Boolean) {
         with(binding){
             edCustomerName.setText(customer.name)
             edCustomerLinkMap.setText(customer.linkMap)
@@ -95,29 +98,24 @@ class ShowCustomerActivity : AppCompatActivity() {
                     phone = customer.phone,
                     price = customer.price
                 )
-                editCustomer(customerData,fromChooseCustomer)
+                editCustomer(customerData,fromCreatePurchase, fromChooseCustomer, fromIndexCustomer)
             }
             btnDeleteCustomer.setOnClickListener {
-                deleteCustomer(customer.id.toString(),fromChooseCustomer)
+                deleteCustomer(customer.id.toString(), fromCreatePurchase, fromChooseCustomer)
             }
         }
     }
 
-    private fun editCustomer(data: ListCustomerItem,fromChooseCustomer:Boolean) {
-        if (fromChooseCustomer) {
-            val intentToDetail = Intent(this@ShowCustomerActivity, EditCustomerActivity::class.java)
-            intentToDetail.putExtra("CUSTOMER", data)
-            intentToDetail.putExtra("FROM-CHOOSE-CUSTOMER",true)
-            startActivity(intentToDetail)
-        } else {
-            val intentToDetail = Intent(this@ShowCustomerActivity, EditCustomerActivity::class.java)
-            intentToDetail.putExtra("CUSTOMER", data)
-            intentToDetail.putExtra("FROM-CHOOSE-CUSTOMER",false)
-            startActivity(intentToDetail)
-        }
+    private fun editCustomer(data: ListCustomerItem, fromCreatePurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer: Boolean) {
+        val intentToEdit = Intent(this@ShowCustomerActivity, EditCustomerActivity::class.java)
+        intentToEdit.putExtra("CUSTOMER", data)
+        intentToEdit.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
+        intentToEdit.putExtra("FROM-CHOOSE-CUSTOMER",fromChooseCustomer)
+        intentToEdit.putExtra("FROM-INDEX-CUSTOMER",fromIndexCustomer)
+        startActivity(intentToEdit)
     }
 
-    private fun deleteCustomer(id: String,fromChooseCustomer:Boolean) {
+    private fun deleteCustomer(id: String,fromCreatePurchase:Boolean, fromChooseCustomer:Boolean) {
         viewModel.deleteCustomer(id).observe(this) { result ->
             when (result) {
                 is Result.Loading -> {
@@ -136,9 +134,9 @@ class ShowCustomerActivity : AppCompatActivity() {
                         }
                     }
                     if (fromChooseCustomer){
-                        navigateToChooseCustomer()
+                        navigateToChooseCustomer(fromCreatePurchase, true)
                     } else {
-                        navigateToIndexCustomer()
+                        navigateToIndexCustomer(true)
                     }
                 }
 
@@ -154,30 +152,43 @@ class ShowCustomerActivity : AppCompatActivity() {
         return this != CustomerModel(0, "", "", "", "", "")
     }
 
-    private fun navigateToIndexCustomer() {
+    private fun navigateToIndexCustomer(fromEditCustomer:Boolean) {
         val intentToIndex = Intent(this@ShowCustomerActivity, IndexCustomerActivity::class.java)
-        intentToIndex.putExtra("CUSTOMERUPDATED", true)
+        intentToIndex.putExtra("FROM-EDIT-CUSTOMER", fromEditCustomer)
         startActivity(intentToIndex)
         finish()
     }
-    private fun navigateToChooseCustomer() {
-        val intentToChooseCustomer = Intent(this@ShowCustomerActivity, ChooseCustomerActivity::class.java)
-        intentToChooseCustomer.putExtra("CUSTOMERUPDATED", true)
-        startActivity(intentToChooseCustomer)
+    private fun navigateToChooseCustomer(fromCreatePurchase:Boolean, fromEditCustomer:Boolean) {
+        val intentToChoose = Intent(this@ShowCustomerActivity, ChooseCustomerActivity::class.java)
+        intentToChoose.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
+        intentToChoose.putExtra("FROM-EDIT-CUSTOMER",fromEditCustomer)
+        startActivity(intentToChoose)
         finish()
     }
 
-    private fun setupTobBar(updateCustomer: Boolean, fromChooseCustomer:Boolean) {
+    private fun setupTopBar(fromCreatePurchase: Boolean, fromChooseCustomer: Boolean, fromIndexCustomer: Boolean) {
+        if (fromChooseCustomer && fromIndexCustomer) {
+            showAlert("Halaman Tidak Dapat Ditemukan")
+            return
+        }
+
         binding.btnBack.setOnClickListener {
-            if (updateCustomer) {
-                if (fromChooseCustomer){
-                    navigateToChooseCustomer()
-                } else {
-                    navigateToIndexCustomer()
+            val intentToHome = when {
+                fromChooseCustomer -> {
+                    Intent(this@ShowCustomerActivity, ChooseCustomerActivity::class.java).apply {
+                        putExtra("FROM-CREATE-PURCHASE", fromCreatePurchase)
+                    }
                 }
-            } else {
-                onBackPressed()
+                fromIndexCustomer -> {
+                    Intent(this@ShowCustomerActivity, IndexCustomerActivity::class.java)
+                }
+                else -> {
+                    showAlert("Halaman Tidak Dapat Ditemukan")
+                    return@setOnClickListener
+                }
             }
+            startActivity(intentToHome)
+            finish()
         }
     }
 

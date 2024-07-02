@@ -371,6 +371,7 @@ tools:context=".ui.pages.manager.purchasetransaction.show.ShowPurchaseTransactio
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="20dp"
             android:backgroundTint="@android:color/white"
             app:cardCornerRadius="10dp"
             app:cardElevation="4dp"

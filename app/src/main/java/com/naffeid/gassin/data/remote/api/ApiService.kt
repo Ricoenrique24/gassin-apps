@@ -38,9 +38,31 @@ interface ApiService {
         @Field("token_fcm") fcmToken: String
     ): LoginResponse
 
+    @GET("auth/{id}")
+    suspend fun showUser(
+        @Path("id") id: String
+    ): LoginResponse
+
     @FormUrlEncoded
-    @POST("auth/getuser")
-    suspend fun getUser(): LoginResponse
+    @PUT("auth/{id}")
+    suspend fun updateUser(
+        @Path("id") id: String,
+        @Field("name") name: String,
+        @Field("username") username: String,
+        @Field("email") email: String,
+        @Field("password") password: String?,
+        @Field("phone") phone: String
+    ): LoginResponse
+
+    @FormUrlEncoded
+    @PUT("auth/{id}")
+    suspend fun updateUserWithoutPassword(
+        @Path("id") id: String,
+        @Field("name") name: String,
+        @Field("username") username: String,
+        @Field("email") email: String,
+        @Field("phone") phone: String
+    ): LoginResponse
 
     @FormUrlEncoded
     @POST("auth/logout")

@@ -17,11 +17,12 @@ import com.naffeid.gassin.data.utils.Rupiah
 import com.naffeid.gassin.databinding.FragmentHomeManagerBinding
 import com.naffeid.gassin.ui.adapter.TransactionAdapter
 import com.naffeid.gassin.ui.pages.ViewModelFactory
-import com.naffeid.gassin.ui.pages.employee.order.show.ShowOrderEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.customer.index.IndexCustomerActivity
 import com.naffeid.gassin.ui.pages.manager.employee.index.IndexEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.purchasetransaction.create.CreatePurchaseTransactionActivity
+import com.naffeid.gassin.ui.pages.manager.purchasetransaction.show.ShowPurchaseTransactionActivity
 import com.naffeid.gassin.ui.pages.manager.resupplytransaction.create.CreateReSupplyTransactionActivity
+import com.naffeid.gassin.ui.pages.manager.resupplytransaction.show.ShowReSupplyTransactionActivity
 import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreActivity
 import com.naffeid.gassin.ui.pages.signin.SignInActivity
 
@@ -48,12 +49,18 @@ class HomeFragment : Fragment() {
             if (user.apikey == null) {
                 navigationToSignIn()
             }
-            setupView(user)
+            setupData(user)
             setupRecyclerView()
             showAllActiveTransactionManager()
         }
 
         return root
+    }
+    private fun setupData(user:User) {
+        showAllActiveTransactionManager()
+        showRevenueToday()
+        showAvailableStockQuantity()
+        setupView(user)
     }
 
     private fun setupView(user:User) {
@@ -70,17 +77,23 @@ class HomeFragment : Fragment() {
         transactionAdapter = TransactionAdapter()
         transactionAdapter.setOnItemClickCallback(object : TransactionAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ListTransactionItem) {
-                val intentToDetail = Intent(requireContext(), ShowOrderEmployeeActivity::class.java)
-                intentToDetail.putExtra("TRANSACTION", data.id.toString())
-                intentToDetail.putExtra("TYPE-TRANSACTION", data.type.toString())
-                startActivity(intentToDetail)
+                val type = data.type
+                if (type == "purchase") {
+                    val intentToDetail = Intent(requireContext(), ShowPurchaseTransactionActivity::class.java)
+                    intentToDetail.putExtra("PURCHASE", data.id.toString())
+                    startActivity(intentToDetail)
+                } else if (type == "resupply") {
+                    val intentToDetail = Intent(requireContext(), ShowReSupplyTransactionActivity::class.java)
+                    intentToDetail.putExtra("RESUPPLY", data.id.toString())
+                    startActivity(intentToDetail)
+                }
+
             }
         })
-        val layoutManager = LinearLayoutManager(requireActivity())
-        layoutManager.isAutoMeasureEnabled = false
         binding.rvTransaction.apply {
             setHasFixedSize(true)
-            this.layoutManager = layoutManager
+            layoutManager = LinearLayoutManager(requireActivity())
+            this.layoutManager?.isAutoMeasureEnabled = false
             adapter = transactionAdapter
         }
     }
@@ -131,8 +144,7 @@ class HomeFragment : Fragment() {
 
     private fun dashboardCardSetup() {
         //implementation dashboard
-        showRevenueToday()
-        showAvailableStockQuantity()
+
         buttonToStore()
         buttonToEmployee()
         buttonToCustomer()

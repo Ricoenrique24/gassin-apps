@@ -13,6 +13,7 @@ import com.naffeid.gassin.data.remote.response.Store
 import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.databinding.ActivityShowStoreBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.manager.choose.store.ChooseStoreActivity
 import com.naffeid.gassin.ui.pages.manager.store.edit.EditStoreActivity
 import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreActivity
 
@@ -27,15 +28,19 @@ class ShowStoreActivity : AppCompatActivity() {
         binding = ActivityShowStoreBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val store = intent.getParcelableExtra<ListStoreItem>("STORE")
-        val updateStore = intent.getBooleanExtra("STOREUPDATED",false)
-        if (updateStore) {
-            if (store != null) setupData(store)
+        val fromCreateResupply = intent.getBooleanExtra("FROM-CREATE-RESUPPLY",false)
+        val fromChooseStore = intent.getBooleanExtra("FROM-CHOOSE-STORE",false)
+        val fromIndexStore = intent.getBooleanExtra("FROM-INDEX-STORE",false)
+        val fromEditStore = intent.getBooleanExtra("FROM-EDIT-STORE",false)
+
+        if (fromEditStore) {
+            if (store != null) setupData(store, fromCreateResupply, fromChooseStore, fromIndexStore, true)
         }
-        if (store != null) setupData(store)
-        setupTobBar(updateStore)
+        if (store != null) setupData(store, fromCreateResupply, fromChooseStore, fromIndexStore, fromEditStore)
+        setupTopBar(fromCreateResupply, fromChooseStore, fromIndexStore)
     }
 
-    private fun setupData(store: ListStoreItem) {
+    private fun setupData(store: ListStoreItem, fromCreateResupply:Boolean, fromChooseStore:Boolean, fromIndexStore: Boolean, fromEditStore:Boolean) {
         val id = store.id.toString()
         viewModel.showStore(id).observe(this) { result ->
             when (result) {
@@ -46,7 +51,27 @@ class ShowStoreActivity : AppCompatActivity() {
                 is Result.Success -> {
                     showLoading(false)
                     val storeData = result.data.store
-                    if(storeData !=null) setupView(storeData)
+                    if (fromEditStore) {
+                        viewModel.getStore().observe(this) { store ->
+                            if (store.isNotEmpty()) {
+                                val idStore = store.id.toString()
+                                if (id == idStore) {
+                                    viewModel.deleteStore()
+                                    val dataStore = com.naffeid.gassin.data.model.Store(
+                                        id = storeData?.id ?: 0,
+                                        name = storeData?.name ?: "",
+                                        linkMap = storeData?.linkMap ?: "",
+                                        address = storeData?.address ?: "",
+                                        phone = storeData?.phone ?: "",
+                                        price = storeData?.price ?: ""
+                                    )
+                                    viewModel.saveStore(dataStore)
+                                }
+                            }
+                        }
+                    }
+                    if(storeData !=null) setupView(storeData,fromCreateResupply, fromChooseStore, fromIndexStore)
+
                 }
 
                 is Result.Error -> {
@@ -57,7 +82,7 @@ class ShowStoreActivity : AppCompatActivity() {
             }
         }
     }
-    private fun setupView(store: Store) {
+    private fun setupView(store: Store, fromCreateResupply:Boolean, fromChooseStore:Boolean, fromIndexStore: Boolean) {
         with(binding){
             edStoreName.setText(store.name)
             edStoreLinkMap.setText(store.linkMap)
@@ -73,21 +98,24 @@ class ShowStoreActivity : AppCompatActivity() {
                     phone = store.phone,
                     price = store.price
                 )
-                editStore(storeData)
+                editStore(storeData,fromCreateResupply, fromChooseStore, fromIndexStore)
             }
             btnDeleteStore.setOnClickListener {
-                deleteStore(store.id.toString())
+                deleteStore(store.id.toString(), fromCreateResupply, fromChooseStore)
             }
         }
     }
 
-    private fun editStore(data: ListStoreItem) {
-        val intentToDetail = Intent(this@ShowStoreActivity, EditStoreActivity::class.java)
-        intentToDetail.putExtra("STORE", data)
-        startActivity(intentToDetail)
+    private fun editStore(data: ListStoreItem, fromCreateResupply:Boolean, fromChooseStore:Boolean, fromIndexStore: Boolean) {
+        val intentToEdit = Intent(this@ShowStoreActivity, EditStoreActivity::class.java)
+        intentToEdit.putExtra("STORE", data)
+        intentToEdit.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
+        intentToEdit.putExtra("FROM-CHOOSE-STORE",fromChooseStore)
+        intentToEdit.putExtra("FROM-INDEX-STORE",fromIndexStore)
+        startActivity(intentToEdit)
     }
 
-    private fun deleteStore(id: String) {
+    private fun deleteStore(id: String,fromCreateResupply:Boolean, fromChooseStore:Boolean) {
         viewModel.deleteStore(id).observe(this) { result ->
             when (result) {
                 is Result.Loading -> {
@@ -97,7 +125,19 @@ class ShowStoreActivity : AppCompatActivity() {
                 is Result.Success -> {
                     showLoading(false)
                     showAlert(getString(R.string.agen_berhasil_dihapus))
-                    navigateToIndexStore()
+                    viewModel.getStore().observe(this) { store ->
+                        if (store.isNotEmpty()) {
+                            val idStore = store.id.toString()
+                            if (id == idStore) {
+                                viewModel.deleteStore()
+                            }
+                        }
+                    }
+                    if (fromChooseStore){
+                        navigateToChooseStore(fromCreateResupply, true)
+                    } else {
+                        navigateToIndexStore(true)
+                    }
                 }
 
                 is Result.Error -> {
@@ -108,21 +148,47 @@ class ShowStoreActivity : AppCompatActivity() {
             }
         }
     }
+    private fun com.naffeid.gassin.data.model.Store.isNotEmpty(): Boolean {
+        return this != com.naffeid.gassin.data.model.Store(0, "", "", "", "", "")
+    }
 
-    private fun navigateToIndexStore() {
+    private fun navigateToIndexStore(fromEditStore:Boolean) {
         val intentToIndex = Intent(this@ShowStoreActivity, IndexStoreActivity::class.java)
-        intentToIndex.putExtra("STOREUPDATED", true)
+        intentToIndex.putExtra("FROM-EDIT-STORE", fromEditStore)
         startActivity(intentToIndex)
         finish()
     }
+    private fun navigateToChooseStore(fromCreateResupply:Boolean, fromEditStore:Boolean) {
+        val intentToChoose = Intent(this@ShowStoreActivity, ChooseStoreActivity::class.java)
+        intentToChoose.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
+        intentToChoose.putExtra("FROM-EDIT-STORE",fromEditStore)
+        startActivity(intentToChoose)
+        finish()
+    }
 
-    private fun setupTobBar(updateStore: Boolean) {
+    private fun setupTopBar(fromCreateResupply: Boolean, fromChooseStore: Boolean, fromIndexStore: Boolean) {
+        if (fromChooseStore && fromIndexStore) {
+            showAlert("Halaman Tidak Dapat Ditemukan")
+            return
+        }
+
         binding.btnBack.setOnClickListener {
-            if (updateStore) {
-                navigateToIndexStore()
-            } else {
-                onBackPressed()
+            val intentToHome = when {
+                fromChooseStore -> {
+                    Intent(this@ShowStoreActivity, ChooseStoreActivity::class.java).apply {
+                        putExtra("FROM-CREATE-RESUPPLY", fromCreateResupply)
+                    }
+                }
+                fromIndexStore -> {
+                    Intent(this@ShowStoreActivity, IndexStoreActivity::class.java)
+                }
+                else -> {
+                    showAlert("Halaman Tidak Dapat Ditemukan")
+                    return@setOnClickListener
+                }
             }
+            startActivity(intentToHome)
+            finish()
         }
     }
 

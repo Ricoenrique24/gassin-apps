@@ -14,6 +14,7 @@ import com.naffeid.gassin.ui.pages.manager.customer.index.IndexCustomerActivity
 import com.naffeid.gassin.ui.pages.manager.employee.index.IndexEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.resupplytransaction.create.CreateReSupplyTransactionActivity
 import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreActivity
+import com.naffeid.gassin.ui.pages.manager.user.show.ShowUserActivity
 import com.naffeid.gassin.ui.pages.signin.SignInActivity
 
 class MoreFragment : Fragment() {
@@ -45,6 +46,9 @@ class MoreFragment : Fragment() {
         with(binding){
             tvUsername.text = user.username
             dashboardCardSetup()
+            btnAccount.setOnClickListener {
+                navigationToProfile()
+            }
             btnLogout.setOnClickListener {
                 viewModel.logout()
                 navigationToSignIn()
@@ -89,6 +93,10 @@ class MoreFragment : Fragment() {
 
     private fun navigationToSignIn(){
         val intent = Intent(requireContext(), SignInActivity::class.java)
+        startActivity(intent)
+    }
+    private fun navigationToProfile(){
+        val intent = Intent(requireContext(), ShowUserActivity::class.java)
         startActivity(intent)
     }
 

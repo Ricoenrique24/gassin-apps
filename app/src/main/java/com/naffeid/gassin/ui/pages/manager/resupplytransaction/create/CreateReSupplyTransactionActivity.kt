@@ -32,7 +32,7 @@ class CreateReSupplyTransactionActivity : AppCompatActivity() {
             setupView()
             validate()
         }
-        setupTobBar()
+        setupTopBar()
         setupView()
         validate()
     }
@@ -174,13 +174,16 @@ class CreateReSupplyTransactionActivity : AppCompatActivity() {
 
     private fun navigateToChooseEmployee() {
         val intentToChooseEmployee = Intent(this@CreateReSupplyTransactionActivity, ChooseEmployeeActivity::class.java)
+        intentToChooseEmployee.putExtra("FROM-CREATE-RESUPPLY",true)
         startActivity(intentToChooseEmployee)
         finish()
     }
 
-    private fun setupTobBar() {
+    private fun setupTopBar() {
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            val intentToHome = Intent(this@CreateReSupplyTransactionActivity, ManagerMainActivity::class.java)
+            startActivity(intentToHome)
+            finish()
         }
     }
 

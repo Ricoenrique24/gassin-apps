@@ -15,6 +15,7 @@ import com.naffeid.gassin.ui.adapter.CustomerAdapter
 import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.customer.create.CreateCustomerActivity
 import com.naffeid.gassin.ui.pages.manager.customer.show.ShowCustomerActivity
+import com.naffeid.gassin.ui.pages.manager.main.ManagerMainActivity
 
 class IndexCustomerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityIndexCustomerBinding
@@ -27,11 +28,11 @@ class IndexCustomerActivity : AppCompatActivity() {
         binding = ActivityIndexCustomerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-        val updateCustomer = intent.getBooleanExtra("CUSTOMERUPDATED",false)
+        val updateCustomer = intent.getBooleanExtra("FROM-CREATE-CUSTOMER",false)
         if (updateCustomer) {
             showAllCustomer()
         }
-        setupTobBar()
+        setupTopBar()
         setupRecyclerView()
         setupView()
         showAllCustomer()
@@ -54,8 +55,7 @@ class IndexCustomerActivity : AppCompatActivity() {
 
             //Create Customer
             btnAddStory.setOnClickListener {
-                val intentToDetail = Intent(this@IndexCustomerActivity, CreateCustomerActivity::class.java)
-                startActivity(intentToDetail)
+                navigateToCreateCustomer()
             }
         }
     }
@@ -64,9 +64,7 @@ class IndexCustomerActivity : AppCompatActivity() {
         customerAdapter = CustomerAdapter()
         customerAdapter.setOnItemClickCallback(object : CustomerAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ListCustomerItem) {
-                val intentToDetail = Intent(this@IndexCustomerActivity, ShowCustomerActivity::class.java)
-                intentToDetail.putExtra("CUSTOMER", data)
-                startActivity(intentToDetail)
+                navigateToShowCustomer(data)
             }
         })
         binding.rvCustomer.apply {
@@ -119,9 +117,24 @@ class IndexCustomerActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupTobBar() {
+    private fun navigateToShowCustomer(data: ListCustomerItem, ) {
+        val intentToDetail = Intent(this@IndexCustomerActivity, ShowCustomerActivity::class.java)
+        intentToDetail.putExtra("FROM-INDEX-CUSTOMER",true)
+        intentToDetail.putExtra("CUSTOMER", data)
+        startActivity(intentToDetail)
+    }
+
+    private fun navigateToCreateCustomer() {
+        val intentToCreate = Intent(this@IndexCustomerActivity, CreateCustomerActivity::class.java)
+        intentToCreate.putExtra("FROM-INDEX-CUSTOMER",true)
+        startActivity(intentToCreate)
+    }
+
+    private fun setupTopBar() {
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            val intentToHome = Intent(this@IndexCustomerActivity, ManagerMainActivity::class.java)
+            startActivity(intentToHome)
+            finish()
         }
     }
 

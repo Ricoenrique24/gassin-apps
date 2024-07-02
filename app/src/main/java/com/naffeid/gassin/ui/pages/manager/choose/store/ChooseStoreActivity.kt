@@ -30,13 +30,21 @@ class ChooseStoreActivity : AppCompatActivity() {
         binding = ActivityChooseStoreBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-        setupTobBar()
-        setupRecyclerView()
-        setupView()
+        val fromCreateResupply = intent.getBooleanExtra("FROM-CREATE-RESUPPLY",false)
+        val fromCreateStore = intent.getBooleanExtra("FROM-CREATE-STORE",false)
+        if (fromCreateStore) {
+            setupData()
+        }
+        setupRecyclerView(fromCreateResupply)
+        setupView(fromCreateResupply)
+        setupData()
+        setupTopBar()
+    }
+    private fun setupData() {
         showAllStore()
     }
 
-    private fun setupView() {
+    private fun setupView(fromCreateResupply:Boolean) {
         with(binding){
             searchView.setupWithSearchBar(searchBar)
             searchView.editText.setOnEditorActionListener { textView, actionId, event ->
@@ -53,37 +61,20 @@ class ChooseStoreActivity : AppCompatActivity() {
 
             //Create Store
             btnAddStory.setOnClickListener {
-                val intentToCreate = Intent(this@ChooseStoreActivity, CreateStoreActivity::class.java)
-                intentToCreate.putExtra("FROM-CHOOSE-STORE",true)
-                startActivity(intentToCreate)
+                navigateToCreateStore(fromCreateResupply)
             }
         }
     }
 
-    private fun setupRecyclerView() {
+    private fun setupRecyclerView(fromCreateResupply:Boolean) {
         chooseStoreAdapter = ChooseStoreAdapter()
         chooseStoreAdapter.setOnItemClickCallback(object : ChooseStoreAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ListStoreItem) {
-                val intentToDetail = Intent(this@ChooseStoreActivity, ShowStoreActivity::class.java)
-                intentToDetail.putExtra("STORE", data)
-                intentToDetail.putExtra("FROM-CHOOSE-STORE",true)
-                startActivity(intentToDetail)
+                navigateToShowStore(data, fromCreateResupply)
             }
 
             override fun onChooseStoreClicked(data: ListStoreItem) {
-                viewModel.deleteStore()
-                viewModel.saveStore(
-                    Store(
-                        id = data.id ?: 0,
-                        name = data.name ?: "",
-                        phone = data.phone ?: "",
-                        address = data.address ?: "",
-                        linkMap = data.linkMap ?: "",
-                        price = data.price ?: ""
-                    )
-                )
-                showAlert(getString(R.string.berhasil_memilih_store))
-                navigateToCreateResupply()
+                selectedStore(data)
             }
         })
         binding.rvStore.apply {
@@ -135,6 +126,21 @@ class ChooseStoreActivity : AppCompatActivity() {
             }
         }
     }
+    private fun selectedStore(data: ListStoreItem){
+        viewModel.deleteStore()
+        viewModel.saveStore(
+            Store(
+                id = data.id ?: 0,
+                name = data.name ?: "",
+                phone = data.phone ?: "",
+                address = data.address ?: "",
+                linkMap = data.linkMap ?: "",
+                price = data.price ?: ""
+            )
+        )
+        showAlert(getString(R.string.berhasil_memilih_store))
+        navigateToCreateResupply()
+    }
 
     private fun navigateToCreateResupply() {
         val intentToCreateResupply = Intent(this@ChooseStoreActivity, CreateReSupplyTransactionActivity::class.java)
@@ -142,7 +148,22 @@ class ChooseStoreActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun setupTobBar() {
+    private fun navigateToCreateStore(fromCreateResupply:Boolean) {
+        val intentToCreate = Intent(this@ChooseStoreActivity, CreateStoreActivity::class.java)
+        intentToCreate.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
+        intentToCreate.putExtra("FROM-CHOOSE-STORE",true)
+        startActivity(intentToCreate)
+    }
+
+    private fun navigateToShowStore(data: ListStoreItem, fromCreateResupply:Boolean) {
+        val intentToDetail = Intent(this@ChooseStoreActivity, ShowStoreActivity::class.java)
+        intentToDetail.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
+        intentToDetail.putExtra("FROM-CHOOSE-STORE",true)
+        intentToDetail.putExtra("STORE", data)
+        startActivity(intentToDetail)
+    }
+
+    private fun setupTopBar() {
         binding.btnBack.setOnClickListener {
             val intentToHome = Intent(this@ChooseStoreActivity, CreateReSupplyTransactionActivity::class.java)
             startActivity(intentToHome)

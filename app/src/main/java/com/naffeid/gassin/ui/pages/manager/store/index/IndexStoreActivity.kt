@@ -13,6 +13,7 @@ import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.databinding.ActivityIndexStoreBinding
 import com.naffeid.gassin.ui.adapter.StoreAdapter
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.manager.main.ManagerMainActivity
 import com.naffeid.gassin.ui.pages.manager.store.create.CreateStoreActivity
 import com.naffeid.gassin.ui.pages.manager.store.show.ShowStoreActivity
 
@@ -27,11 +28,11 @@ class IndexStoreActivity : AppCompatActivity() {
         binding = ActivityIndexStoreBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-        val updateStore = intent.getBooleanExtra("STOREUPDATED",false)
+        val updateStore = intent.getBooleanExtra("FROM-CREATE-STORE",false)
         if (updateStore) {
             showAllStore()
         }
-        setupTobBar()
+        setupTopBar()
         setupRecyclerView()
         setupView()
         showAllStore()
@@ -54,8 +55,7 @@ class IndexStoreActivity : AppCompatActivity() {
 
             //Create Store
             btnAddStory.setOnClickListener {
-                val intentToDetail = Intent(this@IndexStoreActivity, CreateStoreActivity::class.java)
-                startActivity(intentToDetail)
+                navigateToCreateStore()
             }
         }
     }
@@ -64,9 +64,7 @@ class IndexStoreActivity : AppCompatActivity() {
         storeAdapter = StoreAdapter()
         storeAdapter.setOnItemClickCallback(object : StoreAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ListStoreItem) {
-                val intentToDetail = Intent(this@IndexStoreActivity, ShowStoreActivity::class.java)
-                intentToDetail.putExtra("STORE", data)
-                startActivity(intentToDetail)
+                navigateToShowStore(data)
             }
         })
         binding.rvStore.apply {
@@ -119,9 +117,24 @@ class IndexStoreActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupTobBar() {
+    private fun navigateToShowStore(data: ListStoreItem, ) {
+        val intentToDetail = Intent(this@IndexStoreActivity, ShowStoreActivity::class.java)
+        intentToDetail.putExtra("FROM-INDEX-STORE",true)
+        intentToDetail.putExtra("STORE", data)
+        startActivity(intentToDetail)
+    }
+
+    private fun navigateToCreateStore() {
+        val intentToCreate = Intent(this@IndexStoreActivity, CreateStoreActivity::class.java)
+        intentToCreate.putExtra("FROM-INDEX-STORE",true)
+        startActivity(intentToCreate)
+    }
+
+    private fun setupTopBar() {
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            val intentToHome = Intent(this@IndexStoreActivity, ManagerMainActivity::class.java)
+            startActivity(intentToHome)
+            finish()
         }
     }
 

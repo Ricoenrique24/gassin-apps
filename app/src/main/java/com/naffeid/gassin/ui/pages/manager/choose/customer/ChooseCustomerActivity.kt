@@ -30,13 +30,22 @@ class ChooseCustomerActivity : AppCompatActivity() {
         binding = ActivityChooseCustomerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-        setupTobBar()
-        setupRecyclerView()
-        setupView()
+        val fromCreatePurchase = intent.getBooleanExtra("FROM-CREATE-PURCHASE",false)
+        val fromCreateCustomer = intent.getBooleanExtra("FROM-CREATE-CUSTOMER",false)
+        if (fromCreateCustomer) {
+            setupData()
+        }
+        setupRecyclerView(fromCreatePurchase)
+        setupView(fromCreatePurchase)
+        setupData()
+        setupTopBar()
+    }
+
+    private fun setupData() {
         showAllCustomer()
     }
 
-    private fun setupView() {
+    private fun setupView(fromCreatePurchase:Boolean) {
         with(binding){
             searchView.setupWithSearchBar(searchBar)
             searchView.editText.setOnEditorActionListener { textView, actionId, event ->
@@ -53,37 +62,21 @@ class ChooseCustomerActivity : AppCompatActivity() {
 
             //Create Customer
             btnAddStory.setOnClickListener {
-                val intentToCreate = Intent(this@ChooseCustomerActivity, CreateCustomerActivity::class.java)
-                intentToCreate.putExtra("FROM-CHOOSE-CUSTOMER",true)
-                startActivity(intentToCreate)
+                navigateToCreateCustomer(fromCreatePurchase)
             }
         }
     }
 
-    private fun setupRecyclerView() {
+    private fun setupRecyclerView(fromCreatePurchase:Boolean) {
         chooseCustomerAdapter = ChooseCustomerAdapter()
         chooseCustomerAdapter.setOnItemClickCallback(object : ChooseCustomerAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ListCustomerItem) {
-                val intentToDetail = Intent(this@ChooseCustomerActivity, ShowCustomerActivity::class.java)
-                intentToDetail.putExtra("CUSTOMER", data)
-                intentToDetail.putExtra("FROM-CHOOSE-CUSTOMER",true)
-                startActivity(intentToDetail)
+                navigateToShowCustomer(data, fromCreatePurchase)
             }
 
             override fun onChooseCustomerClicked(data: ListCustomerItem) {
-                viewModel.deleteCustomer()
-                viewModel.saveCustomer(
-                    Customer(
-                        id = data.id ?: 0,
-                        name = data.name ?: "",
-                        phone = data.phone ?: "",
-                        address = data.address ?: "",
-                        linkMap = data.linkMap ?: "",
-                        price = data.price ?: ""
-                    )
-                )
-                showAlert(getString(R.string.berhasil_memilih_customer))
-                navigateToCreatePurchase()
+                selectedCustomer(data, fromCreatePurchase)
+
             }
         })
         binding.rvCustomer.apply {
@@ -136,13 +129,45 @@ class ChooseCustomerActivity : AppCompatActivity() {
         }
     }
 
+    private fun selectedCustomer(data: ListCustomerItem, fromCreatePurchase: Boolean){
+        viewModel.deleteCustomer()
+        viewModel.saveCustomer(
+            Customer(
+                id = data.id ?: 0,
+                name = data.name ?: "",
+                phone = data.phone ?: "",
+                address = data.address ?: "",
+                linkMap = data.linkMap ?: "",
+                price = data.price ?: ""
+            )
+        )
+        showAlert(getString(R.string.berhasil_memilih_customer))
+        navigateToCreatePurchase()
+    }
+
+    private fun navigateToCreateCustomer(fromCreatePurchase:Boolean) {
+        val intentToCreate = Intent(this@ChooseCustomerActivity, CreateCustomerActivity::class.java)
+        intentToCreate.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
+        intentToCreate.putExtra("FROM-CHOOSE-CUSTOMER",true)
+        startActivity(intentToCreate)
+    }
+
+    private fun navigateToShowCustomer(data: ListCustomerItem, fromCreatePurchase:Boolean) {
+        val intentToDetail = Intent(this@ChooseCustomerActivity, ShowCustomerActivity::class.java)
+        intentToDetail.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
+        intentToDetail.putExtra("FROM-CHOOSE-CUSTOMER",true)
+        intentToDetail.putExtra("CUSTOMER", data)
+        startActivity(intentToDetail)
+    }
+
     private fun navigateToCreatePurchase() {
-        val intentToCreatePurchase = Intent(this@ChooseCustomerActivity, CreatePurchaseTransactionActivity::class.java)
-        startActivity(intentToCreatePurchase)
+        val intentToCreate = Intent(this@ChooseCustomerActivity, CreatePurchaseTransactionActivity::class.java)
+        startActivity(intentToCreate)
         finish()
     }
 
-    private fun setupTobBar() {
+
+    private fun setupTopBar() {
         binding.btnBack.setOnClickListener {
             val intentToHome = Intent(this@ChooseCustomerActivity, CreatePurchaseTransactionActivity::class.java)
             startActivity(intentToHome)

@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import com.naffeid.gassin.data.model.User
 import com.naffeid.gassin.databinding.FragmentMoreEmployeeBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.employee.user.show.ShowUserEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.main.more.MoreViewModel
 import com.naffeid.gassin.ui.pages.signin.SignInActivity
 
@@ -41,6 +42,9 @@ class MoreEmployeeFragment : Fragment() {
     private fun setupView(user: User) {
         with(binding){
             tvUsername.text = user.username
+            btnAccount.setOnClickListener {
+                navigationToProfile()
+            }
             btnLogout.setOnClickListener {
                 viewModel.logout()
                 navigationToSignIn()
@@ -50,6 +54,10 @@ class MoreEmployeeFragment : Fragment() {
 
     private fun navigationToSignIn(){
         val intent = Intent(requireContext(), SignInActivity::class.java)
+        startActivity(intent)
+    }
+    private fun navigationToProfile(){
+        val intent = Intent(requireContext(), ShowUserEmployeeActivity::class.java)
         startActivity(intent)
     }
 

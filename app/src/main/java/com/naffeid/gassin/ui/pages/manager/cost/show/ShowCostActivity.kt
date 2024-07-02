@@ -68,6 +68,14 @@ class ShowCostActivity : AppCompatActivity() {
 
         when (verified) {
             0 -> with(binding) {
+                btnReject.visibility = View.INVISIBLE
+                btnConfirm.visibility = View.INVISIBLE
+            }
+            1 -> with(binding) {
+                btnReject.visibility = View.INVISIBLE
+                btnConfirm.visibility = View.INVISIBLE
+            }
+            else -> with(binding) {
                 btnReject.visibility = View.VISIBLE
                 btnConfirm.visibility = View.VISIBLE
                 btnReject.setOnClickListener {
@@ -76,14 +84,6 @@ class ShowCostActivity : AppCompatActivity() {
                 btnConfirm.setOnClickListener {
                     updateOperationTransaction(idTransaction, typeTransaction, true)
                 }
-            }
-            1 -> with(binding) {
-                btnReject.visibility = View.INVISIBLE
-                btnConfirm.visibility = View.INVISIBLE
-            }
-            else -> with(binding) {
-                btnReject.visibility = View.INVISIBLE
-                btnConfirm.visibility = View.INVISIBLE
             }
         }
     }

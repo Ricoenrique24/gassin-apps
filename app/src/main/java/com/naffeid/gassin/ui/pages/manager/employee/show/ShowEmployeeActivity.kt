@@ -28,16 +28,20 @@ class ShowEmployeeActivity : AppCompatActivity() {
         binding = ActivityShowEmployeeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val employee = intent.getParcelableExtra<ListEmployeeItem>("EMPLOYEE")
-        val updateEmployee = intent.getBooleanExtra("EMPLOYEEUPDATED",false)
+        val fromCreatePurchase = intent.getBooleanExtra("FROM-CREATE-PURCHASE",false)
+        val fromCreateResupply = intent.getBooleanExtra("FROM-CREATE-RESUPPLY",false)
         val fromChooseEmployee = intent.getBooleanExtra("FROM-CHOOSE-EMPLOYEE",false)
-        if (updateEmployee) {
-            if (employee != null) setupData(employee, updateEmployee,fromChooseEmployee)
+        val fromIndexEmployee = intent.getBooleanExtra("FROM-INDEX-EMPLOYEE",false)
+        val fromEditEmployee = intent.getBooleanExtra("FROM-EDIT-EMPLOYEE",false)
+
+        if (fromEditEmployee) {
+            if (employee != null) setupData(employee, fromCreatePurchase, fromCreateResupply, fromChooseEmployee, fromIndexEmployee, true)
         }
-        if (employee != null) setupData(employee, updateEmployee,fromChooseEmployee)
-        setupTobBar(updateEmployee,fromChooseEmployee)
+        if (employee != null) setupData(employee, fromCreatePurchase, fromCreateResupply, fromChooseEmployee, fromIndexEmployee, fromEditEmployee)
+        setupTopBar(fromCreatePurchase, fromCreateResupply, fromChooseEmployee, fromIndexEmployee)
     }
 
-    private fun setupData(employee: ListEmployeeItem, updateEmployee:Boolean, fromChooseEmployee:Boolean) {
+    private fun setupData(employee: ListEmployeeItem, fromCreatePurchase:Boolean, fromCreateResupply:Boolean, fromChooseEmployee:Boolean, fromIndexEmployee: Boolean, fromEditEmployee:Boolean) {
         val id = employee.id.toString()
         viewModel.showEmployee(id).observe(this) { result ->
             when (result) {
@@ -48,7 +52,7 @@ class ShowEmployeeActivity : AppCompatActivity() {
                 is Result.Success -> {
                     showLoading(false)
                     val employeeData = result.data.employee
-                    if (updateEmployee) {
+                    if (fromEditEmployee) {
                         viewModel.getEmployee().observe(this) { employee ->
                             if (employee.isNotEmpty()) {
                                 val idEmployee = employee.id.toString()
@@ -68,7 +72,7 @@ class ShowEmployeeActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    if(employeeData !=null) setupView(employeeData,fromChooseEmployee)
+                    if(employeeData !=null) setupView(employeeData,fromCreatePurchase, fromCreateResupply, fromChooseEmployee, fromIndexEmployee)
 
                 }
 
@@ -80,7 +84,7 @@ class ShowEmployeeActivity : AppCompatActivity() {
             }
         }
     }
-    private fun setupView(employee: Employee, fromChooseEmployee:Boolean) {
+    private fun setupView(employee: Employee, fromCreatePurchase:Boolean, fromCreateResupply:Boolean, fromChooseEmployee:Boolean, fromIndexEmployee: Boolean) {
         with(binding){
             edEmployeeName.setText(employee.name)
             edEmployeeUsername.setText(employee.username)
@@ -94,29 +98,25 @@ class ShowEmployeeActivity : AppCompatActivity() {
                     email = employee.email,
                     phone = employee.phone
                 )
-                editEmployee(employeeData,fromChooseEmployee)
+                editEmployee(employeeData,fromCreatePurchase, fromCreateResupply, fromChooseEmployee, fromIndexEmployee)
             }
             btnDeleteEmployee.setOnClickListener {
-                deleteEmployee(employee.id.toString(),fromChooseEmployee)
+                deleteEmployee(employee.id.toString(), fromCreatePurchase, fromCreateResupply, fromChooseEmployee)
             }
         }
     }
 
-    private fun editEmployee(data: ListEmployeeItem, fromChooseEmployee:Boolean) {
-        if (fromChooseEmployee) {
-            val intentToDetail = Intent(this@ShowEmployeeActivity, EditEmployeeActivity::class.java)
-            intentToDetail.putExtra("EMPLOYEE", data)
-            intentToDetail.putExtra("FROM-CHOOSE-EMPLOYEE",true)
-            startActivity(intentToDetail)
-        } else {
-            val intentToDetail = Intent(this@ShowEmployeeActivity, EditEmployeeActivity::class.java)
-            intentToDetail.putExtra("EMPLOYEE", data)
-            intentToDetail.putExtra("FROM-CHOOSE-EMPLOYEE",false)
-            startActivity(intentToDetail)
-        }
+    private fun editEmployee(data: ListEmployeeItem, fromCreatePurchase:Boolean, fromCreateResupply:Boolean, fromChooseEmployee:Boolean, fromIndexEmployee: Boolean) {
+        val intentToEdit = Intent(this@ShowEmployeeActivity, EditEmployeeActivity::class.java)
+        intentToEdit.putExtra("EMPLOYEE", data)
+        intentToEdit.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
+        intentToEdit.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
+        intentToEdit.putExtra("FROM-CHOOSE-EMPLOYEE",fromChooseEmployee)
+        intentToEdit.putExtra("FROM-INDEX-EMPLOYEE",fromIndexEmployee)
+        startActivity(intentToEdit)
     }
 
-    private fun deleteEmployee(id: String, fromChooseEmployee:Boolean) {
+    private fun deleteEmployee(id: String, fromCreatePurchase:Boolean, fromCreateResupply:Boolean, fromChooseEmployee:Boolean) {
         viewModel.deleteEmployee(id).observe(this) { result ->
             when (result) {
                 is Result.Loading -> {
@@ -135,9 +135,9 @@ class ShowEmployeeActivity : AppCompatActivity() {
                         }
                     }
                     if (fromChooseEmployee){
-                        navigateToChooseEmployee()
+                        navigateToChooseEmployee(fromCreatePurchase, fromCreateResupply, true)
                     } else {
-                        navigateToIndexEmployee()
+                        navigateToIndexEmployee(true)
                     }
                 }
 
@@ -154,30 +154,45 @@ class ShowEmployeeActivity : AppCompatActivity() {
         return this != EmployeeModel(0, "", "", "", "", "","")
     }
 
-    private fun navigateToIndexEmployee() {
+    private fun navigateToIndexEmployee(fromEditEmployee:Boolean) {
         val intentToIndex = Intent(this@ShowEmployeeActivity, IndexEmployeeActivity::class.java)
-        intentToIndex.putExtra("EMPLOYEEUPDATED", true)
+        intentToIndex.putExtra("FROM-EDIT-EMPLOYEE", fromEditEmployee)
         startActivity(intentToIndex)
         finish()
     }
-    private fun navigateToChooseEmployee() {
-        val intentToChooseEmployee = Intent(this@ShowEmployeeActivity, ChooseEmployeeActivity::class.java)
-        intentToChooseEmployee.putExtra("EMPLOYEEUPDATED", true)
-        startActivity(intentToChooseEmployee)
+    private fun navigateToChooseEmployee(fromCreatePurchase:Boolean, fromCreateResupply:Boolean, fromEditEmployee:Boolean) {
+        val intentToChoose = Intent(this@ShowEmployeeActivity, ChooseEmployeeActivity::class.java)
+        intentToChoose.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
+        intentToChoose.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
+        intentToChoose.putExtra("FROM-EDIT-EMPLOYEE",fromEditEmployee)
+        startActivity(intentToChoose)
         finish()
     }
 
-    private fun setupTobBar(updateEmployee: Boolean, fromChooseEmployee:Boolean) {
+    private fun setupTopBar(fromCreatePurchase: Boolean, fromCreateResupply: Boolean, fromChooseEmployee: Boolean, fromIndexEmployee: Boolean) {
+        if (fromChooseEmployee && fromIndexEmployee) {
+            showAlert("Halaman Tidak Dapat Ditemukan")
+            return
+        }
+
         binding.btnBack.setOnClickListener {
-            if (updateEmployee) {
-                if (fromChooseEmployee){
-                    navigateToChooseEmployee()
-                } else {
-                    navigateToIndexEmployee()
+            val intentToHome = when {
+                fromChooseEmployee -> {
+                    Intent(this@ShowEmployeeActivity, ChooseEmployeeActivity::class.java).apply {
+                        putExtra("FROM-CREATE-PURCHASE", fromCreatePurchase)
+                        putExtra("FROM-CREATE-RESUPPLY", fromCreateResupply)
+                    }
                 }
-            } else {
-                onBackPressed()
+                fromIndexEmployee -> {
+                    Intent(this@ShowEmployeeActivity, IndexEmployeeActivity::class.java)
+                }
+                else -> {
+                    showAlert("Halaman Tidak Dapat Ditemukan")
+                    return@setOnClickListener
+                }
             }
+            startActivity(intentToHome)
+            finish()
         }
     }
 

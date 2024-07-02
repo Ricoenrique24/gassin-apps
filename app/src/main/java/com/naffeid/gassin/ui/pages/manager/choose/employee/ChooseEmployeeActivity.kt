@@ -18,6 +18,7 @@ import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.employee.create.CreateEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.employee.show.ShowEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.purchasetransaction.create.CreatePurchaseTransactionActivity
+import com.naffeid.gassin.ui.pages.manager.resupplytransaction.create.CreateReSupplyTransactionActivity
 
 class ChooseEmployeeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChooseEmployeeBinding
@@ -31,12 +32,22 @@ class ChooseEmployeeActivity : AppCompatActivity() {
         binding = ActivityChooseEmployeeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-        setupTobBar()
-        setupRecyclerView()
-        setupView()
+        val fromCreatePurchase = intent.getBooleanExtra("FROM-CREATE-PURCHASE",false)
+        val fromCreateResupply = intent.getBooleanExtra("FROM-CREATE-RESUPPLY",false)
+        val fromCreateEmployee = intent.getBooleanExtra("FROM-CREATE-EMPLOYEE",false)
+        if (fromCreateEmployee) {
+            setupData()
+        }
+        setupRecyclerView(fromCreatePurchase, fromCreateResupply)
+        setupView(fromCreatePurchase, fromCreateResupply)
+        setupData()
+        setupTopBar(fromCreatePurchase, fromCreateResupply)
+    }
+    private fun setupData() {
         showAllEmployee()
     }
-    private fun setupView() {
+
+    private fun setupView(fromCreatePurchase:Boolean, fromCreateResupply:Boolean) {
         with(binding){
             searchView.setupWithSearchBar(searchBar)
             searchView.editText.setOnEditorActionListener { textView, actionId, event ->
@@ -53,38 +64,20 @@ class ChooseEmployeeActivity : AppCompatActivity() {
 
             //Create Employee
             btnAddStory.setOnClickListener {
-                val intentToCreate = Intent(this@ChooseEmployeeActivity, CreateEmployeeActivity::class.java)
-                intentToCreate.putExtra("FROM-CHOOSE-EMPLOYEE",true)
-                startActivity(intentToCreate)
+                navigateToCreateEmployee(fromCreatePurchase, fromCreateResupply)
             }
         }
     }
 
-    private fun setupRecyclerView() {
+    private fun setupRecyclerView(fromCreatePurchase:Boolean, fromCreateResupply:Boolean) {
         chooseEmployeeAdapter = ChooseEmployeeAdapter()
         chooseEmployeeAdapter.setOnItemClickCallback(object : ChooseEmployeeAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ListEmployeeItem) {
-                val intentToDetail = Intent(this@ChooseEmployeeActivity, ShowEmployeeActivity::class.java)
-                intentToDetail.putExtra("EMPLOYEE", data)
-                intentToDetail.putExtra("FROM-CHOOSE-EMPLOYEE",true)
-                startActivity(intentToDetail)
+                navigateToShowEmployee(data, fromCreatePurchase, fromCreateResupply)
             }
 
             override fun onChooseEmployeeClicked(data: ListEmployeeItem) {
-                viewModel.deleteEmployee()
-                viewModel.saveEmployee(
-                    Employee(
-                        id = data.id ?: 0,
-                        name = data.name ?: "",
-                        username = data.username ?: "",
-                        email = data.email ?: "",
-                        phone = data.phone ?: "",
-                        role = data.role ?: "",
-                        token = data.apikey ?: ""
-                    )
-                )
-                showAlert(getString(R.string.berhasil_memilih_employee))
-                navigateToCreatePurchase()
+                selectedEmployee(data, fromCreatePurchase, fromCreateResupply)
             }
         })
         binding.rvEmployee.apply {
@@ -136,20 +129,75 @@ class ChooseEmployeeActivity : AppCompatActivity() {
             }
         }
     }
-
-    private fun navigateToCreatePurchase() {
-        val intentToCreatePurchase = Intent(this@ChooseEmployeeActivity, CreatePurchaseTransactionActivity::class.java)
-        startActivity(intentToCreatePurchase)
-        finish()
+    private fun selectedEmployee(data: ListEmployeeItem, fromCreatePurchase: Boolean, fromCreateResupply: Boolean){
+        viewModel.deleteEmployee()
+        viewModel.saveEmployee(
+            Employee(
+                id = data.id ?: 0,
+                name = data.name ?: "",
+                username = data.username ?: "",
+                email = data.email ?: "",
+                phone = data.phone ?: "",
+                role = data.role ?: "",
+                token = data.apikey ?: ""
+            )
+        )
+        showAlert(getString(R.string.berhasil_memilih_employee))
+        navigateToCreateTransaction(fromCreatePurchase, fromCreateResupply)
+    }
+    private fun navigateToCreateEmployee(fromCreatePurchase:Boolean, fromCreateResupply:Boolean) {
+        val intentToCreate = Intent(this@ChooseEmployeeActivity, CreateEmployeeActivity::class.java)
+        intentToCreate.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
+        intentToCreate.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
+        intentToCreate.putExtra("FROM-CHOOSE-EMPLOYEE",true)
+        startActivity(intentToCreate)
     }
 
-    private fun setupTobBar() {
+    private fun navigateToShowEmployee(data:ListEmployeeItem, fromCreatePurchase:Boolean, fromCreateResupply:Boolean) {
+        val intentToDetail = Intent(this@ChooseEmployeeActivity, ShowEmployeeActivity::class.java)
+        intentToDetail.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
+        intentToDetail.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
+        intentToDetail.putExtra("FROM-CHOOSE-EMPLOYEE",true)
+        intentToDetail.putExtra("EMPLOYEE", data)
+        startActivity(intentToDetail)
+    }
+
+    private fun navigateToCreateTransaction(fromCreatePurchase: Boolean, fromCreateResupply: Boolean) {
+        val intentToCreate = when {
+            fromCreatePurchase -> Intent(this@ChooseEmployeeActivity, CreatePurchaseTransactionActivity::class.java)
+            fromCreateResupply -> Intent(this@ChooseEmployeeActivity, CreateReSupplyTransactionActivity::class.java)
+            else -> null
+        }
+
+        intentToCreate?.let {
+            startActivity(it)
+            finish()
+        } ?: run {
+            showAlert("Halaman Tidak Dapat Ditemukan")
+        }
+    }
+
+
+    private fun setupTopBar(fromCreatePurchase: Boolean, fromCreateResupply: Boolean) {
+        if (fromCreatePurchase && fromCreateResupply) {
+            showAlert("Halaman Tidak Dapat Ditemukan")
+            return
+        }
+
         binding.btnBack.setOnClickListener {
-            val intentToHome = Intent(this@ChooseEmployeeActivity, CreatePurchaseTransactionActivity::class.java)
+            val intentToHome = when {
+                fromCreatePurchase -> Intent(this@ChooseEmployeeActivity, CreatePurchaseTransactionActivity::class.java)
+                fromCreateResupply -> Intent(this@ChooseEmployeeActivity, CreateReSupplyTransactionActivity::class.java)
+                else -> {
+                    showAlert("Halaman Tidak Dapat Ditemukan")
+                    return@setOnClickListener
+                }
+            }
             startActivity(intentToHome)
             finish()
         }
     }
+
 
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) binding.progressBar.visibility =

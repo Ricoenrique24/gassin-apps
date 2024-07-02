@@ -159,4 +159,11 @@
     <string name="keterangan_pengeluaran">Keterangan pengeluaran</string>
     <string name="simpan_pesanan">Simpan Pesanan</string>
     <string name="simpan_pembelian">Simpan Pembelian</string>
+    <string name="edit_profil">Edit Profil</string>
+    <string name="profil">Profil</string>
+    <string name="user_berhasil_di_update">User Berhasil Di Update</string>
+    <string name="masukkan_username">Masukkan Username</string>
+    <string name="masukkan_email">Masukkan Email</string>
+    <string name="masukkan_nomor_telepon">Masukkan Nomor Telepon</string>
+    <string name="masukkan_nama">Masukkan Nama</string>
 </resources>

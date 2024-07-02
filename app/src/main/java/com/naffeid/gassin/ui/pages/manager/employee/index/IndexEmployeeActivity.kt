@@ -15,6 +15,7 @@ import com.naffeid.gassin.ui.adapter.EmployeeAdapter
 import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.employee.create.CreateEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.employee.show.ShowEmployeeActivity
+import com.naffeid.gassin.ui.pages.manager.main.ManagerMainActivity
 
 class IndexEmployeeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityIndexEmployeeBinding
@@ -27,11 +28,11 @@ class IndexEmployeeActivity : AppCompatActivity() {
         binding = ActivityIndexEmployeeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-        val updateEmployee = intent.getBooleanExtra("EMPLOYEEUPDATED",false)
+        val updateEmployee = intent.getBooleanExtra("FROM-CREATE-EMPLOYEE",false)
         if (updateEmployee) {
             showAllEmployee()
         }
-        setupTobBar()
+        setupTopBar()
         setupRecyclerView()
         setupView()
         showAllEmployee()
@@ -54,8 +55,7 @@ class IndexEmployeeActivity : AppCompatActivity() {
 
             //Create Employee
             btnAddStory.setOnClickListener {
-                val intentToDetail = Intent(this@IndexEmployeeActivity, CreateEmployeeActivity::class.java)
-                startActivity(intentToDetail)
+                navigateToCreateEmployee()
             }
         }
     }
@@ -64,9 +64,7 @@ class IndexEmployeeActivity : AppCompatActivity() {
         employeeAdapter = EmployeeAdapter()
         employeeAdapter.setOnItemClickCallback(object : EmployeeAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ListEmployeeItem) {
-                val intentToDetail = Intent(this@IndexEmployeeActivity, ShowEmployeeActivity::class.java)
-                intentToDetail.putExtra("EMPLOYEE", data)
-                startActivity(intentToDetail)
+                navigateToShowEmployee(data)
             }
         })
         binding.rvEmployee.apply {
@@ -118,10 +116,25 @@ class IndexEmployeeActivity : AppCompatActivity() {
             }
         }
     }
+    
+    private fun navigateToShowEmployee(data: ListEmployeeItem, ) {
+        val intentToDetail = Intent(this@IndexEmployeeActivity, ShowEmployeeActivity::class.java)
+        intentToDetail.putExtra("FROM-INDEX-EMPLOYEE",true)
+        intentToDetail.putExtra("EMPLOYEE", data)
+        startActivity(intentToDetail)
+    }
 
-    private fun setupTobBar() {
+    private fun navigateToCreateEmployee() {
+        val intentToCreate = Intent(this@IndexEmployeeActivity, CreateEmployeeActivity::class.java)
+        intentToCreate.putExtra("FROM-INDEX-EMPLOYEE",true)
+        startActivity(intentToCreate)
+    }
+
+    private fun setupTopBar() {
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            val intentToHome = Intent(this@IndexEmployeeActivity, ManagerMainActivity::class.java)
+            startActivity(intentToHome)
+            finish()
         }
     }
 

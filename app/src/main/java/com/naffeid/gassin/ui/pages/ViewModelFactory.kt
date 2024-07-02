@@ -18,6 +18,10 @@ import com.naffeid.gassin.ui.pages.employee.main.home.HomeEmployeeViewModel
 import com.naffeid.gassin.ui.pages.employee.main.more.MoreEmployeeViewModel
 import com.naffeid.gassin.ui.pages.employee.main.order.OrderEmployeeViewModel
 import com.naffeid.gassin.ui.pages.employee.order.show.ShowOrderEmployeeViewModel
+import com.naffeid.gassin.ui.pages.employee.user.edit.EditUserEmployeeViewModel
+import com.naffeid.gassin.ui.pages.employee.user.show.ShowUserEmployeeViewModel
+import com.naffeid.gassin.ui.pages.manager.user.edit.EditUserViewModel
+import com.naffeid.gassin.ui.pages.manager.user.show.ShowUserViewModel
 import com.naffeid.gassin.ui.pages.signin.SignInViewModel
 import com.naffeid.gassin.ui.pages.splashscreen.SplashViewModel
 import com.naffeid.gassin.ui.pages.manager.choose.customer.ChooseCustomerViewModel as ChooseCustomerManagerViewModel
@@ -136,6 +140,14 @@ class ViewModelFactory private constructor(
             return MoreEmployeeViewModel(userRepository) as T
         } else if (modelClass.isAssignableFrom(ShowOrderEmployeeViewModel::class.java)) {
             return ShowOrderEmployeeViewModel(transactionRepository, operationTransactionRepository) as T
+        } else if (modelClass.isAssignableFrom(ShowUserViewModel::class.java)) {
+            return ShowUserViewModel(userRepository,authRepository) as T
+        } else if (modelClass.isAssignableFrom(EditUserViewModel::class.java)) {
+            return EditUserViewModel(userRepository,authRepository) as T
+        } else if (modelClass.isAssignableFrom(ShowUserEmployeeViewModel::class.java)) {
+            return ShowUserEmployeeViewModel(userRepository,authRepository) as T
+        } else if (modelClass.isAssignableFrom(EditUserEmployeeViewModel::class.java)) {
+            return EditUserEmployeeViewModel(userRepository,authRepository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

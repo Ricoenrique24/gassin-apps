@@ -12,6 +12,7 @@ import com.naffeid.gassin.R
 import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.databinding.ActivityCreateStoreBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.manager.choose.store.ChooseStoreActivity
 import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreActivity
 
 class CreateStoreActivity : AppCompatActivity() {
@@ -24,11 +25,15 @@ class CreateStoreActivity : AppCompatActivity() {
         binding = ActivityCreateStoreBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-        setupTobBar()
-        validate()
+        val fromCreateResupply = intent.getBooleanExtra("FROM-CREATE-RESUPPLY",false)
+        val fromChooseStore = intent.getBooleanExtra("FROM-CHOOSE-STORE",false)
+        val fromIndexStore = intent.getBooleanExtra("FROM-INDEX-STORE",false)
+
+        validate(fromCreateResupply, fromChooseStore, fromIndexStore)
+        setupTopBar(fromCreateResupply, fromChooseStore, fromIndexStore)
     }
 
-    private fun validate() {
+    private fun validate(fromCreateResupply:Boolean, fromChooseStore:Boolean, fromIndexStore:Boolean) {
         binding.btnCreateStore.setOnClickListener {
             val name = binding.edStoreName.text.toString()
             val linkMap = binding.edStoreLinkMap.text.toString()
@@ -37,14 +42,14 @@ class CreateStoreActivity : AppCompatActivity() {
             val price = binding.edStorePrice.text.toString()
 
             if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(linkMap) && !TextUtils.isEmpty(address) && !TextUtils.isEmpty(phone) && !TextUtils.isEmpty(price)) {
-                createStore(name, phone, address, linkMap, price)
+                createStore(name, phone, address, linkMap, price, fromCreateResupply, fromChooseStore, fromIndexStore)
             } else {
                 showAlert(getString(R.string.please_fill_in_all_input))
             }
         }
     }
 
-    private fun createStore(name: String, phone: String, address: String, linkMap: String, price: String) {
+    private fun createStore(name: String, phone: String, address: String, linkMap: String, price: String, fromCreateResupply:Boolean, fromChooseStore:Boolean, fromIndexStore:Boolean) {
         viewModel.createNewStore(name, phone, address, linkMap, price).observe(this) {
             if (it != null) {
                 when (it) {
@@ -61,23 +66,56 @@ class CreateStoreActivity : AppCompatActivity() {
                     is Result.Success -> {
                         showLoading(false)
                         showAlert(getString(R.string.login_success))
-                        navigateToIndexStore()
+                        when {
+                            fromChooseStore -> navigateToChooseStore(fromCreateResupply)
+                            fromIndexStore -> navigateToIndexStore()
+                            else -> {
+                                showAlert("Halaman Tidak Dapat Ditemukan")
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
+    private fun navigateToChooseStore(fromCreateResupply:Boolean) {
+        val intentToChoose = Intent(this@CreateStoreActivity, ChooseStoreActivity::class.java)
+        intentToChoose.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
+        intentToChoose.putExtra("FROM-CREATE-STORE",true)
+        startActivity(intentToChoose)
+        finish()
+    }
     private fun navigateToIndexStore() {
         val intentToIndex = Intent(this@CreateStoreActivity, IndexStoreActivity::class.java)
-        intentToIndex.putExtra("STOREUPDATED", true)
+        intentToIndex.putExtra("FROM-CREATE-STORE", true)
         startActivity(intentToIndex)
         finish()
     }
 
-    private fun setupTobBar() {
+    private fun setupTopBar(fromCreateResupply: Boolean, fromChooseStore: Boolean, fromIndexStore: Boolean) {
+        if (fromChooseStore && fromIndexStore) {
+            showAlert("Halaman Tidak Dapat Ditemukan")
+            return
+        }
+
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            val intentToHome = when {
+                fromChooseStore -> {
+                    Intent(this@CreateStoreActivity, ChooseStoreActivity::class.java).apply {
+                        putExtra("FROM-CREATE-RESUPPLY", fromCreateResupply)
+                    }
+                }
+                fromIndexStore -> {
+                    Intent(this@CreateStoreActivity, IndexStoreActivity::class.java)
+                }
+                else -> {
+                    showAlert("Halaman Tidak Dapat Ditemukan")
+                    return@setOnClickListener
+                }
+            }
+            startActivity(intentToHome)
+            finish()
         }
     }
 

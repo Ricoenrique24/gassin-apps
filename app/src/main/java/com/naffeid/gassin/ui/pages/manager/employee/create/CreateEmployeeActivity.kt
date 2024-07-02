@@ -26,12 +26,16 @@ class CreateEmployeeActivity : AppCompatActivity() {
         binding = ActivityCreateEmployeeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+        val fromCreatePurchase = intent.getBooleanExtra("FROM-CREATE-PURCHASE",false)
+        val fromCreateResupply = intent.getBooleanExtra("FROM-CREATE-RESUPPLY",false)
         val fromChooseEmployee = intent.getBooleanExtra("FROM-CHOOSE-EMPLOYEE",false)
-        validate(fromChooseEmployee)
-        setupTobBar()
+        val fromIndexEmployee = intent.getBooleanExtra("FROM-INDEX-EMPLOYEE",false)
+
+        validate(fromCreatePurchase, fromCreateResupply, fromChooseEmployee, fromIndexEmployee)
+        setupTopBar(fromCreatePurchase, fromCreateResupply, fromChooseEmployee, fromIndexEmployee)
     }
 
-    private fun validate(fromChooseEmployee:Boolean) {
+    private fun validate(fromCreatePurchase:Boolean, fromCreateResupply:Boolean, fromChooseEmployee:Boolean, fromIndexEmployee:Boolean) {
         binding.btnCreateEmployee.setOnClickListener {
             val name = binding.edEmployeeName.text.toString()
             val username = binding.edEmployeeUsername.text.toString()
@@ -43,7 +47,7 @@ class CreateEmployeeActivity : AppCompatActivity() {
             if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(username) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(confirmPassword) && !TextUtils.isEmpty(phone)) {
                 if (password.length >= 8 && confirmPassword.length >= 8 && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     if (confirmPassword == password){
-                        createNewEmployee(name, username, email, password, phone, fromChooseEmployee)
+                        createNewEmployee(name, username, email, password, phone, fromCreatePurchase, fromCreateResupply, fromChooseEmployee, fromIndexEmployee)
                     } else {
                         showAlert(getString(R.string.konfirmasi_kata_sandi_tidak_sama_dengan_password))
                     }
@@ -56,7 +60,7 @@ class CreateEmployeeActivity : AppCompatActivity() {
         }
     }
 
-    private fun createNewEmployee(name: String, username: String, email: String, password: String, phone: String, fromChooseEmployee:Boolean) {
+    private fun createNewEmployee(name: String, username: String, email: String, password: String, phone: String, fromCreatePurchase:Boolean, fromCreateResupply:Boolean, fromChooseEmployee:Boolean, fromIndexEmployee:Boolean) {
         viewModel.createNewEmployee(name, username, email, password, phone).observe(this) {
             if (it != null) {
                 when (it) {
@@ -73,10 +77,12 @@ class CreateEmployeeActivity : AppCompatActivity() {
                     is Result.Success -> {
                         showLoading(false)
                         showAlert(getString(R.string.login_success))
-                        if (fromChooseEmployee){
-                            navigateToChooseEmployee()
-                        } else {
-                            navigateToIndexEmployee()
+                        when {
+                            fromChooseEmployee -> navigateToChooseEmployee(fromCreatePurchase, fromCreateResupply)
+                            fromIndexEmployee -> navigateToIndexEmployee()
+                            else -> {
+                                showAlert("Halaman Tidak Dapat Ditemukan")
+                            }
                         }
                     }
                 }
@@ -84,22 +90,45 @@ class CreateEmployeeActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToChooseEmployee() {
-        val intentToIndex = Intent(this@CreateEmployeeActivity, ChooseEmployeeActivity::class.java)
-        intentToIndex.putExtra("EMPLOYEEUPDATED", true)
-        startActivity(intentToIndex)
+    private fun navigateToChooseEmployee(fromCreatePurchase:Boolean, fromCreateResupply:Boolean) {
+        val intentToChoose = Intent(this@CreateEmployeeActivity, ChooseEmployeeActivity::class.java)
+        intentToChoose.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
+        intentToChoose.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
+        intentToChoose.putExtra("FROM-CREATE-EMPLOYEE",true)
+        startActivity(intentToChoose)
         finish()
     }
     private fun navigateToIndexEmployee() {
         val intentToIndex = Intent(this@CreateEmployeeActivity, IndexEmployeeActivity::class.java)
-        intentToIndex.putExtra("EMPLOYEEUPDATED", true)
+        intentToIndex.putExtra("FROM-CREATE-EMPLOYEE", true)
         startActivity(intentToIndex)
         finish()
     }
 
-    private fun setupTobBar() {
+    private fun setupTopBar(fromCreatePurchase: Boolean, fromCreateResupply: Boolean, fromChooseEmployee: Boolean, fromIndexEmployee: Boolean) {
+        if (fromChooseEmployee && fromIndexEmployee) {
+            showAlert("Halaman Tidak Dapat Ditemukan")
+            return
+        }
+
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            val intentToHome = when {
+                fromChooseEmployee -> {
+                    Intent(this@CreateEmployeeActivity, ChooseEmployeeActivity::class.java).apply {
+                        putExtra("FROM-CREATE-PURCHASE", fromCreatePurchase)
+                        putExtra("FROM-CREATE-RESUPPLY", fromCreateResupply)
+                    }
+                }
+                fromIndexEmployee -> {
+                    Intent(this@CreateEmployeeActivity, IndexEmployeeActivity::class.java)
+                }
+                else -> {
+                    showAlert("Halaman Tidak Dapat Ditemukan")
+                    return@setOnClickListener
+                }
+            }
+            startActivity(intentToHome)
+            finish()
         }
     }
 

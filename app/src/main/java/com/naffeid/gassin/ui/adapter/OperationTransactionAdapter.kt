@@ -36,11 +36,11 @@ class OperationTransactionAdapter() : ListAdapter<ListOperationItem, OperationTr
             val typeTransaction = transaction.categoryTransaction?.name.toString()
             when (typeTransaction) {
                 "purchase" -> {
-                    binding.tvCustomerName.text = transaction.purchase?.customer?.name?.capitalizeWords()
+                    binding.tvCustomerName.text = transaction.purchase?.user?.name?.capitalizeWords()
                     binding.ivCategoryTransation.setImageResource(R.drawable.ic_delivery_24dp)
                 }
                 "resupply" -> {
-                    binding.tvCustomerName.text = transaction.resupply?.store?.name?.capitalizeWords()
+                    binding.tvCustomerName.text = transaction.resupply?.user?.name?.capitalizeWords()
                     binding.ivCategoryTransation.setImageResource(R.drawable.ic_shop_24dp)
                 }
                 else -> {
@@ -50,13 +50,13 @@ class OperationTransactionAdapter() : ListAdapter<ListOperationItem, OperationTr
             val verified = transaction.verified
             when(verified) {
                 0 -> {
-                    binding.tvStatusTransaction.text = "Butuh Konfirmasi"
+                    binding.tvStatusTransaction.text = "Ditolak"
                 }
                 1 -> {
                     binding.tvStatusTransaction.text = "Disetujui"
                 }
                 else -> {
-                    binding.tvStatusTransaction.text = "Ditolak"
+                    binding.tvStatusTransaction.text = "Butuh Konfirmasi"
                 }
             }
             val createdAt = transaction.createdAt.toString()
