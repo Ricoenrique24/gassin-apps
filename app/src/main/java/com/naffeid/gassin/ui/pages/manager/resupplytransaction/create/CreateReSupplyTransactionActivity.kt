@@ -167,7 +167,8 @@ class CreateReSupplyTransactionActivity : AppCompatActivity() {
     }
 
     private fun navigateToChooseStore() {
-        val intentToChooseStore= Intent(this@CreateReSupplyTransactionActivity, ChooseStoreActivity::class.java)
+        val intentToChooseStore = Intent(this@CreateReSupplyTransactionActivity, ChooseStoreActivity::class.java)
+        intentToChooseStore.putExtra("FROM-CREATE-RESUPPLY",true)
         startActivity(intentToChooseStore)
         finish()
     }

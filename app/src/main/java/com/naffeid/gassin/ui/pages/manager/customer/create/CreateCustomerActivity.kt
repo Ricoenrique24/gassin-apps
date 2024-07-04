@@ -26,14 +26,15 @@ class CreateCustomerActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
         val fromCreatePurchase = intent.getBooleanExtra("FROM-CREATE-PURCHASE",false)
+        val fromEditPurchase = intent.getBooleanExtra("FROM-EDIT-PURCHASE",false)
         val fromChooseCustomer = intent.getBooleanExtra("FROM-CHOOSE-CUSTOMER",false)
         val fromIndexCustomer = intent.getBooleanExtra("FROM-INDEX-CUSTOMER",false)
 
-        validate(fromCreatePurchase, fromChooseCustomer, fromIndexCustomer)
-        setupTopBar(fromCreatePurchase, fromChooseCustomer, fromIndexCustomer)
+        validate(fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer)
+        setupTopBar(fromCreatePurchase, fromEditPurchase,fromChooseCustomer, fromIndexCustomer)
     }
 
-    private fun validate(fromCreatePurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer:Boolean) {
+    private fun validate(fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer:Boolean) {
         binding.btnCreateCustomer.setOnClickListener {
             val name = binding.edCustomerName.text.toString()
             val linkMap = binding.edCustomerLinkMap.text.toString()
@@ -42,14 +43,14 @@ class CreateCustomerActivity : AppCompatActivity() {
             val price = binding.edCustomerPrice.text.toString()
 
             if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(linkMap) && !TextUtils.isEmpty(address) && !TextUtils.isEmpty(phone) && !TextUtils.isEmpty(price)) {
-                createCustomer(name, phone, address, linkMap, price, fromCreatePurchase, fromChooseCustomer, fromIndexCustomer)
+                createCustomer(name, phone, address, linkMap, price, fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer)
             } else {
                 showAlert(getString(R.string.please_fill_in_all_input))
             }
         }
     }
 
-    private fun createCustomer(name: String, phone: String, address: String, linkMap: String, price: String,fromCreatePurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer:Boolean) {
+    private fun createCustomer(name: String, phone: String, address: String, linkMap: String, price: String, fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer:Boolean) {
         viewModel.createNewCustomer(name, phone, address, linkMap, price).observe(this) {
             if (it != null) {
                 when (it) {
@@ -67,7 +68,7 @@ class CreateCustomerActivity : AppCompatActivity() {
                         showLoading(false)
                         showAlert(it.data.message.toString())
                         when {
-                            fromChooseCustomer -> navigateToChooseCustomer(fromCreatePurchase)
+                            fromChooseCustomer -> navigateToChooseCustomer(fromCreatePurchase, fromEditPurchase)
                             fromIndexCustomer -> navigateToIndexCustomer()
                             else -> {
                                 showAlert("Halaman Tidak Dapat Ditemukan")
@@ -79,9 +80,10 @@ class CreateCustomerActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToChooseCustomer(fromCreatePurchase:Boolean) {
+    private fun navigateToChooseCustomer(fromCreatePurchase:Boolean, fromEditPurchase:Boolean) {
         val intentToChoose = Intent(this@CreateCustomerActivity, ChooseCustomerActivity::class.java)
         intentToChoose.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
+        intentToChoose.putExtra("FROM-EDIT-PURCHASE",fromEditPurchase)
         intentToChoose.putExtra("FROM-CREATE-CUSTOMER",true)
         startActivity(intentToChoose)
         finish()
@@ -93,7 +95,7 @@ class CreateCustomerActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun setupTopBar(fromCreatePurchase: Boolean, fromChooseCustomer: Boolean, fromIndexCustomer: Boolean) {
+    private fun setupTopBar(fromCreatePurchase: Boolean, fromEditPurchase: Boolean, fromChooseCustomer: Boolean, fromIndexCustomer: Boolean) {
         if (fromChooseCustomer && fromIndexCustomer) {
             showAlert("Halaman Tidak Dapat Ditemukan")
             return
@@ -104,6 +106,7 @@ class CreateCustomerActivity : AppCompatActivity() {
                 fromChooseCustomer -> {
                     Intent(this@CreateCustomerActivity, ChooseCustomerActivity::class.java).apply {
                         putExtra("FROM-CREATE-PURCHASE", fromCreatePurchase)
+                        putExtra("FROM-EDIT-PURCHASE", fromEditPurchase)
                     }
                 }
                 fromIndexCustomer -> {

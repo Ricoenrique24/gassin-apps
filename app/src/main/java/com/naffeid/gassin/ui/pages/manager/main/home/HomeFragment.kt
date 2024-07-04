@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +26,12 @@ import com.naffeid.gassin.ui.pages.manager.resupplytransaction.create.CreateReSu
 import com.naffeid.gassin.ui.pages.manager.resupplytransaction.show.ShowReSupplyTransactionActivity
 import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreActivity
 import com.naffeid.gassin.ui.pages.signin.SignInActivity
+import okhttp3.ResponseBody
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 
 class HomeFragment : Fragment() {
 
@@ -118,6 +125,72 @@ class HomeFragment : Fragment() {
             }
         }
     }
+    private fun downloadTransactionReport() {
+        viewModel.downloadTransactionReport().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    showLoading(true)
+                }
+                is Result.Success -> {
+                    showLoading(false)
+                    val responseBody = result.data.body()
+                    if (responseBody != null) {
+                        saveFile(responseBody)
+                        showAlert("Berhasil mendownload laporan")
+                    } else {
+                        showAlert("Gagal mendownload laporan")
+                    }
+                }
+                is Result.Error -> {
+                    showLoading(false)
+                    showAlert(result.error)
+                    Log.e("error employee:", result.error.toString())
+                }
+            }
+        }
+    }
+
+    private fun saveFile(responseBody: ResponseBody) {
+        try {
+            val fileName = "laporan.xlsx"
+            val file = File(requireContext().getExternalFilesDir(null), fileName)
+
+            // Menyimpan respons dari server ke file lokal
+            val inputStream: InputStream = responseBody.byteStream()
+            val outputStream: OutputStream = FileOutputStream(file)
+            val buffer = ByteArray(4096)
+            var bytesRead: Int
+            while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                outputStream.write(buffer, 0, bytesRead)
+            }
+            outputStream.close()
+            inputStream.close()
+
+            // Memberikan notifikasi bahwa file berhasil disimpan
+            showAlert("File berhasil disimpan di ${file.absolutePath}")
+
+            // Setelah berhasil disimpan, Anda dapat menambahkan aksi untuk membuka file
+            // atau memberikan opsi kepada pengguna untuk membuka file tersebut.
+            openDownloadedFile(file)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            showAlert("Gagal menyimpan file: ${e.message}")
+        }
+    }
+
+    private fun openDownloadedFile(file: File) {
+        val uri = FileProvider.getUriForFile(
+            requireContext(),
+            requireContext().packageName + ".fileprovider",
+            file
+        )
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setDataAndType(uri, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        startActivity(intent)
+    }
+
+
 
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) binding.progressBar.visibility =
@@ -197,8 +270,7 @@ class HomeFragment : Fragment() {
 
     private fun buttonToReport() {
         binding.btnReportFeature.setOnClickListener {
-            val intent = Intent(requireContext(), CreateReSupplyTransactionActivity::class.java)
-            startActivity(intent)
+            downloadTransactionReport()
         }
     }
 

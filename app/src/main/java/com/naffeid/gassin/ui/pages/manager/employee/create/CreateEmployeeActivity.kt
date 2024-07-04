@@ -27,15 +27,17 @@ class CreateEmployeeActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
         val fromCreatePurchase = intent.getBooleanExtra("FROM-CREATE-PURCHASE",false)
+        val fromEditPurchase = intent.getBooleanExtra("FROM-EDIT-PURCHASE",false)
         val fromCreateResupply = intent.getBooleanExtra("FROM-CREATE-RESUPPLY",false)
+        val fromEditResupply = intent.getBooleanExtra("FROM-EDIT-RESUPPLY",false)
         val fromChooseEmployee = intent.getBooleanExtra("FROM-CHOOSE-EMPLOYEE",false)
         val fromIndexEmployee = intent.getBooleanExtra("FROM-INDEX-EMPLOYEE",false)
 
-        validate(fromCreatePurchase, fromCreateResupply, fromChooseEmployee, fromIndexEmployee)
-        setupTopBar(fromCreatePurchase, fromCreateResupply, fromChooseEmployee, fromIndexEmployee)
+        validate(fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, fromChooseEmployee, fromIndexEmployee)
+        setupTopBar(fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, fromChooseEmployee, fromIndexEmployee)
     }
 
-    private fun validate(fromCreatePurchase:Boolean, fromCreateResupply:Boolean, fromChooseEmployee:Boolean, fromIndexEmployee:Boolean) {
+    private fun validate(fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromCreateResupply:Boolean, fromEditResupply:Boolean, fromChooseEmployee:Boolean, fromIndexEmployee:Boolean) {
         binding.btnCreateEmployee.setOnClickListener {
             val name = binding.edEmployeeName.text.toString()
             val username = binding.edEmployeeUsername.text.toString()
@@ -47,7 +49,7 @@ class CreateEmployeeActivity : AppCompatActivity() {
             if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(username) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(confirmPassword) && !TextUtils.isEmpty(phone)) {
                 if (password.length >= 8 && confirmPassword.length >= 8 && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     if (confirmPassword == password){
-                        createNewEmployee(name, username, email, password, phone, fromCreatePurchase, fromCreateResupply, fromChooseEmployee, fromIndexEmployee)
+                        createNewEmployee(name, username, email, password, phone, fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, fromChooseEmployee, fromIndexEmployee)
                     } else {
                         showAlert(getString(R.string.konfirmasi_kata_sandi_tidak_sama_dengan_password))
                     }
@@ -60,7 +62,7 @@ class CreateEmployeeActivity : AppCompatActivity() {
         }
     }
 
-    private fun createNewEmployee(name: String, username: String, email: String, password: String, phone: String, fromCreatePurchase:Boolean, fromCreateResupply:Boolean, fromChooseEmployee:Boolean, fromIndexEmployee:Boolean) {
+    private fun createNewEmployee(name: String, username: String, email: String, password: String, phone: String, fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromCreateResupply:Boolean, fromEditResupply:Boolean, fromChooseEmployee:Boolean, fromIndexEmployee:Boolean) {
         viewModel.createNewEmployee(name, username, email, password, phone).observe(this) {
             if (it != null) {
                 when (it) {
@@ -78,7 +80,7 @@ class CreateEmployeeActivity : AppCompatActivity() {
                         showLoading(false)
                         showAlert(getString(R.string.login_success))
                         when {
-                            fromChooseEmployee -> navigateToChooseEmployee(fromCreatePurchase, fromCreateResupply)
+                            fromChooseEmployee -> navigateToChooseEmployee(fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply)
                             fromIndexEmployee -> navigateToIndexEmployee()
                             else -> {
                                 showAlert("Halaman Tidak Dapat Ditemukan")
@@ -90,7 +92,7 @@ class CreateEmployeeActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToChooseEmployee(fromCreatePurchase:Boolean, fromCreateResupply:Boolean) {
+    private fun navigateToChooseEmployee(fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromCreateResupply:Boolean, fromEditResupply:Boolean) {
         val intentToChoose = Intent(this@CreateEmployeeActivity, ChooseEmployeeActivity::class.java)
         intentToChoose.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
         intentToChoose.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
@@ -105,7 +107,7 @@ class CreateEmployeeActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun setupTopBar(fromCreatePurchase: Boolean, fromCreateResupply: Boolean, fromChooseEmployee: Boolean, fromIndexEmployee: Boolean) {
+    private fun setupTopBar(fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromCreateResupply:Boolean, fromEditResupply:Boolean, fromChooseEmployee: Boolean, fromIndexEmployee: Boolean) {
         if (fromChooseEmployee && fromIndexEmployee) {
             showAlert("Halaman Tidak Dapat Ditemukan")
             return
@@ -116,7 +118,9 @@ class CreateEmployeeActivity : AppCompatActivity() {
                 fromChooseEmployee -> {
                     Intent(this@CreateEmployeeActivity, ChooseEmployeeActivity::class.java).apply {
                         putExtra("FROM-CREATE-PURCHASE", fromCreatePurchase)
+                        putExtra("FROM-EDIT-PURCHASE", fromEditPurchase)
                         putExtra("FROM-CREATE-RESUPPLY", fromCreateResupply)
+                        putExtra("FROM-EDIT-RESUPPLY", fromEditResupply)
                     }
                 }
                 fromIndexEmployee -> {

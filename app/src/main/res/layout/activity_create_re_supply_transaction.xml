@@ -125,7 +125,7 @@ tools:context=".ui.pages.manager.resupplytransaction.create.CreateReSupplyTransa
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
                                 android:layout_gravity="center"
-                                android:src="@drawable/ic_profile_24dp" />
+                                android:src="@drawable/ic_shop_24dp" />
                         </androidx.cardview.widget.CardView>
 
                         <LinearLayout

@@ -18,6 +18,8 @@ import com.naffeid.gassin.data.remote.response.SingleTransactionResponse
 import com.naffeid.gassin.data.remote.response.StockResponse
 import com.naffeid.gassin.data.remote.response.StoreResponse
 import com.naffeid.gassin.data.remote.response.TransactionResponse
+import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -26,6 +28,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Streaming
 
 interface ApiService {
 
@@ -77,8 +80,9 @@ interface ApiService {
     @GET("manager/dashboard/getRevenueToday")
     suspend fun revenueToday(): RevenueResponse
 
-    @GET("manager/dashboard/downloadtransactionrecap")
-    suspend fun downloadTransactionRecap(): LoginResponse
+    @Streaming
+    @GET("manager/dashboard/getReport")
+    suspend fun downloadTransactionReport(): Response<ResponseBody>
 
     /* End API Dashboard */
 

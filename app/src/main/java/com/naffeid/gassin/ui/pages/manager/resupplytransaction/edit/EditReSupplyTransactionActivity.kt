@@ -17,7 +17,7 @@ import com.naffeid.gassin.databinding.ActivityEditReSupplyTransactionBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.choose.employee.ChooseEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.choose.store.ChooseStoreActivity
-import com.naffeid.gassin.ui.pages.manager.main.ManagerMainActivity
+import com.naffeid.gassin.ui.pages.manager.resupplytransaction.show.ShowReSupplyTransactionActivity
 
 class EditReSupplyTransactionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditReSupplyTransactionBinding
@@ -33,11 +33,13 @@ class EditReSupplyTransactionActivity : AppCompatActivity() {
         val idResupply = intent.getStringExtra("RESUPPLY")
         val updateData = intent.getBooleanExtra("CHOOSE-UPDATED", false)
         if (updateData) {
-            if (idResupply != null) setupData(idResupply, updateData)
+            if (idResupply != null) setupData(idResupply, true)
         }
-        if (idResupply != null) setupData(idResupply, updateData)
-        setupTobBar()
-        validate(idResupply.toString())
+        if (!idResupply.isNullOrBlank()) {
+            setupData(idResupply.toString(), updateData)
+            setupTopBar(idResupply.toString())
+            validate(idResupply.toString())
+        }
     }
 
     private fun setupData(id: String, updateData: Boolean) {
@@ -92,7 +94,7 @@ class EditReSupplyTransactionActivity : AppCompatActivity() {
             }
         }
         binding.btnChangeStore.setOnClickListener {
-            navigateToChooseStore()
+            navigateToChooseStore(resupply.id.toString())
         }
 
     }
@@ -117,7 +119,7 @@ class EditReSupplyTransactionActivity : AppCompatActivity() {
             }
         }
         binding.btnChangeEmployee.setOnClickListener {
-            navigateToChooseEmployee()
+            navigateToChooseEmployee(resupply.id.toString())
         }
     }
 
@@ -229,30 +231,28 @@ class EditReSupplyTransactionActivity : AppCompatActivity() {
             }
     }
 
-    private fun navigateToHome() {
-        val intentToHome =
-            Intent(this@EditReSupplyTransactionActivity, ManagerMainActivity::class.java)
-        startActivity(intentToHome)
-        finish()
-    }
-
-    private fun navigateToChooseStore() {
-        val intentToChooseStore =
-            Intent(this@EditReSupplyTransactionActivity, ChooseStoreActivity::class.java)
+    private fun navigateToChooseStore(id:String) {
+        val intentToChooseStore = Intent(this@EditReSupplyTransactionActivity, ChooseStoreActivity::class.java)
+        intentToChooseStore.putExtra("FROM-EDIT-RESUPPLY",true)
+        intentToChooseStore.putExtra("RESUPPLY", id)
         startActivity(intentToChooseStore)
         finish()
     }
 
-    private fun navigateToChooseEmployee() {
-        val intentToChooseEmployee =
-            Intent(this@EditReSupplyTransactionActivity, ChooseEmployeeActivity::class.java)
+    private fun navigateToChooseEmployee(id:String) {
+        val intentToChooseEmployee = Intent(this@EditReSupplyTransactionActivity, ChooseEmployeeActivity::class.java)
+        intentToChooseEmployee.putExtra("FROM-EDIT-RESUPPLY",true)
+        intentToChooseEmployee.putExtra("RESUPPLY", id)
         startActivity(intentToChooseEmployee)
         finish()
     }
 
-    private fun setupTobBar() {
+    private fun setupTopBar(id:String) {
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            val intentToShow = Intent(this@EditReSupplyTransactionActivity, ShowReSupplyTransactionActivity::class.java)
+            intentToShow.putExtra("RESUPPLY", id)
+            startActivity(intentToShow)
+            finish()
         }
     }
 
