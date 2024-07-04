@@ -83,7 +83,7 @@ class ViewModelFactory private constructor(
         } else if (modelClass.isAssignableFrom(CostManagerViewModel::class.java)) {
             return CostManagerViewModel(userRepository, operationTransactionRepository) as T
         } else if (modelClass.isAssignableFrom(MoreManagerViewModel::class.java)) {
-            return MoreManagerViewModel(userRepository) as T
+            return MoreManagerViewModel(userRepository, dashboardRepository) as T
         } else if (modelClass.isAssignableFrom(IndexStoreManagerViewModel::class.java)) {
             return IndexStoreManagerViewModel(storeRepository) as T
         } else if (modelClass.isAssignableFrom(CreateStoreManagerViewModel::class.java)) {

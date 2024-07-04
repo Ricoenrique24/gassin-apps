@@ -16,6 +16,7 @@ import com.naffeid.gassin.databinding.ActivityChooseStoreBinding
 import com.naffeid.gassin.ui.adapter.ChooseStoreAdapter
 import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.resupplytransaction.create.CreateReSupplyTransactionActivity
+import com.naffeid.gassin.ui.pages.manager.resupplytransaction.edit.EditReSupplyTransactionActivity
 import com.naffeid.gassin.ui.pages.manager.store.create.CreateStoreActivity
 import com.naffeid.gassin.ui.pages.manager.store.show.ShowStoreActivity
 
@@ -30,21 +31,23 @@ class ChooseStoreActivity : AppCompatActivity() {
         binding = ActivityChooseStoreBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+        val idResupply = intent.getStringExtra("RESUPPLY")
         val fromCreateResupply = intent.getBooleanExtra("FROM-CREATE-RESUPPLY",false)
+        val fromEditResupply = intent.getBooleanExtra("FROM-EDIT-RESUPPLY",false)
         val fromCreateStore = intent.getBooleanExtra("FROM-CREATE-STORE",false)
         if (fromCreateStore) {
             setupData()
         }
-        setupRecyclerView(fromCreateResupply)
-        setupView(fromCreateResupply)
+        setupRecyclerView(idResupply.toString(), fromCreateResupply, fromEditResupply)
+        setupView(fromCreateResupply, fromEditResupply)
         setupData()
-        setupTopBar()
+        setupTopBar(fromCreateResupply, fromEditResupply, idResupply.toString())
     }
     private fun setupData() {
         showAllStore()
     }
 
-    private fun setupView(fromCreateResupply:Boolean) {
+    private fun setupView(fromCreateResupply:Boolean, fromEditResupply:Boolean) {
         with(binding){
             searchView.setupWithSearchBar(searchBar)
             searchView.editText.setOnEditorActionListener { textView, actionId, event ->
@@ -61,20 +64,20 @@ class ChooseStoreActivity : AppCompatActivity() {
 
             //Create Store
             btnAddStory.setOnClickListener {
-                navigateToCreateStore(fromCreateResupply)
+                navigateToCreateStore(fromCreateResupply, fromEditResupply)
             }
         }
     }
 
-    private fun setupRecyclerView(fromCreateResupply:Boolean) {
+    private fun setupRecyclerView(idResupply:String, fromCreateResupply:Boolean, fromEditResupply:Boolean) {
         chooseStoreAdapter = ChooseStoreAdapter()
         chooseStoreAdapter.setOnItemClickCallback(object : ChooseStoreAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ListStoreItem) {
-                navigateToShowStore(data, fromCreateResupply)
+                navigateToShowStore(data, fromCreateResupply, fromEditResupply)
             }
 
             override fun onChooseStoreClicked(data: ListStoreItem) {
-                selectedStore(data)
+                selectedStore(data, idResupply, fromCreateResupply, fromEditResupply)
             }
         })
         binding.rvStore.apply {
@@ -126,7 +129,7 @@ class ChooseStoreActivity : AppCompatActivity() {
             }
         }
     }
-    private fun selectedStore(data: ListStoreItem){
+    private fun selectedStore(data: ListStoreItem, idResupply:String, fromCreateResupply:Boolean, fromEditResupply:Boolean){
         viewModel.deleteStore()
         viewModel.saveStore(
             Store(
@@ -139,7 +142,15 @@ class ChooseStoreActivity : AppCompatActivity() {
             )
         )
         showAlert(getString(R.string.berhasil_memilih_store))
-        navigateToCreateResupply()
+        when {
+            fromCreateResupply -> {
+                navigateToCreateResupply()
+            }
+            fromEditResupply -> {
+                navigateToEditResupply(idResupply)
+            }
+        }
+
     }
 
     private fun navigateToCreateResupply() {
@@ -148,24 +159,52 @@ class ChooseStoreActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun navigateToCreateStore(fromCreateResupply:Boolean) {
+    private fun navigateToEditResupply(id: String) {
+        val intentToEdit = Intent(this@ChooseStoreActivity, EditReSupplyTransactionActivity::class.java)
+        intentToEdit.putExtra("RESUPPLY", id)
+        intentToEdit.putExtra("CHOOSE-UPDATED", true)
+        startActivity(intentToEdit)
+        finish()
+    }
+
+    private fun navigateToCreateStore(fromCreateResupply:Boolean, fromEditResupply:Boolean) {
         val intentToCreate = Intent(this@ChooseStoreActivity, CreateStoreActivity::class.java)
         intentToCreate.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
+        intentToCreate.putExtra("FROM-EDIT-RESUPPLY",fromEditResupply)
         intentToCreate.putExtra("FROM-CHOOSE-STORE",true)
         startActivity(intentToCreate)
     }
 
-    private fun navigateToShowStore(data: ListStoreItem, fromCreateResupply:Boolean) {
+    private fun navigateToShowStore(data: ListStoreItem, fromCreateResupply:Boolean, fromEditResupply:Boolean) {
         val intentToDetail = Intent(this@ChooseStoreActivity, ShowStoreActivity::class.java)
         intentToDetail.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
+        intentToDetail.putExtra("FROM-EDIT-RESUPPLY",fromEditResupply)
         intentToDetail.putExtra("FROM-CHOOSE-STORE",true)
         intentToDetail.putExtra("STORE", data)
         startActivity(intentToDetail)
     }
 
-    private fun setupTopBar() {
+    private fun setupTopBar(fromCreateResupply: Boolean, fromEditResupply: Boolean, id:String) {
+        if (fromCreateResupply && fromEditResupply) {
+            showAlert("Halaman Tidak Dapat Ditemukan")
+            return
+        }
+
         binding.btnBack.setOnClickListener {
-            val intentToHome = Intent(this@ChooseStoreActivity, CreateReSupplyTransactionActivity::class.java)
+            val intentToHome = when {
+                fromCreateResupply -> {
+                    Intent(this@ChooseStoreActivity, CreateReSupplyTransactionActivity::class.java)
+                }
+                fromEditResupply -> {
+                    Intent(this@ChooseStoreActivity, EditReSupplyTransactionActivity::class.java).apply {
+                        putExtra("RESUPPLY", id)
+                    }
+                }
+                else -> {
+                    showAlert("Halaman Tidak Dapat Ditemukan")
+                    return@setOnClickListener
+                }
+            }
             startActivity(intentToHome)
             finish()
         }

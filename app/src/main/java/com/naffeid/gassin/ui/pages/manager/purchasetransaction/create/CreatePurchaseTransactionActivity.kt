@@ -161,12 +161,6 @@ class CreatePurchaseTransactionActivity : AppCompatActivity() {
         startActivity(intentToConfirm)
     }
 
-    private fun navigateToHome() {
-        val intentToHome = Intent(this@CreatePurchaseTransactionActivity, ManagerMainActivity::class.java)
-        startActivity(intentToHome)
-        finish()
-    }
-
     private fun navigateToChooseCustomer() {
         val intentToChooseCustomer= Intent(this@CreatePurchaseTransactionActivity, ChooseCustomerActivity::class.java)
         intentToChooseCustomer.putExtra("FROM-CREATE-PURCHASE",true)

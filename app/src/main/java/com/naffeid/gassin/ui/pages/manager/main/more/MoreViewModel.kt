@@ -5,10 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.naffeid.gassin.data.model.User
+import com.naffeid.gassin.data.repository.DashboardRepository
 import com.naffeid.gassin.data.repository.UserRepository
 import kotlinx.coroutines.launch
 
-class MoreViewModel(private val userRepository: UserRepository) : ViewModel() {
+class MoreViewModel(
+    private val userRepository: UserRepository,
+    private val dashboardRepository: DashboardRepository
+) : ViewModel() {
     fun getSession(): LiveData<User> {
         return userRepository.getSession().asLiveData()
     }
@@ -17,4 +21,6 @@ class MoreViewModel(private val userRepository: UserRepository) : ViewModel() {
             userRepository.logout()
         }
     }
+    fun downloadTransactionReport() = dashboardRepository.downloadTransactionReport()
+
 }

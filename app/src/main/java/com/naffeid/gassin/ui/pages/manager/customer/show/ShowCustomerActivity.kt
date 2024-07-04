@@ -29,18 +29,19 @@ class ShowCustomerActivity : AppCompatActivity() {
         setContentView(binding.root)
         val customer = intent.getParcelableExtra<ListCustomerItem>("CUSTOMER")
         val fromCreatePurchase = intent.getBooleanExtra("FROM-CREATE-PURCHASE",false)
+        val fromEditPurchase = intent.getBooleanExtra("FROM-EDIT-PURCHASE",false)
         val fromChooseCustomer = intent.getBooleanExtra("FROM-CHOOSE-CUSTOMER",false)
         val fromIndexCustomer = intent.getBooleanExtra("FROM-INDEX-CUSTOMER",false)
         val fromEditCustomer = intent.getBooleanExtra("FROM-EDIT-CUSTOMER",false)
 
         if (fromEditCustomer) {
-            if (customer != null) setupData(customer, fromCreatePurchase, fromChooseCustomer, fromIndexCustomer, true)
+            if (customer != null) setupData(customer, fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer, true)
         }
-        if (customer != null) setupData(customer, fromCreatePurchase, fromChooseCustomer, fromIndexCustomer, fromEditCustomer)
-        setupTopBar(fromCreatePurchase, fromChooseCustomer, fromIndexCustomer)
+        if (customer != null) setupData(customer, fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer, fromEditCustomer)
+        setupTopBar(fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer)
     }
 
-    private fun setupData(customer: ListCustomerItem, fromCreatePurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer: Boolean, fromEditCustomer:Boolean) {
+    private fun setupData(customer: ListCustomerItem, fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer: Boolean, fromEditCustomer:Boolean) {
         val id = customer.id.toString()
         viewModel.showCustomer(id).observe(this) { result ->
             when (result) {
@@ -70,7 +71,7 @@ class ShowCustomerActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    if(customerData !=null) setupView(customerData,fromCreatePurchase, fromChooseCustomer, fromIndexCustomer)
+                    if(customerData !=null) setupView(customerData, fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer)
 
                 }
 
@@ -82,7 +83,7 @@ class ShowCustomerActivity : AppCompatActivity() {
             }
         }
     }
-    private fun setupView(customer: Customer, fromCreatePurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer: Boolean) {
+    private fun setupView(customer: Customer, fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer: Boolean) {
         with(binding){
             edCustomerName.setText(customer.name)
             edCustomerLinkMap.setText(customer.linkMap)
@@ -98,24 +99,25 @@ class ShowCustomerActivity : AppCompatActivity() {
                     phone = customer.phone,
                     price = customer.price
                 )
-                editCustomer(customerData,fromCreatePurchase, fromChooseCustomer, fromIndexCustomer)
+                editCustomer(customerData,fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer)
             }
             btnDeleteCustomer.setOnClickListener {
-                deleteCustomer(customer.id.toString(), fromCreatePurchase, fromChooseCustomer)
+                deleteCustomer(customer.id.toString(), fromCreatePurchase, fromEditPurchase, fromChooseCustomer)
             }
         }
     }
 
-    private fun editCustomer(data: ListCustomerItem, fromCreatePurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer: Boolean) {
+    private fun editCustomer(data: ListCustomerItem, fromCreatePurchase:Boolean,fromEditPurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer: Boolean) {
         val intentToEdit = Intent(this@ShowCustomerActivity, EditCustomerActivity::class.java)
         intentToEdit.putExtra("CUSTOMER", data)
         intentToEdit.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
+        intentToEdit.putExtra("FROM-EDIT-PURCHASE",fromEditPurchase)
         intentToEdit.putExtra("FROM-CHOOSE-CUSTOMER",fromChooseCustomer)
         intentToEdit.putExtra("FROM-INDEX-CUSTOMER",fromIndexCustomer)
         startActivity(intentToEdit)
     }
 
-    private fun deleteCustomer(id: String,fromCreatePurchase:Boolean, fromChooseCustomer:Boolean) {
+    private fun deleteCustomer(id: String,fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromChooseCustomer:Boolean) {
         viewModel.deleteCustomer(id).observe(this) { result ->
             when (result) {
                 is Result.Loading -> {
@@ -134,7 +136,7 @@ class ShowCustomerActivity : AppCompatActivity() {
                         }
                     }
                     if (fromChooseCustomer){
-                        navigateToChooseCustomer(fromCreatePurchase, true)
+                        navigateToChooseCustomer(fromCreatePurchase, fromEditPurchase, true)
                     } else {
                         navigateToIndexCustomer(true)
                     }
@@ -158,15 +160,16 @@ class ShowCustomerActivity : AppCompatActivity() {
         startActivity(intentToIndex)
         finish()
     }
-    private fun navigateToChooseCustomer(fromCreatePurchase:Boolean, fromEditCustomer:Boolean) {
+    private fun navigateToChooseCustomer(fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromEditCustomer:Boolean) {
         val intentToChoose = Intent(this@ShowCustomerActivity, ChooseCustomerActivity::class.java)
         intentToChoose.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
+        intentToChoose.putExtra("FROM-EDIT-PURCHASE",fromEditPurchase)
         intentToChoose.putExtra("FROM-EDIT-CUSTOMER",fromEditCustomer)
         startActivity(intentToChoose)
         finish()
     }
 
-    private fun setupTopBar(fromCreatePurchase: Boolean, fromChooseCustomer: Boolean, fromIndexCustomer: Boolean) {
+    private fun setupTopBar(fromCreatePurchase: Boolean, fromEditPurchase: Boolean, fromChooseCustomer: Boolean, fromIndexCustomer: Boolean) {
         if (fromChooseCustomer && fromIndexCustomer) {
             showAlert("Halaman Tidak Dapat Ditemukan")
             return
@@ -177,6 +180,7 @@ class ShowCustomerActivity : AppCompatActivity() {
                 fromChooseCustomer -> {
                     Intent(this@ShowCustomerActivity, ChooseCustomerActivity::class.java).apply {
                         putExtra("FROM-CREATE-PURCHASE", fromCreatePurchase)
+                        putExtra("FROM-EDIT-PURCHASE", fromEditPurchase)
                     }
                 }
                 fromIndexCustomer -> {

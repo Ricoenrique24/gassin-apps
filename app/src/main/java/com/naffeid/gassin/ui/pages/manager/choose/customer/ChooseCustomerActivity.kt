@@ -18,6 +18,7 @@ import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.customer.create.CreateCustomerActivity
 import com.naffeid.gassin.ui.pages.manager.customer.show.ShowCustomerActivity
 import com.naffeid.gassin.ui.pages.manager.purchasetransaction.create.CreatePurchaseTransactionActivity
+import com.naffeid.gassin.ui.pages.manager.purchasetransaction.edit.EditPurchaseTransactionActivity
 
 class ChooseCustomerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChooseCustomerBinding
@@ -30,22 +31,24 @@ class ChooseCustomerActivity : AppCompatActivity() {
         binding = ActivityChooseCustomerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+        val idPurchase = intent.getStringExtra("PURCHASE")
         val fromCreatePurchase = intent.getBooleanExtra("FROM-CREATE-PURCHASE",false)
+        val fromEditPurchase = intent.getBooleanExtra("FROM-EDIT-PURCHASE",false)
         val fromCreateCustomer = intent.getBooleanExtra("FROM-CREATE-CUSTOMER",false)
         if (fromCreateCustomer) {
             setupData()
         }
-        setupRecyclerView(fromCreatePurchase)
-        setupView(fromCreatePurchase)
+        setupRecyclerView(idPurchase.toString(), fromCreatePurchase, fromEditPurchase)
+        setupView(fromCreatePurchase, fromEditPurchase)
         setupData()
-        setupTopBar()
+        setupTopBar(fromCreatePurchase, fromEditPurchase, idPurchase.toString())
     }
 
     private fun setupData() {
         showAllCustomer()
     }
 
-    private fun setupView(fromCreatePurchase:Boolean) {
+    private fun setupView(fromCreatePurchase:Boolean, fromEditPurchase:Boolean) {
         with(binding){
             searchView.setupWithSearchBar(searchBar)
             searchView.editText.setOnEditorActionListener { textView, actionId, event ->
@@ -62,20 +65,20 @@ class ChooseCustomerActivity : AppCompatActivity() {
 
             //Create Customer
             btnAddStory.setOnClickListener {
-                navigateToCreateCustomer(fromCreatePurchase)
+                navigateToCreateCustomer(fromCreatePurchase, fromEditPurchase)
             }
         }
     }
 
-    private fun setupRecyclerView(fromCreatePurchase:Boolean) {
+    private fun setupRecyclerView(idPurchase:String, fromCreatePurchase: Boolean, fromEditPurchase: Boolean) {
         chooseCustomerAdapter = ChooseCustomerAdapter()
         chooseCustomerAdapter.setOnItemClickCallback(object : ChooseCustomerAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ListCustomerItem) {
-                navigateToShowCustomer(data, fromCreatePurchase)
+                navigateToShowCustomer(data, fromCreatePurchase, fromEditPurchase)
             }
 
             override fun onChooseCustomerClicked(data: ListCustomerItem) {
-                selectedCustomer(data, fromCreatePurchase)
+                selectedCustomer(data, idPurchase, fromCreatePurchase, fromEditPurchase)
 
             }
         })
@@ -129,7 +132,7 @@ class ChooseCustomerActivity : AppCompatActivity() {
         }
     }
 
-    private fun selectedCustomer(data: ListCustomerItem, fromCreatePurchase: Boolean){
+    private fun selectedCustomer(data: ListCustomerItem, idPurchase:String, fromCreatePurchase: Boolean, fromEditPurchase: Boolean){
         viewModel.deleteCustomer()
         viewModel.saveCustomer(
             Customer(
@@ -142,19 +145,28 @@ class ChooseCustomerActivity : AppCompatActivity() {
             )
         )
         showAlert(getString(R.string.berhasil_memilih_customer))
-        navigateToCreatePurchase()
+        when {
+            fromCreatePurchase -> {
+                navigateToCreatePurchase()
+            }
+            fromEditPurchase -> {
+                navigateToEditPurchase(idPurchase)
+            }
+        }
     }
 
-    private fun navigateToCreateCustomer(fromCreatePurchase:Boolean) {
+    private fun navigateToCreateCustomer(fromCreatePurchase:Boolean, fromEditPurchase:Boolean) {
         val intentToCreate = Intent(this@ChooseCustomerActivity, CreateCustomerActivity::class.java)
         intentToCreate.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
+        intentToCreate.putExtra("FROM-EDIT-PURCHASE",fromEditPurchase)
         intentToCreate.putExtra("FROM-CHOOSE-CUSTOMER",true)
         startActivity(intentToCreate)
     }
 
-    private fun navigateToShowCustomer(data: ListCustomerItem, fromCreatePurchase:Boolean) {
+    private fun navigateToShowCustomer(data: ListCustomerItem, fromCreatePurchase:Boolean, fromEditPurchase:Boolean) {
         val intentToDetail = Intent(this@ChooseCustomerActivity, ShowCustomerActivity::class.java)
         intentToDetail.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
+        intentToDetail.putExtra("FROM-EDIT-PURCHASE",fromEditPurchase)
         intentToDetail.putExtra("FROM-CHOOSE-CUSTOMER",true)
         intentToDetail.putExtra("CUSTOMER", data)
         startActivity(intentToDetail)
@@ -165,11 +177,35 @@ class ChooseCustomerActivity : AppCompatActivity() {
         startActivity(intentToCreate)
         finish()
     }
+    private fun navigateToEditPurchase(idPurchase: String) {
+        val intentToEdit = Intent(this@ChooseCustomerActivity, EditPurchaseTransactionActivity::class.java)
+        intentToEdit.putExtra("PURCHASE", idPurchase)
+        intentToEdit.putExtra("CHOOSE-UPDATED", true)
+        startActivity(intentToEdit)
+        finish()
+    }
 
+    private fun setupTopBar(fromCreatePurchase: Boolean, fromEditPurchase: Boolean, id:String) {
+        if (fromCreatePurchase && fromEditPurchase) {
+            showAlert("Halaman Tidak Dapat Ditemukan")
+            return
+        }
 
-    private fun setupTopBar() {
         binding.btnBack.setOnClickListener {
-            val intentToHome = Intent(this@ChooseCustomerActivity, CreatePurchaseTransactionActivity::class.java)
+            val intentToHome = when {
+                fromCreatePurchase -> {
+                    Intent(this@ChooseCustomerActivity, CreatePurchaseTransactionActivity::class.java)
+                }
+                fromEditPurchase -> {
+                    Intent(this@ChooseCustomerActivity, EditPurchaseTransactionActivity::class.java).apply {
+                        putExtra("PURCHASE", id)
+                    }
+                }
+                else -> {
+                    showAlert("Halaman Tidak Dapat Ditemukan")
+                    return@setOnClickListener
+                }
+            }
             startActivity(intentToHome)
             finish()
         }

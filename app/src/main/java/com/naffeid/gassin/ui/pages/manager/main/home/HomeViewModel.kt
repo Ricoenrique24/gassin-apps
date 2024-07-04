@@ -19,4 +19,5 @@ class HomeViewModel(
     fun getAvailableStockQuantity() = dashboardRepository.getAvailableStockQuantity()
     fun getRevenueToday() = dashboardRepository.getRevenueToday()
     fun showAllActiveTransactionManager() = transactionRepository.showAllActiveTransactionManager()
+    fun downloadTransactionReport() = dashboardRepository.downloadTransactionReport()
 }

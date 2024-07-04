@@ -17,7 +17,7 @@ import com.naffeid.gassin.databinding.ActivityEditPurchaseTransactionBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.choose.customer.ChooseCustomerActivity
 import com.naffeid.gassin.ui.pages.manager.choose.employee.ChooseEmployeeActivity
-import com.naffeid.gassin.ui.pages.manager.main.ManagerMainActivity
+import com.naffeid.gassin.ui.pages.manager.purchasetransaction.show.ShowPurchaseTransactionActivity
 
 class EditPurchaseTransactionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditPurchaseTransactionBinding
@@ -33,11 +33,13 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
         val idPurchase = intent.getStringExtra("PURCHASE")
         val updateData = intent.getBooleanExtra("CHOOSE-UPDATED", false)
         if (updateData) {
-            if (idPurchase != null) setupData(idPurchase, updateData)
+            if (idPurchase != null) setupData(idPurchase, true)
         }
-        if (idPurchase != null) setupData(idPurchase, updateData)
-        setupTobBar()
-        validate(idPurchase.toString())
+        if (!idPurchase.isNullOrBlank()) {
+            setupData(idPurchase.toString(), updateData)
+            setupTopBar(idPurchase.toString())
+            validate(idPurchase.toString())
+        }
     }
 
     private fun setupData(id: String, updateData: Boolean) {
@@ -92,7 +94,7 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
             }
         }
         binding.btnChangeCustomer.setOnClickListener {
-            navigateToChooseCustomer()
+            navigateToChooseCustomer(purchase.id.toString())
         }
 
     }
@@ -117,7 +119,7 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
             }
         }
         binding.btnChangeEmployee.setOnClickListener {
-            navigateToChooseEmployee()
+            navigateToChooseEmployee(purchase.id.toString())
         }
     }
 
@@ -229,30 +231,28 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
             }
     }
 
-    private fun navigateToHome() {
-        val intentToHome =
-            Intent(this@EditPurchaseTransactionActivity, ManagerMainActivity::class.java)
-        startActivity(intentToHome)
-        finish()
-    }
-
-    private fun navigateToChooseCustomer() {
-        val intentToChooseCustomer =
-            Intent(this@EditPurchaseTransactionActivity, ChooseCustomerActivity::class.java)
+    private fun navigateToChooseCustomer(id:String) {
+        val intentToChooseCustomer = Intent(this@EditPurchaseTransactionActivity, ChooseCustomerActivity::class.java)
+        intentToChooseCustomer.putExtra("FROM-EDIT-PURCHASE",true)
+        intentToChooseCustomer.putExtra("PURCHASE", id)
         startActivity(intentToChooseCustomer)
         finish()
     }
 
-    private fun navigateToChooseEmployee() {
-        val intentToChooseEmployee =
-            Intent(this@EditPurchaseTransactionActivity, ChooseEmployeeActivity::class.java)
+    private fun navigateToChooseEmployee(id:String) {
+        val intentToChooseEmployee = Intent(this@EditPurchaseTransactionActivity, ChooseEmployeeActivity::class.java)
+        intentToChooseEmployee.putExtra("FROM-EDIT-PURCHASE",true)
+        intentToChooseEmployee.putExtra("PURCHASE", id)
         startActivity(intentToChooseEmployee)
         finish()
     }
 
-    private fun setupTobBar() {
+    private fun setupTopBar(id:String) {
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            val intentToShow = Intent(this@EditPurchaseTransactionActivity, ShowPurchaseTransactionActivity::class.java)
+            intentToShow.putExtra("PURCHASE",id)
+            startActivity(intentToShow)
+            finish()
         }
     }
 

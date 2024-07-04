@@ -27,15 +27,16 @@ class EditStoreActivity : AppCompatActivity() {
         supportActionBar?.hide()
         val store = intent.getParcelableExtra<ListStoreItem>("STORE")
         val fromCreateResupply = intent.getBooleanExtra("FROM-CREATE-RESUPPLY",false)
+        val fromEditResupply = intent.getBooleanExtra("FROM-EDIT-RESUPPLY",false)
         val fromChooseStore = intent.getBooleanExtra("FROM-CHOOSE-STORE",false)
         val fromIndexStore = intent.getBooleanExtra("FROM-INDEX-STORE",false)
         if (store != null) {
-            setupView(store, fromCreateResupply, fromChooseStore, fromIndexStore)
-            setupTopBar(store,fromCreateResupply, fromChooseStore, fromIndexStore)
+            setupView(store, fromCreateResupply, fromEditResupply, fromChooseStore, fromIndexStore)
+            setupTopBar(store,fromCreateResupply, fromEditResupply, fromChooseStore, fromIndexStore)
         }
     }
 
-    private fun setupView(store: ListStoreItem, fromCreateResupply:Boolean, fromChooseStore:Boolean, fromIndexStore:Boolean) {
+    private fun setupView(store: ListStoreItem, fromCreateResupply:Boolean, fromEditResupply:Boolean, fromChooseStore:Boolean, fromIndexStore:Boolean) {
         with(binding) {
             edStoreName.setText(store.name)
             edStoreLinkMap.setText(store.linkMap)
@@ -43,12 +44,12 @@ class EditStoreActivity : AppCompatActivity() {
             edStorePhone.setText(store.phone)
             edStorePrice.setText(store.price)
             btnUpdateStore.setOnClickListener {
-                validate(store.id.toString(), fromCreateResupply, fromChooseStore, fromIndexStore)
+                validate(store.id.toString(), fromCreateResupply, fromEditResupply, fromChooseStore, fromIndexStore)
             }
         }
     }
 
-    private fun validate(id: String, fromCreateResupply:Boolean, fromChooseStore:Boolean, fromIndexStore:Boolean) {
+    private fun validate(id: String, fromCreateResupply:Boolean, fromEditResupply:Boolean, fromChooseStore:Boolean, fromIndexStore:Boolean) {
         val name = binding.edStoreName.text.toString()
         val linkMap = binding.edStoreLinkMap.text.toString()
         val address = binding.edStoreAddress.text.toString()
@@ -56,13 +57,13 @@ class EditStoreActivity : AppCompatActivity() {
         val price = binding.edStorePrice.text.toString()
 
         if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(linkMap) && !TextUtils.isEmpty(address) && !TextUtils.isEmpty(phone) && !TextUtils.isEmpty(price)) {
-            updateStore(id, name, phone, address, linkMap, price, fromCreateResupply, fromChooseStore, fromIndexStore)
+            updateStore(id, name, phone, address, linkMap, price, fromCreateResupply, fromEditResupply, fromChooseStore, fromIndexStore)
         } else {
             showAlert(getString(R.string.please_fill_in_all_input))
         }
     }
 
-    private fun updateStore(id:String,name: String, phone: String, address: String, linkMap: String, price: String, fromCreateResupply:Boolean, fromChooseStore:Boolean, fromIndexStore:Boolean) {
+    private fun updateStore(id:String,name: String, phone: String, address: String, linkMap: String, price: String, fromCreateResupply:Boolean, fromEditResupply:Boolean, fromChooseStore:Boolean, fromIndexStore:Boolean) {
         viewModel.updateStore(id, name, phone, address, linkMap, price).observe(this) {
             if (it != null) {
                 when (it) {
@@ -88,17 +89,18 @@ class EditStoreActivity : AppCompatActivity() {
                             phone = store?.phone,
                             price = store?.price
                         )
-                        navigateToShowStore(storeData,fromCreateResupply, fromChooseStore, fromIndexStore)
+                        navigateToShowStore(storeData,fromCreateResupply, fromEditResupply, fromChooseStore, fromIndexStore)
                     }
                 }
             }
         }
     }
 
-    private fun navigateToShowStore(data: ListStoreItem, fromCreateResupply:Boolean, fromChooseStore:Boolean, fromIndexStore:Boolean) {
+    private fun navigateToShowStore(data: ListStoreItem, fromCreateResupply:Boolean, fromEditResupply:Boolean, fromChooseStore:Boolean, fromIndexStore:Boolean) {
         val intentToShow = Intent(this@EditStoreActivity, ShowStoreActivity::class.java)
         intentToShow.putExtra("STORE", data)
         intentToShow.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
+        intentToShow.putExtra("FROM-EDIT-RESUPPLY",fromEditResupply)
         intentToShow.putExtra("FROM-CHOOSE-STORE",fromChooseStore)
         intentToShow.putExtra("FROM-INDEX-STORE",fromIndexStore)
         intentToShow.putExtra("FROM-EDIT-STORE",true)
@@ -106,10 +108,11 @@ class EditStoreActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun setupTopBar(data: ListStoreItem, fromCreateResupply:Boolean, fromChooseStore:Boolean, fromIndexStore:Boolean) {
+    private fun setupTopBar(data: ListStoreItem, fromCreateResupply:Boolean, fromEditResupply:Boolean, fromChooseStore:Boolean, fromIndexStore:Boolean) {
         binding.btnBack.setOnClickListener {
             val intentToShow = Intent(this@EditStoreActivity, ShowStoreActivity::class.java)
             intentToShow.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
+            intentToShow.putExtra("FROM-EDIT-RESUPPLY",fromEditResupply)
             intentToShow.putExtra("FROM-CHOOSE-STORE",fromChooseStore)
             intentToShow.putExtra("FROM-INDEX-STORE",fromIndexStore)
             intentToShow.putExtra("FROM-EDIT-STORE",true)
