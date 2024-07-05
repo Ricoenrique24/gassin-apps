@@ -189,11 +189,6 @@ class MoreFragment : Fragment() {
     }
 
     private fun openDownloadedFile(uri: Uri) {
-//        val uri = FileProvider.getUriForFile(
-//            requireContext(),
-//            requireContext().packageName + ".fileprovider",
-//            file
-//        )
         val intent = Intent(Intent.ACTION_VIEW)
         intent.setDataAndType(uri, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
