@@ -1,27 +1,22 @@
 package com.naffeid.gassin.ui.pages.manager.main.home
 
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.naffeid.gassin.BuildConfig
 import com.naffeid.gassin.data.model.User
 import com.naffeid.gassin.data.remote.response.ListTransactionItem
 import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.data.utils.Rupiah
+import com.naffeid.gassin.data.utils.getFileUri
 import com.naffeid.gassin.databinding.FragmentHomeManagerBinding
 import com.naffeid.gassin.ui.adapter.TransactionAdapter
 import com.naffeid.gassin.ui.pages.ViewModelFactory
@@ -33,13 +28,6 @@ import com.naffeid.gassin.ui.pages.manager.resupplytransaction.create.CreateReSu
 import com.naffeid.gassin.ui.pages.manager.resupplytransaction.show.ShowReSupplyTransactionActivity
 import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreActivity
 import com.naffeid.gassin.ui.pages.signin.SignInActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import okhttp3.ResponseBody
-import java.io.File
-import java.io.IOException
-import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -149,7 +137,11 @@ class HomeFragment : Fragment() {
                     showLoading(false)
                     val responseBody = result.data.body()
                     if (responseBody != null) {
-                        saveFile(requireContext(), responseBody)
+                        val byteArray = responseBody.bytes()
+                        val uri = saveExcelFile(requireContext(), byteArray)
+                        uri?.let {
+                            openExcelFile(requireContext(), it)
+                        }
                         showAlert("Berhasil mendownload laporan")
                     } else {
                         showAlert("Gagal mendownload laporan")
@@ -164,64 +156,24 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun getFileUri(context: Context): Uri {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val contentValues = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, "$timeStamp.xlsx")
-                put(MediaStore.MediaColumns.MIME_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                put(MediaStore.MediaColumns.RELATIVE_PATH, "Documents/MyReports/")
-            }
-            context.contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
-                ?: throw IOException("Failed to create new MediaStore record.")
-        } else {
-            val filesDir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
-            val file = File(filesDir, "/MyReports/$timeStamp.xlsx")
-            if (file.parentFile?.exists() == false) file.parentFile?.mkdirs()
-            FileProvider.getUriForFile(context, "${BuildConfig.APPLICATION_ID}.fileprovider", file)
+    private fun saveExcelFile(context: Context, byteArray: ByteArray): Uri? {
+        val uri = getFileUri(context, "Documents/MyReports")
+        uri?.let {
+            context.contentResolver.openOutputStream(it)?.use { outputStream ->
+                outputStream.write(byteArray)
+                showAlert("Laporan berhasil disimpan")
+            } ?: showAlert("Gagal menyimpan laporan")
         }
+        return uri
     }
 
-    private fun saveFile(context: Context, responseBody: ResponseBody) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val uri = getFileUri(context)
-                context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-                    val inputStream: InputStream = responseBody.byteStream()
-                    val buffer = ByteArray(4096)
-                    var bytesRead: Int
-                    while (inputStream.read(buffer).also { bytesRead = it } != -1) {
-                        outputStream.write(buffer, 0, bytesRead)
-                    }
-                    inputStream.close()
-                    outputStream.close()
-                } ?: throw IOException("Failed to open output stream.")
-
-                CoroutineScope(Dispatchers.Main).launch {
-                    showAlert("File berhasil disimpan di $uri")
-                    openDownloadedFile(uri)
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
-                CoroutineScope(Dispatchers.Main).launch {
-                    showAlert("Gagal menyimpan file: ${e.message}")
-                }
-            }
+    private fun openExcelFile(context: Context, uri: Uri) {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, "application/vnd.ms-excel")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
+        context.startActivity(Intent.createChooser(intent, "Open with"))
     }
-
-    private fun openDownloadedFile(uri: Uri) {
-//        val uri = FileProvider.getUriForFile(
-//            requireContext(),
-//            requireContext().packageName + ".fileprovider",
-//            file
-//        )
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.setDataAndType(uri, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        startActivity(intent)
-    }
-
-
 
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) binding.progressBar.visibility =
