@@ -29,6 +29,7 @@ class ShowStoreActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityShowStoreBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val quantity = intent.getStringExtra("QUANTITY")
         val store = intent.getParcelableExtra<ListStoreItem>("STORE")
         val fromCreateResupply = intent.getBooleanExtra("FROM-CREATE-RESUPPLY",false)
         val fromEditResupply = intent.getBooleanExtra("FROM-EDIT-RESUPPLY",false)
@@ -37,13 +38,13 @@ class ShowStoreActivity : AppCompatActivity() {
         val fromEditStore = intent.getBooleanExtra("FROM-EDIT-STORE",false)
 
         if (fromEditStore) {
-            if (store != null) setupData(store, fromCreateResupply, fromEditResupply, fromChooseStore, fromIndexStore, true)
+            if (store != null) setupData(quantity.toString(), store, fromCreateResupply, fromEditResupply, fromChooseStore, fromIndexStore, true)
         }
-        if (store != null) setupData(store, fromCreateResupply, fromEditResupply, fromChooseStore, fromIndexStore, fromEditStore)
-        setupTopBar(fromCreateResupply, fromEditResupply, fromChooseStore, fromIndexStore)
+        if (store != null) setupData(quantity.toString(), store, fromCreateResupply, fromEditResupply, fromChooseStore, fromIndexStore, fromEditStore)
+        setupTopBar(quantity.toString(), fromCreateResupply, fromEditResupply, fromChooseStore, fromIndexStore)
     }
 
-    private fun setupData(store: ListStoreItem, fromCreateResupply:Boolean, fromEditResupply:Boolean, fromChooseStore:Boolean, fromIndexStore: Boolean, fromEditStore:Boolean) {
+    private fun setupData(qty: String, store: ListStoreItem, fromCreateResupply:Boolean, fromEditResupply:Boolean, fromChooseStore:Boolean, fromIndexStore: Boolean, fromEditStore:Boolean) {
         val id = store.id.toString()
         viewModel.showStore(id).observe(this) { result ->
             when (result) {
@@ -73,7 +74,7 @@ class ShowStoreActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    if(storeData !=null) setupView(storeData,fromCreateResupply, fromEditResupply, fromChooseStore, fromIndexStore)
+                    if(storeData !=null) setupView(qty, storeData,fromCreateResupply, fromEditResupply, fromChooseStore, fromIndexStore)
 
                 }
 
@@ -85,7 +86,7 @@ class ShowStoreActivity : AppCompatActivity() {
             }
         }
     }
-    private fun setupView(store: Store, fromCreateResupply:Boolean, fromEditResupply:Boolean, fromChooseStore:Boolean, fromIndexStore: Boolean) {
+    private fun setupView(qty: String, store: Store, fromCreateResupply:Boolean, fromEditResupply:Boolean, fromChooseStore:Boolean, fromIndexStore: Boolean) {
         with(binding){
             edStoreName.setText(store.name)
             edStoreLinkMap.setText(store.linkMap)
@@ -101,25 +102,26 @@ class ShowStoreActivity : AppCompatActivity() {
                     phone = store.phone,
                     price = store.price
                 )
-                editStore(storeData,fromCreateResupply, fromEditResupply, fromChooseStore, fromIndexStore)
+                editStore(qty, storeData,fromCreateResupply, fromEditResupply, fromChooseStore, fromIndexStore)
             }
             btnDeleteStore.setOnClickListener {
-                deleteStore(store.id.toString(), fromCreateResupply, fromEditResupply, fromChooseStore)
+                deleteStore(qty, store.id.toString(), fromCreateResupply, fromEditResupply, fromChooseStore)
             }
         }
     }
 
-    private fun editStore(data: ListStoreItem, fromCreateResupply:Boolean, fromEditResupply:Boolean, fromChooseStore:Boolean, fromIndexStore: Boolean) {
+    private fun editStore(qty: String, data: ListStoreItem, fromCreateResupply:Boolean, fromEditResupply:Boolean, fromChooseStore:Boolean, fromIndexStore: Boolean) {
         val intentToEdit = Intent(this@ShowStoreActivity, EditStoreActivity::class.java)
         intentToEdit.putExtra("STORE", data)
         intentToEdit.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
         intentToEdit.putExtra("FROM-EDIT-RESUPPLY",fromEditResupply)
         intentToEdit.putExtra("FROM-CHOOSE-STORE",fromChooseStore)
         intentToEdit.putExtra("FROM-INDEX-STORE",fromIndexStore)
+        intentToEdit.putExtra("QUANTITY", qty)
         startActivity(intentToEdit)
     }
 
-    private fun deleteStore(id: String,fromCreateResupply:Boolean, fromEditResupply:Boolean, fromChooseStore:Boolean) {
+    private fun deleteStore(qty: String, id: String,fromCreateResupply:Boolean, fromEditResupply:Boolean, fromChooseStore:Boolean) {
         viewModel.deleteStore(id).observe(this) { result ->
             when (result) {
                 is Result.Loading -> {
@@ -138,7 +140,7 @@ class ShowStoreActivity : AppCompatActivity() {
                         }
                     }
                     if (fromChooseStore){
-                        navigateToChooseStore(fromCreateResupply, fromEditResupply, true)
+                        navigateToChooseStore(qty, fromCreateResupply, fromEditResupply, true)
                     } else {
                         navigateToIndexStore(true)
                     }
@@ -162,16 +164,17 @@ class ShowStoreActivity : AppCompatActivity() {
         startActivity(intentToIndex)
         finish()
     }
-    private fun navigateToChooseStore(fromCreateResupply:Boolean, fromEditResupply:Boolean, fromEditStore:Boolean) {
+    private fun navigateToChooseStore(qty:String, fromCreateResupply:Boolean, fromEditResupply:Boolean, fromEditStore:Boolean) {
         val intentToChoose = Intent(this@ShowStoreActivity, ChooseStoreActivity::class.java)
         intentToChoose.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
         intentToChoose.putExtra("FROM-EDIT-RESUPPLY",fromEditResupply)
         intentToChoose.putExtra("FROM-EDIT-STORE",fromEditStore)
+        intentToChoose.putExtra("QUANTITY", qty)
         startActivity(intentToChoose)
         finish()
     }
 
-    private fun setupTopBar(fromCreateResupply: Boolean, fromEditResupply: Boolean, fromChooseStore: Boolean, fromIndexStore: Boolean) {
+    private fun setupTopBar(qty:String, fromCreateResupply: Boolean, fromEditResupply: Boolean, fromChooseStore: Boolean, fromIndexStore: Boolean) {
         if (fromChooseStore && fromIndexStore) {
             showAlert("Halaman Tidak Dapat Ditemukan")
             return
@@ -183,6 +186,7 @@ class ShowStoreActivity : AppCompatActivity() {
                     Intent(this@ShowStoreActivity, ChooseStoreActivity::class.java).apply {
                         putExtra("FROM-CREATE-RESUPPLY", fromCreateResupply)
                         putExtra("FROM-EDIT-RESUPPLY", fromEditResupply)
+                        putExtra("QUANTITY", qty)
                     }
                 }
                 fromIndexStore -> {

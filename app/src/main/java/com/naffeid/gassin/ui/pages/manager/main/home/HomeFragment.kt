@@ -20,6 +20,7 @@ import com.naffeid.gassin.data.utils.getFileUri
 import com.naffeid.gassin.databinding.FragmentHomeManagerBinding
 import com.naffeid.gassin.ui.adapter.TransactionAdapter
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.employee.main.EmployeeMainActivity
 import com.naffeid.gassin.ui.pages.manager.customer.index.IndexCustomerActivity
 import com.naffeid.gassin.ui.pages.manager.employee.index.IndexEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.purchasetransaction.create.CreatePurchaseTransactionActivity
@@ -28,16 +29,10 @@ import com.naffeid.gassin.ui.pages.manager.resupplytransaction.create.CreateReSu
 import com.naffeid.gassin.ui.pages.manager.resupplytransaction.show.ShowReSupplyTransactionActivity
 import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreActivity
 import com.naffeid.gassin.ui.pages.signin.SignInActivity
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeManagerBinding? = null
-
-    private val FILENAME_FORMAT = "yyyyMMdd_HHmmss"
-    private val timeStamp: String = SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(Date())
 
     private val binding get() = _binding!!
 
@@ -54,14 +49,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeManagerBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        viewModel.getSession().observe(viewLifecycleOwner) { user ->
-            if (user.apikey == null) {
-                navigationToSignIn()
-            }
-            setupData(user)
-            setupRecyclerView()
-            showAllActiveTransactionManager()
-        }
+        checkSession()
 
         return root
     }
@@ -156,9 +144,9 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun saveExcelFile(context: Context, byteArray: ByteArray): Uri? {
+    private fun saveExcelFile(context: Context, byteArray: ByteArray): Uri {
         val uri = getFileUri(context, "Documents/MyReports")
-        uri?.let {
+        uri.let {
             context.contentResolver.openOutputStream(it)?.use { outputStream ->
                 outputStream.write(byteArray)
                 showAlert("Laporan berhasil disimpan")
@@ -278,9 +266,81 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun navigationToSignIn(){
-        val intent = Intent(requireContext(), SignInActivity::class.java)
-        startActivity(intent)
+    private fun checkSession() {
+        viewModel.getSession().observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                viewModel.showUser(user.id.toString()).observe(viewLifecycleOwner) {
+                    when (it) {
+                        is Result.Loading -> {
+                            Log.d("Get User Data Process:", "Loading ...")
+                        }
+
+                        is Result.Error -> {
+                            Log.d("Get User Data Process:", "Error: ${it.error}")
+                            navigateToSignInScreen()
+                        }
+
+                        is Result.Success -> {
+                            val data = it.data.loginResult
+                            if (data != null) {
+                                val userData = User(
+                                    id = data.id!!,
+                                    name = data.name ?: "",
+                                    username = data.username ?: "",
+                                    email = data.email ?: "",
+                                    phone = data.phone ?: "",
+                                    role = data.role ?: "",
+                                    apikey = data.apikey ?: "",
+                                    tokenfcm = data.tokenFcm ?: ""
+                                )
+                                if (userData == user) {
+                                    checkRole(userData)
+                                } else {
+                                    viewModel.logout()
+                                    navigateToSignInScreen()
+                                }
+                            } else {
+                                viewModel.logout()
+                                navigateToSignInScreen()
+                            }
+                        }
+                    }
+                }
+            } else {
+                navigateToSignInScreen()
+            }
+        }
+    }
+    private fun checkRole(userData: User) {
+        viewModel.checkUserRole(userData.role) { isRoleMatch ->
+            if (isRoleMatch) {
+                 when (userData.role) {
+                    "employee" -> {
+                        val intent = Intent(requireContext(), EmployeeMainActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+                    "manager" -> {
+                        setupData(userData)
+                        setupRecyclerView()
+                        showAllActiveTransactionManager()
+                    }
+                    else -> {
+                        val intent = Intent(requireContext(), SignInActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+                }
+
+            } else {
+                navigateToSignInScreen()
+            }
+        }
+    }
+
+    private fun navigateToSignInScreen() {
+        startActivity(Intent(requireContext(), SignInActivity::class.java))
+        requireActivity().finish()
     }
 
     override fun onDestroyView() {

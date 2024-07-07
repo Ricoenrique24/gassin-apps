@@ -15,6 +15,7 @@ import com.naffeid.gassin.data.utils.Rupiah
 import com.naffeid.gassin.data.utils.TransactionStatus
 import com.naffeid.gassin.databinding.ActivityShowReSupplyTransactionBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.manager.main.ManagerMainActivity
 import com.naffeid.gassin.ui.pages.manager.resupplytransaction.edit.EditReSupplyTransactionActivity
 
 class ShowReSupplyTransactionActivity : AppCompatActivity() {
@@ -167,7 +168,9 @@ class ShowReSupplyTransactionActivity : AppCompatActivity() {
 
     private fun setupTobBar() {
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            val intentToHome = Intent(this@ShowReSupplyTransactionActivity, ManagerMainActivity::class.java)
+            startActivity(intentToHome)
+            finish()
         }
     }
     private fun showLoading(isLoading: Boolean) {

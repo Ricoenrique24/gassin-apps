@@ -13,11 +13,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.radiobutton.MaterialRadioButton
 import com.google.android.material.snackbar.Snackbar
 import com.naffeid.gassin.R
+import com.naffeid.gassin.data.model.User
 import com.naffeid.gassin.data.remote.response.ListResupplyItem
 import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.databinding.FragmentStockManagerBinding
 import com.naffeid.gassin.ui.adapter.ResupplyTransactionAdapter
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.employee.main.EmployeeMainActivity
 import com.naffeid.gassin.ui.pages.manager.resupplytransaction.create.CreateReSupplyTransactionActivity
 import com.naffeid.gassin.ui.pages.manager.resupplytransaction.show.ShowReSupplyTransactionActivity
 import com.naffeid.gassin.ui.pages.signin.SignInActivity
@@ -41,22 +43,14 @@ class StockFragment : Fragment() {
         _binding = FragmentStockManagerBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        viewModel.getSession().observe(viewLifecycleOwner) { user ->
-            if (user.apikey == null) {
-                navigationToSignIn()
-            }
-
-            setupView()
-            setupRecyclerView()
-            showAllResupplyTransaction()
-        }
+        checkSession()
 
         return root
     }
     private fun setupView() {
         with(binding){
             searchView.setupWithSearchBar(searchBar)
-            searchView.editText.setOnEditorActionListener { textView, actionId, event ->
+            searchView.editText.setOnEditorActionListener { _, _, _ ->
                 searchBar.setText(searchView.text)
                 searchView.hide()
                 val query = searchView.text.toString().trim()
@@ -68,7 +62,7 @@ class StockFragment : Fragment() {
                 false
             }
             // Setup ChipGroup for status filter
-            chipGroup.setOnCheckedChangeListener { group, checkedId ->
+            chipGroup.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
                     R.id.chip_all_stock_transaction -> applyStatusFilter("all")
                     R.id.chip_pending_stock_transaction -> applyStatusFilter("1")
@@ -203,9 +197,81 @@ class StockFragment : Fragment() {
             }
         }
     }
-    private fun navigationToSignIn(){
-        val intent = Intent(requireContext(), SignInActivity::class.java)
-        startActivity(intent)
+    private fun checkSession() {
+        viewModel.getSession().observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                viewModel.showUser(user.id.toString()).observe(viewLifecycleOwner) {
+                    when (it) {
+                        is Result.Loading -> {
+                            Log.d("Get User Data Process:", "Loading ...")
+                        }
+
+                        is Result.Error -> {
+                            Log.d("Get User Data Process:", "Error: ${it.error}")
+                            navigateToSignInScreen()
+                        }
+
+                        is Result.Success -> {
+                            val data = it.data.loginResult
+                            if (data != null) {
+                                val userData = User(
+                                    id = data.id!!,
+                                    name = data.name ?: "",
+                                    username = data.username ?: "",
+                                    email = data.email ?: "",
+                                    phone = data.phone ?: "",
+                                    role = data.role ?: "",
+                                    apikey = data.apikey ?: "",
+                                    tokenfcm = data.tokenFcm ?: ""
+                                )
+                                if (userData == user) {
+                                    checkRole(userData)
+                                } else {
+                                    viewModel.logout()
+                                    navigateToSignInScreen()
+                                }
+                            } else {
+                                viewModel.logout()
+                                navigateToSignInScreen()
+                            }
+                        }
+                    }
+                }
+            } else {
+                navigateToSignInScreen()
+            }
+        }
+    }
+    private fun checkRole(userData: User) {
+        viewModel.checkUserRole(userData.role) { isRoleMatch ->
+            if (isRoleMatch) {
+                when (userData.role) {
+                    "employee" -> {
+                        val intent = Intent(requireContext(), EmployeeMainActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+                    "manager" -> {
+                        setupView()
+                        setupRecyclerView()
+                        showAllResupplyTransaction()
+                    }
+                    else -> {
+                        val intent = Intent(requireContext(), SignInActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+                }
+
+            } else {
+                navigateToSignInScreen()
+            }
+        }
+    }
+
+    private fun navigateToSignInScreen() {
+        startActivity(Intent(requireContext(), SignInActivity::class.java))
+        requireActivity().finish()
     }
 
     private fun showLoading(isLoading: Boolean) {

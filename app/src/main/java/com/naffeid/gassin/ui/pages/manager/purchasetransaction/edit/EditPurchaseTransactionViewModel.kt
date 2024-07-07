@@ -7,13 +7,15 @@ import androidx.lifecycle.asLiveData
 import com.naffeid.gassin.data.model.Customer
 import com.naffeid.gassin.data.model.Employee
 import com.naffeid.gassin.data.repository.CustomerRepository
+import com.naffeid.gassin.data.repository.DashboardRepository
 import com.naffeid.gassin.data.repository.EmployeeRepository
 import com.naffeid.gassin.data.repository.PurchaseTransactionRepository
 
 class EditPurchaseTransactionViewModel(
     private val purchaseTransactionRepository: PurchaseTransactionRepository,
     private val customerRepository: CustomerRepository,
-    private val employeeRepository: EmployeeRepository
+    private val employeeRepository: EmployeeRepository,
+    private val dashboardRepository: DashboardRepository
 ) : ViewModel() {
     private val _quantity = MutableLiveData<Int>()
     val quantity: LiveData<Int> get() = _quantity
@@ -22,6 +24,8 @@ class EditPurchaseTransactionViewModel(
     val totalPayment: LiveData<Int> get() = _totalPayment
 
     private var gasPrice: Int = 0
+
+    private var stock: Int = 0
 
     init {
         _quantity.value = 1
@@ -44,6 +48,14 @@ class EditPurchaseTransactionViewModel(
     fun setQuantity(newQty: Int) {
         _quantity.value = newQty
         updateTotalPayment()
+    }
+
+    fun setStock(newStock: Int) {
+        stock = newStock
+    }
+
+    fun getStock(): Int {
+        return stock
     }
 
     private fun updateTotalPayment() {
@@ -81,4 +93,7 @@ class EditPurchaseTransactionViewModel(
         qty,
         totalPayment
     )
+
+    fun getAvailableStockQuantity() = dashboardRepository.getAvailableStockQuantity()
+
 }

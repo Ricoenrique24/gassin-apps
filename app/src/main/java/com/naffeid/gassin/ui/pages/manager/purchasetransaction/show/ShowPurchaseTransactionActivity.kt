@@ -13,6 +13,7 @@ import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.data.utils.Rupiah
 import com.naffeid.gassin.databinding.ActivityShowPurchaseTransactionBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.manager.main.ManagerMainActivity
 import com.naffeid.gassin.ui.pages.manager.purchasetransaction.edit.EditPurchaseTransactionActivity
 
 class ShowPurchaseTransactionActivity : AppCompatActivity() {
@@ -166,7 +167,9 @@ class ShowPurchaseTransactionActivity : AppCompatActivity() {
 
     private fun setupTobBar() {
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            val intentToHome = Intent(this@ShowPurchaseTransactionActivity, ManagerMainActivity::class.java)
+            startActivity(intentToHome)
+            finish()
         }
     }
     private fun showLoading(isLoading: Boolean) {

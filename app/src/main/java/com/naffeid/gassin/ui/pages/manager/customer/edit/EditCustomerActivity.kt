@@ -25,18 +25,19 @@ class EditCustomerActivity : AppCompatActivity() {
         binding = ActivityEditCustomerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+        val quantity = intent.getStringExtra("QUANTITY")
         val customer = intent.getParcelableExtra<ListCustomerItem>("CUSTOMER")
         val fromCreatePurchase = intent.getBooleanExtra("FROM-CREATE-PURCHASE",false)
         val fromEditPurchase = intent.getBooleanExtra("FROM-EDIT-PURCHASE",false)
         val fromChooseCustomer = intent.getBooleanExtra("FROM-CHOOSE-CUSTOMER",false)
         val fromIndexCustomer = intent.getBooleanExtra("FROM-INDEX-CUSTOMER",false)
         if (customer != null) {
-            setupView(customer, fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer)
-            setupTopBar(customer,fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer)
+            setupView(quantity.toString(), customer, fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer)
+            setupTopBar(quantity.toString(), customer,fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer)
         }
     }
 
-    private fun setupView(customer: ListCustomerItem, fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer:Boolean) {
+    private fun setupView(qty:String, customer: ListCustomerItem, fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer:Boolean) {
         with(binding) {
             edCustomerName.setText(customer.name)
             edCustomerLinkMap.setText(customer.linkMap)
@@ -44,12 +45,12 @@ class EditCustomerActivity : AppCompatActivity() {
             edCustomerPhone.setText(customer.phone)
             edCustomerPrice.setText(customer.price)
             btnUpdateCustomer.setOnClickListener {
-                validate(customer.id.toString(), fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer)
+                validate(qty, customer.id.toString(), fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer)
             }
         }
     }
 
-    private fun validate(id: String, fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer:Boolean) {
+    private fun validate(qty:String, id: String, fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer:Boolean) {
         val name = binding.edCustomerName.text.toString()
         val linkMap = binding.edCustomerLinkMap.text.toString()
         val address = binding.edCustomerAddress.text.toString()
@@ -57,13 +58,13 @@ class EditCustomerActivity : AppCompatActivity() {
         val price = binding.edCustomerPrice.text.toString()
 
         if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(linkMap) && !TextUtils.isEmpty(address) && !TextUtils.isEmpty(phone) && !TextUtils.isEmpty(price)) {
-            updateCustomer(id, name, phone, address, linkMap, price, fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer)
+            updateCustomer(qty, id, name, phone, address, linkMap, price, fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer)
         } else {
             showAlert(getString(R.string.please_fill_in_all_input))
         }
     }
 
-    private fun updateCustomer(id:String,name: String, phone: String, address: String, linkMap: String, price: String, fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer:Boolean) {
+    private fun updateCustomer(qty:String, id:String,name: String, phone: String, address: String, linkMap: String, price: String, fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer:Boolean) {
         viewModel.updateCustomer(id, name, phone, address, linkMap, price).observe(this) {
             if (it != null) {
                 when (it) {
@@ -89,14 +90,14 @@ class EditCustomerActivity : AppCompatActivity() {
                             phone = customer?.phone,
                             price = customer?.price
                         )
-                        navigateToShowCustomer(customerData,fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer)
+                        navigateToShowCustomer(qty, customerData,fromCreatePurchase, fromEditPurchase, fromChooseCustomer, fromIndexCustomer)
                     }
                 }
             }
         }
     }
 
-    private fun navigateToShowCustomer(data: ListCustomerItem, fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer:Boolean) {
+    private fun navigateToShowCustomer(qty:String, data: ListCustomerItem, fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer:Boolean) {
         val intentToShow = Intent(this@EditCustomerActivity, ShowCustomerActivity::class.java)
         intentToShow.putExtra("CUSTOMER", data)
         intentToShow.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
@@ -104,11 +105,12 @@ class EditCustomerActivity : AppCompatActivity() {
         intentToShow.putExtra("FROM-CHOOSE-CUSTOMER",fromChooseCustomer)
         intentToShow.putExtra("FROM-INDEX-CUSTOMER",fromIndexCustomer)
         intentToShow.putExtra("FROM-EDIT-CUSTOMER",true)
+        intentToShow.putExtra("QUANTITY", qty)
         startActivity(intentToShow)
         finish()
     }
 
-    private fun setupTopBar(data: ListCustomerItem, fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer:Boolean) {
+    private fun setupTopBar(qty:String, data: ListCustomerItem, fromCreatePurchase:Boolean, fromEditPurchase:Boolean, fromChooseCustomer:Boolean, fromIndexCustomer:Boolean) {
         binding.btnBack.setOnClickListener {
             val intentToShow = Intent(this@EditCustomerActivity, ShowCustomerActivity::class.java)
             intentToShow.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
@@ -117,6 +119,7 @@ class EditCustomerActivity : AppCompatActivity() {
             intentToShow.putExtra("FROM-INDEX-CUSTOMER",fromIndexCustomer)
             intentToShow.putExtra("FROM-EDIT-CUSTOMER",true)
             intentToShow.putExtra("CUSTOMER", data)
+            intentToShow.putExtra("QUANTITY", qty)
             startActivity(intentToShow)
             finish()
         }

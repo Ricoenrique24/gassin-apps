@@ -17,6 +17,7 @@ import com.naffeid.gassin.databinding.FragmentHomeEmployeeBinding
 import com.naffeid.gassin.ui.adapter.TransactionAdapter
 import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.employee.order.show.ShowOrderEmployeeActivity
+import com.naffeid.gassin.ui.pages.manager.main.ManagerMainActivity
 import com.naffeid.gassin.ui.pages.signin.SignInActivity
 
 class HomeEmployeeFragment : Fragment() {
@@ -37,14 +38,7 @@ class HomeEmployeeFragment : Fragment() {
         _binding = FragmentHomeEmployeeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        viewModel.getSession().observe(viewLifecycleOwner) { user ->
-            if (user.apikey == null) {
-                navigationToSignIn()
-            }
-            setupView(user)
-            setupRecyclerView()
-            showAllTransaction()
-        }
+        checkSession()
 
         return root
     }
@@ -98,6 +92,83 @@ class HomeEmployeeFragment : Fragment() {
         }
     }
 
+    private fun checkSession() {
+        viewModel.getSession().observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                viewModel.showUser(user.id.toString()).observe(viewLifecycleOwner) {
+                    when (it) {
+                        is Result.Loading -> {
+                            Log.d("Get User Data Process:", "Loading ...")
+                        }
+
+                        is Result.Error -> {
+                            Log.d("Get User Data Process:", "Error: ${it.error}")
+                            navigateToSignInScreen()
+                        }
+
+                        is Result.Success -> {
+                            val data = it.data.loginResult
+                            if (data != null) {
+                                val userData = User(
+                                    id = data.id!!,
+                                    name = data.name ?: "",
+                                    username = data.username ?: "",
+                                    email = data.email ?: "",
+                                    phone = data.phone ?: "",
+                                    role = data.role ?: "",
+                                    apikey = data.apikey ?: "",
+                                    tokenfcm = data.tokenFcm ?: ""
+                                )
+                                if (userData == user) {
+                                    checkRole(userData)
+                                } else {
+                                    viewModel.logout()
+                                    navigateToSignInScreen()
+                                }
+                            } else {
+                                viewModel.logout()
+                                navigateToSignInScreen()
+                            }
+                        }
+                    }
+                }
+            } else {
+                navigateToSignInScreen()
+            }
+        }
+    }
+    private fun checkRole(userData: User) {
+        viewModel.checkUserRole(userData.role) { isRoleMatch ->
+            if (isRoleMatch) {
+                when (userData.role) {
+                    "employee" -> {
+                        setupView(userData)
+                        setupRecyclerView()
+                        showAllTransaction()
+                    }
+                    "manager" -> {
+                        val intent = Intent(requireContext(), ManagerMainActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+                    else -> {
+                        val intent = Intent(requireContext(), SignInActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+                }
+
+            } else {
+                navigateToSignInScreen()
+            }
+        }
+    }
+
+    private fun navigateToSignInScreen() {
+        startActivity(Intent(requireContext(), SignInActivity::class.java))
+        requireActivity().finish()
+    }
+
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) binding.progressBar.visibility =
             View.VISIBLE else binding.progressBar.visibility = View.GONE
@@ -105,11 +176,6 @@ class HomeEmployeeFragment : Fragment() {
 
     private fun showAlert(string: String) {
         Snackbar.make(binding.root, string, Snackbar.LENGTH_LONG).show()
-    }
-
-    private fun navigationToSignIn(){
-        val intent = Intent(requireContext(), SignInActivity::class.java)
-        startActivity(intent)
     }
 
     override fun onDestroyView() {

@@ -27,20 +27,25 @@ class CreateReSupplyTransactionActivity : AppCompatActivity() {
         binding = ActivityCreateReSupplyTransactionBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+        val quantity = intent.getStringExtra("QUANTITY")
         val updateData = intent.getBooleanExtra("CHOOSE-UPDATED", false)
-        if (updateData){
-            setupView()
-            validate()
+        if (updateData) {
+            setupData(quantity)
+        } else {
+            setupData(quantity)
         }
         setupTopBar()
-        setupView()
+    }
+
+    private fun setupData(qty:String?) {
+        setupView(qty)
         validate()
     }
 
-    private fun setupView() {
+    private fun setupView(qty:String?) {
         setupStore()
         setupEmployee()
-        setupQty()
+        setupQty(qty)
         setupPayment()
     }
 
@@ -59,7 +64,9 @@ class CreateReSupplyTransactionActivity : AppCompatActivity() {
             }
         }
         binding.btnChangeStore.setOnClickListener {
-            navigateToChooseStore()
+            viewModel.quantity.observe(this) { qty ->
+                navigateToChooseStore(qty.toString())
+            }
         }
 
     }
@@ -77,13 +84,21 @@ class CreateReSupplyTransactionActivity : AppCompatActivity() {
             }
         }
         binding.btnChangeEmployee.setOnClickListener {
-            navigateToChooseEmployee()
+            viewModel.quantity.observe(this) { qty ->
+                navigateToChooseEmployee(qty.toString())
+            }
         }
     }
 
-    private fun setupQty() {
-        viewModel.quantity.observe(this) { qty ->
-            binding.edQtyGas.setText(qty.toString())
+    private fun setupQty(quantity:String?) {
+        if (quantity != null) {
+            val newQty = quantity.toIntOrNull() ?: 1
+            binding.edQtyGas.setText(quantity)
+            viewModel.setQuantity(newQty)
+        } else {
+            viewModel.quantity.observe(this) { qty ->
+                binding.edQtyGas.setText(qty.toString())
+            }
         }
 
         binding.btnMinus.setOnClickListener {
@@ -155,7 +170,7 @@ class CreateReSupplyTransactionActivity : AppCompatActivity() {
 
     private fun confirmationResupplyTransaction(qty: String, totalPayment: String) {
         val intentToConfirm = Intent(this@CreateReSupplyTransactionActivity, ConfirmationResupplyTransactionActivity::class.java)
-        intentToConfirm.putExtra("QUANTITY-RESUPPLY", qty)
+        intentToConfirm.putExtra("QUANTITY", qty)
         intentToConfirm.putExtra("TOTAL-RESUPPLY", totalPayment)
         startActivity(intentToConfirm)
     }
@@ -166,25 +181,25 @@ class CreateReSupplyTransactionActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun navigateToChooseStore() {
+    private fun navigateToChooseStore(qty: String) {
         val intentToChooseStore = Intent(this@CreateReSupplyTransactionActivity, ChooseStoreActivity::class.java)
         intentToChooseStore.putExtra("FROM-CREATE-RESUPPLY",true)
+        intentToChooseStore.putExtra("QUANTITY", qty)
         startActivity(intentToChooseStore)
         finish()
     }
 
-    private fun navigateToChooseEmployee() {
+    private fun navigateToChooseEmployee(qty: String) {
         val intentToChooseEmployee = Intent(this@CreateReSupplyTransactionActivity, ChooseEmployeeActivity::class.java)
         intentToChooseEmployee.putExtra("FROM-CREATE-RESUPPLY",true)
+        intentToChooseEmployee.putExtra("QUANTITY", qty)
         startActivity(intentToChooseEmployee)
         finish()
     }
 
     private fun setupTopBar() {
         binding.btnBack.setOnClickListener {
-            val intentToHome = Intent(this@CreateReSupplyTransactionActivity, ManagerMainActivity::class.java)
-            startActivity(intentToHome)
-            finish()
+            navigateToHome()
         }
     }
 

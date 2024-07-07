@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.naffeid.gassin.R
 import com.naffeid.gassin.data.model.Customer
@@ -18,6 +19,7 @@ import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.choose.customer.ChooseCustomerActivity
 import com.naffeid.gassin.ui.pages.manager.choose.employee.ChooseEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.purchasetransaction.show.ShowPurchaseTransactionActivity
+import com.naffeid.gassin.ui.pages.manager.resupplytransaction.create.CreateReSupplyTransactionActivity
 
 class EditPurchaseTransactionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditPurchaseTransactionBinding
@@ -30,19 +32,20 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
         binding = ActivityEditPurchaseTransactionBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+        val quantity = intent.getStringExtra("QUANTITY")
         val idPurchase = intent.getStringExtra("PURCHASE")
         val updateData = intent.getBooleanExtra("CHOOSE-UPDATED", false)
         if (updateData) {
-            if (idPurchase != null) setupData(idPurchase, true)
+            if (idPurchase != null) setupData(quantity, idPurchase, true)
         }
         if (!idPurchase.isNullOrBlank()) {
-            setupData(idPurchase.toString(), updateData)
+            setupData(quantity, idPurchase.toString(), updateData)
             setupTopBar(idPurchase.toString())
             validate(idPurchase.toString())
         }
     }
 
-    private fun setupData(id: String, updateData: Boolean) {
+    private fun setupData(qty:String?, id: String, updateData: Boolean) {
         viewModel.showPurchaseTransaction(id).observe(this) { result ->
             when (result) {
                 is Result.Loading -> {
@@ -51,9 +54,9 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
 
                 is Result.Success -> {
                     showLoading(false)
+                    showAvailableStockQuantity()
                     val purchaseData = result.data.purchase
-                    if (purchaseData != null) setupView(purchaseData, updateData)
-
+                    if (purchaseData != null) setupView(qty, purchaseData, updateData)
                 }
 
                 is Result.Error -> {
@@ -65,10 +68,10 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupView(purchase: Purchase, updateData: Boolean) {
+    private fun setupView(qty:String?, purchase: Purchase, updateData: Boolean) {
         setupCustomer(purchase, updateData)
         setupEmployee(purchase, updateData)
-        setupQty(purchase)
+        setupQty(qty, purchase)
         setupPayment()
     }
 
@@ -94,7 +97,9 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
             }
         }
         binding.btnChangeCustomer.setOnClickListener {
-            navigateToChooseCustomer(purchase.id.toString())
+            viewModel.quantity.observe(this) { qty ->
+                navigateToChooseCustomer(qty.toString(), purchase.id.toString())
+            }
         }
 
     }
@@ -119,16 +124,23 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
             }
         }
         binding.btnChangeEmployee.setOnClickListener {
-            navigateToChooseEmployee(purchase.id.toString())
+            viewModel.quantity.observe(this) { qty ->
+                navigateToChooseEmployee(qty.toString(), purchase.id.toString())
+            }
         }
     }
 
-    private fun setupQty(purchase: Purchase) {
-        viewModel.setQuantity(purchase.qty!!.toInt())
-        viewModel.quantity.observe(this) { qty ->
-            binding.edQtyGas.setText(qty.toString())
+    private fun setupQty(quantity:String?, purchase: Purchase) {
+        if (quantity != null) {
+            val newQty = quantity.toIntOrNull() ?: 1
+            binding.edQtyGas.setText(quantity)
+            viewModel.setQuantity(newQty)
+        } else {
+            viewModel.setQuantity(purchase.qty!!.toInt())
+            viewModel.quantity.observe(this) { qty ->
+                binding.edQtyGas.setText(qty.toString())
+            }
         }
-
         binding.btnMinus.setOnClickListener {
             val newQty = binding.edQtyGas.text.toString().toIntOrNull() ?: 1
             if (newQty > 1) {
@@ -141,8 +153,13 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
 
         binding.btnPlus.setOnClickListener {
             val newQty = binding.edQtyGas.text.toString().toIntOrNull() ?: 1
-            viewModel.setQuantity(newQty)
-            viewModel.increaseQuantity()
+            val stock = viewModel.getStock()
+            if (stock < newQty+1) {
+                showStockWarningDialog(stock)
+            } else {
+                viewModel.setQuantity(newQty)
+                viewModel.increaseQuantity()
+            }
         }
 
         binding.edQtyGas.setOnFocusChangeListener { _, hasFocus ->
@@ -219,7 +236,7 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
                     is Result.Success -> {
                         showLoading(false)
                         showAlert(result.data.message.toString())
-                        onBackPressed()
+                        navigateToShow(id)
                     }
 
                     is Result.Error -> {
@@ -231,19 +248,35 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
             }
     }
 
-    private fun navigateToChooseCustomer(id:String) {
+    private fun navigateToChooseCustomer(qty: String, id:String) {
         val intentToChooseCustomer = Intent(this@EditPurchaseTransactionActivity, ChooseCustomerActivity::class.java)
         intentToChooseCustomer.putExtra("FROM-EDIT-PURCHASE",true)
         intentToChooseCustomer.putExtra("PURCHASE", id)
+        intentToChooseCustomer.putExtra("QUANTITY", qty)
         startActivity(intentToChooseCustomer)
         finish()
     }
 
-    private fun navigateToChooseEmployee(id:String) {
+    private fun navigateToChooseEmployee(qty: String, id:String) {
         val intentToChooseEmployee = Intent(this@EditPurchaseTransactionActivity, ChooseEmployeeActivity::class.java)
         intentToChooseEmployee.putExtra("FROM-EDIT-PURCHASE",true)
         intentToChooseEmployee.putExtra("PURCHASE", id)
+        intentToChooseEmployee.putExtra("QUANTITY", qty)
         startActivity(intentToChooseEmployee)
+        finish()
+    }
+
+    private fun navigateToCreateResupplyTransaction() {
+        val intentToChooseEmployee = Intent(this@EditPurchaseTransactionActivity, CreateReSupplyTransactionActivity::class.java)
+        startActivity(intentToChooseEmployee)
+        finish()
+    }
+
+    private fun navigateToShow(id:String) {
+        val intentToShow = Intent(this@EditPurchaseTransactionActivity, ShowPurchaseTransactionActivity::class.java)
+        intentToShow.putExtra("PURCHASE", id)
+        intentToShow.putExtra("PURCHASE-UPDATED", true)
+        startActivity(intentToShow)
         finish()
     }
 
@@ -254,6 +287,62 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
             startActivity(intentToShow)
             finish()
         }
+    }
+
+    private fun showAvailableStockQuantity() {
+        viewModel.getAvailableStockQuantity().observe(this) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    showLoading(true)
+                }
+
+                is Result.Success -> {
+                    showLoading(false)
+                    val stock = result.data.stock
+                    if (stock != null) {
+                        if (stock == 0) {
+                            showResupplyWarningDialog()
+                        } else {
+                            viewModel.setStock(stock)
+                        }
+                    }
+
+                }
+
+                is Result.Error -> {
+                    showLoading(false)
+                    showAlert(result.error)
+                    Log.e("error employee:", result.error.toString())
+                }
+            }
+        }
+    }
+
+    private fun showStockWarningDialog(availableStock: Int) {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.stok_tidak_cukup))
+            .setMessage(
+                getString(
+                    R.string.stok_saat_ini_apakah_anda_ingin_menggunakan_stok_yang_tersedia,
+                    availableStock.toString()
+                ))
+            .setPositiveButton(getString(R.string.gunakan_stok)) { _, _ ->
+                viewModel.setQuantity(availableStock)
+            }
+            .setNegativeButton(getString(R.string.resupply)) { _, _ ->
+                navigateToCreateResupplyTransaction()
+            }
+            .show()
+    }
+
+    private fun showResupplyWarningDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.stok_habis))
+            .setMessage(getString(R.string.stok_saat_ini_kosong_anda_perlu_melakukan_resupply))
+            .setPositiveButton(getString(R.string.resupply)) { _, _ ->
+                navigateToCreateResupplyTransaction()
+            }
+            .show()
     }
 
     private fun showLoading(isLoading: Boolean) {

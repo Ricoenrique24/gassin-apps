@@ -27,6 +27,7 @@ class ShowEmployeeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityShowEmployeeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val quantity = intent.getStringExtra("QUANTITY")
         val employee = intent.getParcelableExtra<ListEmployeeItem>("EMPLOYEE")
         val fromCreatePurchase = intent.getBooleanExtra("FROM-CREATE-PURCHASE",false)
         val fromEditPurchase = intent.getBooleanExtra("FROM-EDIT-PURCHASE",false)
@@ -37,13 +38,13 @@ class ShowEmployeeActivity : AppCompatActivity() {
         val fromEditEmployee = intent.getBooleanExtra("FROM-EDIT-EMPLOYEE",false)
 
         if (fromEditEmployee) {
-            if (employee != null) setupData(employee, fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, fromChooseEmployee, fromIndexEmployee, true)
+            if (employee != null) setupData(quantity.toString(), employee, fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, fromChooseEmployee, fromIndexEmployee, true)
         }
-        if (employee != null) setupData(employee, fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, fromChooseEmployee, fromIndexEmployee, fromEditEmployee)
-        setupTopBar(fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, fromChooseEmployee, fromIndexEmployee)
+        if (employee != null) setupData(quantity.toString(), employee, fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, fromChooseEmployee, fromIndexEmployee, fromEditEmployee)
+        setupTopBar(quantity.toString(), fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, fromChooseEmployee, fromIndexEmployee)
     }
 
-    private fun setupData(employee: ListEmployeeItem, fromCreatePurchase: Boolean, fromEditPurchase: Boolean, fromCreateResupply: Boolean, fromEditResupply: Boolean, fromChooseEmployee:Boolean, fromIndexEmployee: Boolean, fromEditEmployee:Boolean) {
+    private fun setupData(qty: String, employee: ListEmployeeItem, fromCreatePurchase: Boolean, fromEditPurchase: Boolean, fromCreateResupply: Boolean, fromEditResupply: Boolean, fromChooseEmployee:Boolean, fromIndexEmployee: Boolean, fromEditEmployee:Boolean) {
         val id = employee.id.toString()
         viewModel.showEmployee(id).observe(this) { result ->
             when (result) {
@@ -74,7 +75,7 @@ class ShowEmployeeActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    if(employeeData !=null) setupView(employeeData, fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, fromChooseEmployee, fromIndexEmployee)
+                    if(employeeData !=null) setupView(qty, employeeData, fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, fromChooseEmployee, fromIndexEmployee)
 
                 }
 
@@ -86,7 +87,7 @@ class ShowEmployeeActivity : AppCompatActivity() {
             }
         }
     }
-    private fun setupView(employee: Employee, fromCreatePurchase: Boolean, fromEditPurchase: Boolean, fromCreateResupply: Boolean, fromEditResupply: Boolean, fromChooseEmployee:Boolean, fromIndexEmployee: Boolean) {
+    private fun setupView(qty: String, employee: Employee, fromCreatePurchase: Boolean, fromEditPurchase: Boolean, fromCreateResupply: Boolean, fromEditResupply: Boolean, fromChooseEmployee:Boolean, fromIndexEmployee: Boolean) {
         with(binding){
             edEmployeeName.setText(employee.name)
             edEmployeeUsername.setText(employee.username)
@@ -100,15 +101,15 @@ class ShowEmployeeActivity : AppCompatActivity() {
                     email = employee.email,
                     phone = employee.phone
                 )
-                editEmployee(employeeData, fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, fromChooseEmployee, fromIndexEmployee)
+                editEmployee(qty, employeeData, fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, fromChooseEmployee, fromIndexEmployee)
             }
             btnDeleteEmployee.setOnClickListener {
-                deleteEmployee(employee.id.toString(), fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, fromChooseEmployee)
+                deleteEmployee(qty, employee.id.toString(), fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, fromChooseEmployee)
             }
         }
     }
 
-    private fun editEmployee(data: ListEmployeeItem, fromCreatePurchase: Boolean, fromEditPurchase: Boolean, fromCreateResupply: Boolean, fromEditResupply: Boolean, fromChooseEmployee:Boolean, fromIndexEmployee: Boolean) {
+    private fun editEmployee(qty: String, data: ListEmployeeItem, fromCreatePurchase: Boolean, fromEditPurchase: Boolean, fromCreateResupply: Boolean, fromEditResupply: Boolean, fromChooseEmployee:Boolean, fromIndexEmployee: Boolean) {
         val intentToEdit = Intent(this@ShowEmployeeActivity, EditEmployeeActivity::class.java)
         intentToEdit.putExtra("EMPLOYEE", data)
         intentToEdit.putExtra("FROM-CREATE-PURCHASE", fromCreatePurchase)
@@ -117,10 +118,11 @@ class ShowEmployeeActivity : AppCompatActivity() {
         intentToEdit.putExtra("FROM-EDIT-RESUPPLY", fromEditResupply)
         intentToEdit.putExtra("FROM-CHOOSE-EMPLOYEE",fromChooseEmployee)
         intentToEdit.putExtra("FROM-INDEX-EMPLOYEE",fromIndexEmployee)
+        intentToEdit.putExtra("QUANTITY", qty)
         startActivity(intentToEdit)
     }
 
-    private fun deleteEmployee(id: String, fromCreatePurchase: Boolean, fromEditPurchase: Boolean, fromCreateResupply: Boolean, fromEditResupply: Boolean, fromChooseEmployee:Boolean) {
+    private fun deleteEmployee(qty: String, id: String, fromCreatePurchase: Boolean, fromEditPurchase: Boolean, fromCreateResupply: Boolean, fromEditResupply: Boolean, fromChooseEmployee:Boolean) {
         viewModel.deleteEmployee(id).observe(this) { result ->
             when (result) {
                 is Result.Loading -> {
@@ -139,7 +141,7 @@ class ShowEmployeeActivity : AppCompatActivity() {
                         }
                     }
                     if (fromChooseEmployee){
-                        navigateToChooseEmployee(fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, true)
+                        navigateToChooseEmployee(qty, fromCreatePurchase, fromEditPurchase, fromCreateResupply, fromEditResupply, true)
                     } else {
                         navigateToIndexEmployee(true)
                     }
@@ -164,18 +166,19 @@ class ShowEmployeeActivity : AppCompatActivity() {
         startActivity(intentToIndex)
         finish()
     }
-    private fun navigateToChooseEmployee(fromCreatePurchase: Boolean, fromEditPurchase: Boolean, fromCreateResupply: Boolean, fromEditResupply: Boolean, fromEditEmployee:Boolean) {
+    private fun navigateToChooseEmployee(qty:String, fromCreatePurchase: Boolean, fromEditPurchase: Boolean, fromCreateResupply: Boolean, fromEditResupply: Boolean, fromEditEmployee:Boolean) {
         val intentToChoose = Intent(this@ShowEmployeeActivity, ChooseEmployeeActivity::class.java)
         intentToChoose.putExtra("FROM-CREATE-PURCHASE", fromCreatePurchase)
         intentToChoose.putExtra("FROM-EDIT-PURCHASE", fromEditPurchase)
         intentToChoose.putExtra("FROM-CREATE-RESUPPLY", fromCreateResupply)
         intentToChoose.putExtra("FROM-EDIT-RESUPPLY", fromEditResupply)
         intentToChoose.putExtra("FROM-EDIT-EMPLOYEE",fromEditEmployee)
+        intentToChoose.putExtra("QUANTITY", qty)
         startActivity(intentToChoose)
         finish()
     }
 
-    private fun setupTopBar(fromCreatePurchase: Boolean, fromEditPurchase: Boolean, fromCreateResupply: Boolean, fromEditResupply: Boolean, fromChooseEmployee: Boolean, fromIndexEmployee: Boolean) {
+    private fun setupTopBar(qty:String, fromCreatePurchase: Boolean, fromEditPurchase: Boolean, fromCreateResupply: Boolean, fromEditResupply: Boolean, fromChooseEmployee: Boolean, fromIndexEmployee: Boolean) {
         if (fromChooseEmployee && fromIndexEmployee) {
             showAlert("Halaman Tidak Dapat Ditemukan")
             return
@@ -189,6 +192,7 @@ class ShowEmployeeActivity : AppCompatActivity() {
                         putExtra("FROM-EDIT-PURCHASE", fromEditPurchase)
                         putExtra("FROM-CREATE-RESUPPLY", fromCreateResupply)
                         putExtra("FROM-EDIT-RESUPPLY", fromEditResupply)
+                        putExtra("QUANTITY", qty)
                     }
                 }
                 fromIndexEmployee -> {

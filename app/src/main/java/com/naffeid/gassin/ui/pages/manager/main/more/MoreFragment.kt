@@ -16,6 +16,7 @@ import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.data.utils.getFileUri
 import com.naffeid.gassin.databinding.FragmentMoreManagerBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
+import com.naffeid.gassin.ui.pages.employee.main.EmployeeMainActivity
 import com.naffeid.gassin.ui.pages.manager.customer.index.IndexCustomerActivity
 import com.naffeid.gassin.ui.pages.manager.employee.index.IndexEmployeeActivity
 import com.naffeid.gassin.ui.pages.manager.store.index.IndexStoreActivity
@@ -43,12 +44,7 @@ class MoreFragment : Fragment() {
         _binding = FragmentMoreManagerBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        viewModel.getSession().observe(viewLifecycleOwner) { user ->
-            if (user.apikey == null) {
-                navigationToSignIn()
-            }
-            setupView(user)
-        }
+        checkSession()
 
         return root
     }
@@ -135,9 +131,9 @@ class MoreFragment : Fragment() {
             }
         }
     }
-    private fun saveExcelFile(context: Context, byteArray: ByteArray): Uri? {
+    private fun saveExcelFile(context: Context, byteArray: ByteArray): Uri {
         val uri = getFileUri(context, "Documents/MyReports")
-        uri?.let {
+        uri.let {
             context.contentResolver.openOutputStream(it)?.use { outputStream ->
                 outputStream.write(byteArray)
                 showAlert("Laporan berhasil disimpan")
@@ -152,6 +148,80 @@ class MoreFragment : Fragment() {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
         context.startActivity(Intent.createChooser(intent, "Open with"))
+    }
+    private fun checkSession() {
+        viewModel.getSession().observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                viewModel.showUser(user.id.toString()).observe(viewLifecycleOwner) {
+                    when (it) {
+                        is Result.Loading -> {
+                            Log.d("Get User Data Process:", "Loading ...")
+                        }
+
+                        is Result.Error -> {
+                            Log.d("Get User Data Process:", "Error: ${it.error}")
+                            navigateToSignInScreen()
+                        }
+
+                        is Result.Success -> {
+                            val data = it.data.loginResult
+                            if (data != null) {
+                                val userData = User(
+                                    id = data.id!!,
+                                    name = data.name ?: "",
+                                    username = data.username ?: "",
+                                    email = data.email ?: "",
+                                    phone = data.phone ?: "",
+                                    role = data.role ?: "",
+                                    apikey = data.apikey ?: "",
+                                    tokenfcm = data.tokenFcm ?: ""
+                                )
+                                if (userData == user) {
+                                    checkRole(userData)
+                                } else {
+                                    viewModel.logout()
+                                    navigateToSignInScreen()
+                                }
+                            } else {
+                                viewModel.logout()
+                                navigateToSignInScreen()
+                            }
+                        }
+                    }
+                }
+            } else {
+                navigateToSignInScreen()
+            }
+        }
+    }
+    private fun checkRole(userData: User) {
+        viewModel.checkUserRole(userData.role) { isRoleMatch ->
+            if (isRoleMatch) {
+                when (userData.role) {
+                    "employee" -> {
+                        val intent = Intent(requireContext(), EmployeeMainActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+                    "manager" -> {
+                        setupView(userData)
+                    }
+                    else -> {
+                        val intent = Intent(requireContext(), SignInActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+                }
+
+            } else {
+                navigateToSignInScreen()
+            }
+        }
+    }
+
+    private fun navigateToSignInScreen() {
+        startActivity(Intent(requireContext(), SignInActivity::class.java))
+        requireActivity().finish()
     }
 
     private fun showAlert(string: String) {

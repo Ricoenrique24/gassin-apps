@@ -11,9 +11,11 @@ import com.naffeid.gassin.R
 import com.naffeid.gassin.data.model.Customer
 import com.naffeid.gassin.data.model.Employee
 import com.naffeid.gassin.data.utils.Result
+import com.naffeid.gassin.data.utils.Rupiah
 import com.naffeid.gassin.databinding.ActivityConfirmationPurchaseTransactionBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.main.ManagerMainActivity
+import com.naffeid.gassin.ui.pages.manager.purchasetransaction.create.CreatePurchaseTransactionActivity
 
 class ConfirmationPurchaseTransactionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityConfirmationPurchaseTransactionBinding
@@ -25,9 +27,9 @@ class ConfirmationPurchaseTransactionActivity : AppCompatActivity() {
         binding = ActivityConfirmationPurchaseTransactionBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-        val quantity = intent.getStringExtra("QUANTITY-PURCHASE").toString()
+        val quantity = intent.getStringExtra("QUANTITY").toString()
         val totalPayment = intent.getStringExtra("TOTAL-PURCHASE").toString()
-        setupTobBar()
+        setupTopBar(quantity)
         setupView(quantity, totalPayment)
         validate(quantity, totalPayment)
     }
@@ -70,10 +72,13 @@ class ConfirmationPurchaseTransactionActivity : AppCompatActivity() {
 
     private fun setupPayment(quantity:String, totalPayment:String) {
         viewModel.getCustomer().observe(this) { customer ->
-            binding.tvPriceOneGas.text = customer.price.toString()
+            val price = customer.price.toDoubleOrNull() ?: 0.0
+            binding.tvPriceOneGas.text = Rupiah.convertToRupiah(price)
+
         }
         binding.tvQtyGasTotal.text = quantity
-        binding.tvTotalPayment.text = totalPayment
+        val total = totalPayment.toDouble()
+        binding.tvTotalPayment.text = Rupiah.convertToRupiah(total)
     }
 
     private fun validate(quantity:String, totalPayment:String) {
@@ -122,9 +127,11 @@ class ConfirmationPurchaseTransactionActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun setupTobBar() {
+    private fun setupTopBar(qty:String) {
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            val intentToCreate = Intent(this@ConfirmationPurchaseTransactionActivity, CreatePurchaseTransactionActivity::class.java)
+            intentToCreate.putExtra("QUANTITY", qty)
+            startActivity(intentToCreate)
         }
     }
 

@@ -32,22 +32,23 @@ class ChooseStoreActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
         val idResupply = intent.getStringExtra("RESUPPLY")
+        val quantity = intent.getStringExtra("QUANTITY")
         val fromCreateResupply = intent.getBooleanExtra("FROM-CREATE-RESUPPLY",false)
         val fromEditResupply = intent.getBooleanExtra("FROM-EDIT-RESUPPLY",false)
         val fromCreateStore = intent.getBooleanExtra("FROM-CREATE-STORE",false)
         if (fromCreateStore) {
             setupData()
         }
-        setupRecyclerView(idResupply.toString(), fromCreateResupply, fromEditResupply)
-        setupView(fromCreateResupply, fromEditResupply)
+        setupRecyclerView(quantity.toString(), idResupply.toString(), fromCreateResupply, fromEditResupply)
+        setupView(quantity.toString(), fromCreateResupply, fromEditResupply)
         setupData()
-        setupTopBar(fromCreateResupply, fromEditResupply, idResupply.toString())
+        setupTopBar(quantity.toString(), fromCreateResupply, fromEditResupply, idResupply.toString())
     }
     private fun setupData() {
         showAllStore()
     }
 
-    private fun setupView(fromCreateResupply:Boolean, fromEditResupply:Boolean) {
+    private fun setupView(qty:String, fromCreateResupply:Boolean, fromEditResupply:Boolean) {
         with(binding){
             searchView.setupWithSearchBar(searchBar)
             searchView.editText.setOnEditorActionListener { textView, actionId, event ->
@@ -64,20 +65,20 @@ class ChooseStoreActivity : AppCompatActivity() {
 
             //Create Store
             btnAddStory.setOnClickListener {
-                navigateToCreateStore(fromCreateResupply, fromEditResupply)
+                navigateToCreateStore(qty, fromCreateResupply, fromEditResupply)
             }
         }
     }
 
-    private fun setupRecyclerView(idResupply:String, fromCreateResupply:Boolean, fromEditResupply:Boolean) {
+    private fun setupRecyclerView(qty:String, idResupply:String, fromCreateResupply:Boolean, fromEditResupply:Boolean) {
         chooseStoreAdapter = ChooseStoreAdapter()
         chooseStoreAdapter.setOnItemClickCallback(object : ChooseStoreAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ListStoreItem) {
-                navigateToShowStore(data, fromCreateResupply, fromEditResupply)
+                navigateToShowStore(qty, data, fromCreateResupply, fromEditResupply)
             }
 
             override fun onChooseStoreClicked(data: ListStoreItem) {
-                selectedStore(data, idResupply, fromCreateResupply, fromEditResupply)
+                selectedStore(qty, data, idResupply, fromCreateResupply, fromEditResupply)
             }
         })
         binding.rvStore.apply {
@@ -129,7 +130,7 @@ class ChooseStoreActivity : AppCompatActivity() {
             }
         }
     }
-    private fun selectedStore(data: ListStoreItem, idResupply:String, fromCreateResupply:Boolean, fromEditResupply:Boolean){
+    private fun selectedStore(qty:String, data: ListStoreItem, idResupply:String, fromCreateResupply:Boolean, fromEditResupply:Boolean){
         viewModel.deleteStore()
         viewModel.saveStore(
             Store(
@@ -144,47 +145,51 @@ class ChooseStoreActivity : AppCompatActivity() {
         showAlert(getString(R.string.berhasil_memilih_store))
         when {
             fromCreateResupply -> {
-                navigateToCreateResupply()
+                navigateToCreateResupply(qty)
             }
             fromEditResupply -> {
-                navigateToEditResupply(idResupply)
+                navigateToEditResupply(qty, idResupply)
             }
         }
 
     }
 
-    private fun navigateToCreateResupply() {
+    private fun navigateToCreateResupply(qty:String) {
         val intentToCreateResupply = Intent(this@ChooseStoreActivity, CreateReSupplyTransactionActivity::class.java)
+        intentToCreateResupply.putExtra("QUANTITY", qty)
         startActivity(intentToCreateResupply)
         finish()
     }
 
-    private fun navigateToEditResupply(id: String) {
+    private fun navigateToEditResupply(qty:String, id: String) {
         val intentToEdit = Intent(this@ChooseStoreActivity, EditReSupplyTransactionActivity::class.java)
         intentToEdit.putExtra("RESUPPLY", id)
         intentToEdit.putExtra("CHOOSE-UPDATED", true)
+        intentToEdit.putExtra("QUANTITY", qty)
         startActivity(intentToEdit)
         finish()
     }
 
-    private fun navigateToCreateStore(fromCreateResupply:Boolean, fromEditResupply:Boolean) {
+    private fun navigateToCreateStore(qty:String, fromCreateResupply:Boolean, fromEditResupply:Boolean) {
         val intentToCreate = Intent(this@ChooseStoreActivity, CreateStoreActivity::class.java)
         intentToCreate.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
         intentToCreate.putExtra("FROM-EDIT-RESUPPLY",fromEditResupply)
         intentToCreate.putExtra("FROM-CHOOSE-STORE",true)
+        intentToCreate.putExtra("QUANTITY", qty)
         startActivity(intentToCreate)
     }
 
-    private fun navigateToShowStore(data: ListStoreItem, fromCreateResupply:Boolean, fromEditResupply:Boolean) {
+    private fun navigateToShowStore(qty:String, data: ListStoreItem, fromCreateResupply:Boolean, fromEditResupply:Boolean) {
         val intentToDetail = Intent(this@ChooseStoreActivity, ShowStoreActivity::class.java)
         intentToDetail.putExtra("FROM-CREATE-RESUPPLY",fromCreateResupply)
         intentToDetail.putExtra("FROM-EDIT-RESUPPLY",fromEditResupply)
         intentToDetail.putExtra("FROM-CHOOSE-STORE",true)
         intentToDetail.putExtra("STORE", data)
+        intentToDetail.putExtra("QUANTITY", qty)
         startActivity(intentToDetail)
     }
 
-    private fun setupTopBar(fromCreateResupply: Boolean, fromEditResupply: Boolean, id:String) {
+    private fun setupTopBar(qty:String, fromCreateResupply: Boolean, fromEditResupply: Boolean, id:String) {
         if (fromCreateResupply && fromEditResupply) {
             showAlert("Halaman Tidak Dapat Ditemukan")
             return
@@ -193,11 +198,14 @@ class ChooseStoreActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener {
             val intentToHome = when {
                 fromCreateResupply -> {
-                    Intent(this@ChooseStoreActivity, CreateReSupplyTransactionActivity::class.java)
+                    Intent(this@ChooseStoreActivity, CreateReSupplyTransactionActivity::class.java).apply {
+                        putExtra("QUANTITY", qty)
+                    }
                 }
                 fromEditResupply -> {
                     Intent(this@ChooseStoreActivity, EditReSupplyTransactionActivity::class.java).apply {
                         putExtra("RESUPPLY", id)
+                        putExtra("QUANTITY", qty)
                     }
                 }
                 else -> {

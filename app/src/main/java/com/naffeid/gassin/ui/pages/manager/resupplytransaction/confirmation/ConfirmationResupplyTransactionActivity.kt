@@ -11,9 +11,11 @@ import com.naffeid.gassin.R
 import com.naffeid.gassin.data.model.Employee
 import com.naffeid.gassin.data.model.Store
 import com.naffeid.gassin.data.utils.Result
+import com.naffeid.gassin.data.utils.Rupiah
 import com.naffeid.gassin.databinding.ActivityConfirmationResupplyTransactionBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
 import com.naffeid.gassin.ui.pages.manager.main.ManagerMainActivity
+import com.naffeid.gassin.ui.pages.manager.resupplytransaction.create.CreateReSupplyTransactionActivity
 
 class ConfirmationResupplyTransactionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityConfirmationResupplyTransactionBinding
@@ -25,9 +27,9 @@ class ConfirmationResupplyTransactionActivity : AppCompatActivity() {
         binding = ActivityConfirmationResupplyTransactionBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-        val quantity = intent.getStringExtra("QUANTITY-RESUPPLY").toString()
+        val quantity = intent.getStringExtra("QUANTITY").toString()
         val totalPayment = intent.getStringExtra("TOTAL-RESUPPLY").toString()
-        setupTobBar()
+        setupTopBar(quantity)
         setupView(quantity, totalPayment)
         validate(quantity, totalPayment)
     }
@@ -71,9 +73,12 @@ class ConfirmationResupplyTransactionActivity : AppCompatActivity() {
     private fun setupPayment(quantity:String, totalPayment:String) {
         viewModel.getStore().observe(this) { store ->
             binding.tvPriceOneGas.text = store.price.toString()
+            val price = store.price.toDoubleOrNull() ?: 0.0
+            binding.tvPriceOneGas.text = Rupiah.convertToRupiah(price)
         }
         binding.tvQtyGasTotal.text = quantity
-        binding.tvTotalPayment.text = totalPayment
+        val total = totalPayment.toDouble()
+        binding.tvTotalPayment.text = Rupiah.convertToRupiah(total)
     }
 
     private fun validate(quantity:String, totalPayment:String) {
@@ -122,9 +127,11 @@ class ConfirmationResupplyTransactionActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun setupTobBar() {
+    private fun setupTopBar(qty:String) {
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            val intentToCreate = Intent(this@ConfirmationResupplyTransactionActivity, CreateReSupplyTransactionActivity::class.java)
+            intentToCreate.putExtra("QUANTITY", qty)
+            startActivity(intentToCreate)
         }
     }
 

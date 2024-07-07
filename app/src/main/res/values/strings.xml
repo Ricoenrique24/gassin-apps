@@ -166,4 +166,10 @@
     <string name="masukkan_email">Masukkan Email</string>
     <string name="masukkan_nomor_telepon">Masukkan Nomor Telepon</string>
     <string name="masukkan_nama">Masukkan Nama</string>
+    <string name="stok_tidak_cukup">Stok Tidak Cukup</string>
+    <string name="stok_saat_ini_apakah_anda_ingin_menggunakan_stok_yang_tersedia">Stok saat ini: %1$s. Apakah Anda ingin menggunakan stok yang tersedia?</string>
+    <string name="gunakan_stok">Gunakan Stok</string>
+    <string name="resupply">Resupply</string>
+    <string name="stok_habis">Stok Habis</string>
+    <string name="stok_saat_ini_kosong_anda_perlu_melakukan_resupply">Stok saat ini kosong. Anda perlu melakukan resupply.</string>
 </resources>

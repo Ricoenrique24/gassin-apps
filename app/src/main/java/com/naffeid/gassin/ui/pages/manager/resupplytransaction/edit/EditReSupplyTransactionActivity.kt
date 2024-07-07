@@ -30,19 +30,20 @@ class EditReSupplyTransactionActivity : AppCompatActivity() {
         binding = ActivityEditReSupplyTransactionBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+        val quantity = intent.getStringExtra("QUANTITY")
         val idResupply = intent.getStringExtra("RESUPPLY")
         val updateData = intent.getBooleanExtra("CHOOSE-UPDATED", false)
         if (updateData) {
-            if (idResupply != null) setupData(idResupply, true)
+            if (idResupply != null) setupData(quantity, idResupply, true)
         }
         if (!idResupply.isNullOrBlank()) {
-            setupData(idResupply.toString(), updateData)
+            setupData(quantity, idResupply.toString(), updateData)
             setupTopBar(idResupply.toString())
             validate(idResupply.toString())
         }
     }
 
-    private fun setupData(id: String, updateData: Boolean) {
+    private fun setupData(qty:String?, id: String, updateData: Boolean) {
         viewModel.showResupplyTransaction(id).observe(this) { result ->
             when (result) {
                 is Result.Loading -> {
@@ -52,7 +53,7 @@ class EditReSupplyTransactionActivity : AppCompatActivity() {
                 is Result.Success -> {
                     showLoading(false)
                     val resupplyData = result.data.resupply
-                    if (resupplyData != null) setupView(resupplyData, updateData)
+                    if (resupplyData != null) setupView(qty, resupplyData, updateData)
 
                 }
 
@@ -65,10 +66,10 @@ class EditReSupplyTransactionActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupView(resupply: Resupply, updateData: Boolean) {
+    private fun setupView(qty:String?, resupply: Resupply, updateData: Boolean) {
         setupStore(resupply, updateData)
         setupEmployee(resupply, updateData)
-        setupQty(resupply)
+        setupQty(qty, resupply)
         setupPayment()
     }
 
@@ -94,7 +95,9 @@ class EditReSupplyTransactionActivity : AppCompatActivity() {
             }
         }
         binding.btnChangeStore.setOnClickListener {
-            navigateToChooseStore(resupply.id.toString())
+            viewModel.quantity.observe(this) { qty ->
+                navigateToChooseStore(qty.toString(), resupply.id.toString())
+            }
         }
 
     }
@@ -119,14 +122,22 @@ class EditReSupplyTransactionActivity : AppCompatActivity() {
             }
         }
         binding.btnChangeEmployee.setOnClickListener {
-            navigateToChooseEmployee(resupply.id.toString())
+            viewModel.quantity.observe(this) { qty ->
+                navigateToChooseEmployee(qty.toString(), resupply.id.toString())
+            }
         }
     }
 
-    private fun setupQty(resupply: Resupply) {
-        viewModel.setQuantity(resupply.qty!!.toInt())
-        viewModel.quantity.observe(this) { qty ->
-            binding.edQtyGas.setText(qty.toString())
+    private fun setupQty(quantity:String?, resupply: Resupply) {
+        if (quantity != null) {
+            val newQty = quantity.toIntOrNull() ?: 1
+            binding.edQtyGas.setText(quantity)
+            viewModel.setQuantity(newQty)
+        } else {
+            viewModel.setQuantity(resupply.qty!!.toInt())
+            viewModel.quantity.observe(this) { qty ->
+                binding.edQtyGas.setText(qty.toString())
+            }
         }
 
         binding.btnMinus.setOnClickListener {
@@ -219,7 +230,7 @@ class EditReSupplyTransactionActivity : AppCompatActivity() {
                     is Result.Success -> {
                         showLoading(false)
                         showAlert(result.data.message.toString())
-                        onBackPressed()
+                        navigateToShow(id)
                     }
 
                     is Result.Error -> {
@@ -231,19 +242,29 @@ class EditReSupplyTransactionActivity : AppCompatActivity() {
             }
     }
 
-    private fun navigateToChooseStore(id:String) {
+    private fun navigateToChooseStore(qty: String, id:String) {
         val intentToChooseStore = Intent(this@EditReSupplyTransactionActivity, ChooseStoreActivity::class.java)
         intentToChooseStore.putExtra("FROM-EDIT-RESUPPLY",true)
         intentToChooseStore.putExtra("RESUPPLY", id)
+        intentToChooseStore.putExtra("QUANTITY", qty)
         startActivity(intentToChooseStore)
         finish()
     }
 
-    private fun navigateToChooseEmployee(id:String) {
+    private fun navigateToChooseEmployee(qty: String, id:String) {
         val intentToChooseEmployee = Intent(this@EditReSupplyTransactionActivity, ChooseEmployeeActivity::class.java)
         intentToChooseEmployee.putExtra("FROM-EDIT-RESUPPLY",true)
         intentToChooseEmployee.putExtra("RESUPPLY", id)
+        intentToChooseEmployee.putExtra("QUANTITY", qty)
         startActivity(intentToChooseEmployee)
+        finish()
+    }
+
+    private fun navigateToShow(id:String) {
+        val intentToShow = Intent(this@EditReSupplyTransactionActivity, ShowReSupplyTransactionActivity::class.java)
+        intentToShow.putExtra("RESUPPLY", id)
+        intentToShow.putExtra("RESUPPLY-UPDATED", true)
+        startActivity(intentToShow)
         finish()
     }
 

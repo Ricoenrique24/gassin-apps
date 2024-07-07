@@ -71,19 +71,19 @@ class ViewModelFactory private constructor(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SplashViewModel::class.java)) {
-            return SplashViewModel(userRepository) as T
+            return SplashViewModel(userRepository, authRepository) as T
         } else if (modelClass.isAssignableFrom(SignInViewModel::class.java)) {
             return SignInViewModel(userRepository, authRepository) as T
         } else if (modelClass.isAssignableFrom(HomeManagerViewModel::class.java)) {
-            return HomeManagerViewModel(userRepository, dashboardRepository, transactionRepository) as T
+            return HomeManagerViewModel(userRepository, dashboardRepository, transactionRepository, authRepository) as T
         } else if (modelClass.isAssignableFrom(OrderManagerViewModel::class.java)) {
-            return OrderManagerViewModel(userRepository, purchaseTransactionRepository, customerRepository) as T
+            return OrderManagerViewModel(userRepository, purchaseTransactionRepository, customerRepository, authRepository) as T
         } else if (modelClass.isAssignableFrom(StockManagerViewModel::class.java)) {
-            return StockManagerViewModel(userRepository, resupplyTransactionRepository, storeRepository) as T
+            return StockManagerViewModel(userRepository, resupplyTransactionRepository, storeRepository, authRepository) as T
         } else if (modelClass.isAssignableFrom(CostManagerViewModel::class.java)) {
-            return CostManagerViewModel(userRepository, operationTransactionRepository) as T
+            return CostManagerViewModel(userRepository, operationTransactionRepository, authRepository) as T
         } else if (modelClass.isAssignableFrom(MoreManagerViewModel::class.java)) {
-            return MoreManagerViewModel(userRepository, dashboardRepository) as T
+            return MoreManagerViewModel(userRepository, dashboardRepository, authRepository) as T
         } else if (modelClass.isAssignableFrom(IndexStoreManagerViewModel::class.java)) {
             return IndexStoreManagerViewModel(storeRepository) as T
         } else if (modelClass.isAssignableFrom(CreateStoreManagerViewModel::class.java)) {
@@ -109,9 +109,9 @@ class ViewModelFactory private constructor(
         } else if (modelClass.isAssignableFrom(EditEmployeeManagerViewModel::class.java)) {
             return EditEmployeeManagerViewModel(employeeRepository) as T
         } else if (modelClass.isAssignableFrom(CreatePurchaseTransactionManagerViewModel::class.java)) {
-            return CreatePurchaseTransactionManagerViewModel(purchaseTransactionRepository,customerRepository,employeeRepository) as T
+            return CreatePurchaseTransactionManagerViewModel(customerRepository,employeeRepository, dashboardRepository) as T
         } else if (modelClass.isAssignableFrom(EditPurchaseTransactionManagerViewModel::class.java)) {
-            return EditPurchaseTransactionManagerViewModel(purchaseTransactionRepository,customerRepository,employeeRepository) as T
+            return EditPurchaseTransactionManagerViewModel(purchaseTransactionRepository,customerRepository,employeeRepository, dashboardRepository) as T
         } else if (modelClass.isAssignableFrom(CreateResupplyTransactionManagerViewModel::class.java)) {
             return CreateResupplyTransactionManagerViewModel(resupplyTransactionRepository,storeRepository,employeeRepository) as T
         } else if (modelClass.isAssignableFrom(EditResupplyTransactionManagerViewModel::class.java)) {
@@ -133,11 +133,11 @@ class ViewModelFactory private constructor(
         } else if (modelClass.isAssignableFrom(ChooseStoreManagerViewModel::class.java)) {
             return ChooseStoreManagerViewModel(storeRepository) as T
         } else if (modelClass.isAssignableFrom(HomeEmployeeViewModel::class.java)) {
-            return HomeEmployeeViewModel(userRepository, transactionRepository) as T
+            return HomeEmployeeViewModel(userRepository, transactionRepository, authRepository) as T
         } else if (modelClass.isAssignableFrom(OrderEmployeeViewModel::class.java)) {
-            return OrderEmployeeViewModel(userRepository, transactionRepository) as T
+            return OrderEmployeeViewModel(userRepository, transactionRepository, authRepository) as T
         } else if (modelClass.isAssignableFrom(MoreEmployeeViewModel::class.java)) {
-            return MoreEmployeeViewModel(userRepository) as T
+            return MoreEmployeeViewModel(userRepository, authRepository) as T
         } else if (modelClass.isAssignableFrom(ShowOrderEmployeeViewModel::class.java)) {
             return ShowOrderEmployeeViewModel(transactionRepository, operationTransactionRepository) as T
         } else if (modelClass.isAssignableFrom(ShowUserViewModel::class.java)) {

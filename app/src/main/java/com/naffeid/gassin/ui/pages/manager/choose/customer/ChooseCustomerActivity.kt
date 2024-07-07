@@ -32,23 +32,24 @@ class ChooseCustomerActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
         val idPurchase = intent.getStringExtra("PURCHASE")
+        val quantity = intent.getStringExtra("QUANTITY")
         val fromCreatePurchase = intent.getBooleanExtra("FROM-CREATE-PURCHASE",false)
         val fromEditPurchase = intent.getBooleanExtra("FROM-EDIT-PURCHASE",false)
         val fromCreateCustomer = intent.getBooleanExtra("FROM-CREATE-CUSTOMER",false)
         if (fromCreateCustomer) {
             setupData()
         }
-        setupRecyclerView(idPurchase.toString(), fromCreatePurchase, fromEditPurchase)
-        setupView(fromCreatePurchase, fromEditPurchase)
+        setupRecyclerView(quantity.toString(), idPurchase.toString(), fromCreatePurchase, fromEditPurchase)
+        setupView(quantity.toString(),fromCreatePurchase, fromEditPurchase)
         setupData()
-        setupTopBar(fromCreatePurchase, fromEditPurchase, idPurchase.toString())
+        setupTopBar(quantity.toString(), fromCreatePurchase, fromEditPurchase, idPurchase.toString())
     }
 
     private fun setupData() {
         showAllCustomer()
     }
 
-    private fun setupView(fromCreatePurchase:Boolean, fromEditPurchase:Boolean) {
+    private fun setupView(qty:String, fromCreatePurchase:Boolean, fromEditPurchase:Boolean) {
         with(binding){
             searchView.setupWithSearchBar(searchBar)
             searchView.editText.setOnEditorActionListener { textView, actionId, event ->
@@ -65,20 +66,20 @@ class ChooseCustomerActivity : AppCompatActivity() {
 
             //Create Customer
             btnAddStory.setOnClickListener {
-                navigateToCreateCustomer(fromCreatePurchase, fromEditPurchase)
+                navigateToCreateCustomer(qty, fromCreatePurchase, fromEditPurchase)
             }
         }
     }
 
-    private fun setupRecyclerView(idPurchase:String, fromCreatePurchase: Boolean, fromEditPurchase: Boolean) {
+    private fun setupRecyclerView(qty:String, idPurchase:String, fromCreatePurchase: Boolean, fromEditPurchase: Boolean) {
         chooseCustomerAdapter = ChooseCustomerAdapter()
         chooseCustomerAdapter.setOnItemClickCallback(object : ChooseCustomerAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ListCustomerItem) {
-                navigateToShowCustomer(data, fromCreatePurchase, fromEditPurchase)
+                navigateToShowCustomer(qty, data, fromCreatePurchase, fromEditPurchase)
             }
 
             override fun onChooseCustomerClicked(data: ListCustomerItem) {
-                selectedCustomer(data, idPurchase, fromCreatePurchase, fromEditPurchase)
+                selectedCustomer(qty, data, idPurchase, fromCreatePurchase, fromEditPurchase)
 
             }
         })
@@ -132,7 +133,7 @@ class ChooseCustomerActivity : AppCompatActivity() {
         }
     }
 
-    private fun selectedCustomer(data: ListCustomerItem, idPurchase:String, fromCreatePurchase: Boolean, fromEditPurchase: Boolean){
+    private fun selectedCustomer(qty:String, data: ListCustomerItem, idPurchase:String, fromCreatePurchase: Boolean, fromEditPurchase: Boolean){
         viewModel.deleteCustomer()
         viewModel.saveCustomer(
             Customer(
@@ -147,45 +148,49 @@ class ChooseCustomerActivity : AppCompatActivity() {
         showAlert(getString(R.string.berhasil_memilih_customer))
         when {
             fromCreatePurchase -> {
-                navigateToCreatePurchase()
+                navigateToCreatePurchase(qty)
             }
             fromEditPurchase -> {
-                navigateToEditPurchase(idPurchase)
+                navigateToEditPurchase(idPurchase, qty)
             }
         }
     }
 
-    private fun navigateToCreateCustomer(fromCreatePurchase:Boolean, fromEditPurchase:Boolean) {
+    private fun navigateToCreateCustomer(qty:String, fromCreatePurchase:Boolean, fromEditPurchase:Boolean) {
         val intentToCreate = Intent(this@ChooseCustomerActivity, CreateCustomerActivity::class.java)
         intentToCreate.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
         intentToCreate.putExtra("FROM-EDIT-PURCHASE",fromEditPurchase)
         intentToCreate.putExtra("FROM-CHOOSE-CUSTOMER",true)
+        intentToCreate.putExtra("QUANTITY", qty)
         startActivity(intentToCreate)
     }
 
-    private fun navigateToShowCustomer(data: ListCustomerItem, fromCreatePurchase:Boolean, fromEditPurchase:Boolean) {
+    private fun navigateToShowCustomer(qty:String, data: ListCustomerItem, fromCreatePurchase:Boolean, fromEditPurchase:Boolean) {
         val intentToDetail = Intent(this@ChooseCustomerActivity, ShowCustomerActivity::class.java)
         intentToDetail.putExtra("FROM-CREATE-PURCHASE",fromCreatePurchase)
         intentToDetail.putExtra("FROM-EDIT-PURCHASE",fromEditPurchase)
         intentToDetail.putExtra("FROM-CHOOSE-CUSTOMER",true)
         intentToDetail.putExtra("CUSTOMER", data)
+        intentToDetail.putExtra("QUANTITY", qty)
         startActivity(intentToDetail)
     }
 
-    private fun navigateToCreatePurchase() {
+    private fun navigateToCreatePurchase(qty:String) {
         val intentToCreate = Intent(this@ChooseCustomerActivity, CreatePurchaseTransactionActivity::class.java)
+        intentToCreate.putExtra("QUANTITY", qty)
         startActivity(intentToCreate)
         finish()
     }
-    private fun navigateToEditPurchase(idPurchase: String) {
+    private fun navigateToEditPurchase(idPurchase: String, qty:String) {
         val intentToEdit = Intent(this@ChooseCustomerActivity, EditPurchaseTransactionActivity::class.java)
         intentToEdit.putExtra("PURCHASE", idPurchase)
         intentToEdit.putExtra("CHOOSE-UPDATED", true)
+        intentToEdit.putExtra("QUANTITY", qty)
         startActivity(intentToEdit)
         finish()
     }
 
-    private fun setupTopBar(fromCreatePurchase: Boolean, fromEditPurchase: Boolean, id:String) {
+    private fun setupTopBar(qty:String, fromCreatePurchase: Boolean, fromEditPurchase: Boolean, id:String) {
         if (fromCreatePurchase && fromEditPurchase) {
             showAlert("Halaman Tidak Dapat Ditemukan")
             return
@@ -194,11 +199,14 @@ class ChooseCustomerActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener {
             val intentToHome = when {
                 fromCreatePurchase -> {
-                    Intent(this@ChooseCustomerActivity, CreatePurchaseTransactionActivity::class.java)
+                    Intent(this@ChooseCustomerActivity, CreatePurchaseTransactionActivity::class.java).apply {
+                        putExtra("QUANTITY", qty)
+                    }
                 }
                 fromEditPurchase -> {
                     Intent(this@ChooseCustomerActivity, EditPurchaseTransactionActivity::class.java).apply {
                         putExtra("PURCHASE", id)
+                        putExtra("QUANTITY", qty)
                     }
                 }
                 else -> {
