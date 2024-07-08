@@ -102,18 +102,19 @@ class ShowOrderEmployeeActivity : AppCompatActivity() {
         val statusTransaction = transaction.statusTransaction!!.id
         val typeTransaction = transaction.type.toString()
         val idTransaction = transaction.id.toString()
-        val note = ""
 
         when (statusTransaction) {
             1 -> with(binding) {
                 btnCancelTransaction.visibility = View.GONE
                 btnUpdateTransaction.visibility = View.VISIBLE
+                noteLayout.visibility = View.GONE
                 btnUpdateTransaction.text = getString(R.string.berangkat)
                 btnUpdateTransaction.setOnClickListener { inProgressTransaction(idTransaction, typeTransaction) }
             }
             2 -> with(binding) {
                 btnCancelTransaction.visibility = View.VISIBLE
                 btnUpdateTransaction.visibility = View.VISIBLE
+                noteLayout.visibility = View.GONE
                 btnCancelTransaction.setOnClickListener {
                     showBottomSheet(idTransaction, typeTransaction)
                 }
@@ -121,6 +122,7 @@ class ShowOrderEmployeeActivity : AppCompatActivity() {
                 btnUpdateTransaction.setOnClickListener { completedTransaction(idTransaction, typeTransaction) }
             }
             3 -> with(binding) {
+                noteLayout.visibility = View.GONE
                 viewModel.showOperationTransaction(idTransaction, typeTransaction).observe(this@ShowOrderEmployeeActivity) { result ->
                     when (result) {
                         is Result.Loading -> showLoading(true)
@@ -152,6 +154,14 @@ class ShowOrderEmployeeActivity : AppCompatActivity() {
                     }
                 }
 
+            }
+            4 -> with(binding) {
+                if (transaction.note != null) {
+                    noteLayout.visibility = View.VISIBLE
+                    tvNote.text = transaction.note.toString()
+                } else {
+                    noteLayout.visibility = View.GONE
+                }
             }
             else -> with(binding) {
                 btnCancelTransaction.visibility = View.GONE

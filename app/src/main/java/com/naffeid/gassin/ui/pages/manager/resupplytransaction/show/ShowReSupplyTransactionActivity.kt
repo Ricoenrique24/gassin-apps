@@ -77,6 +77,7 @@ class ShowReSupplyTransactionActivity : AppCompatActivity() {
                 "1" -> {
                     btnEditResupply.visibility = View.VISIBLE
                     btnCancelResupply.visibility = View.VISIBLE
+                    noteLayout.visibility = View.GONE
                     btnCancelResupply.setOnClickListener {
                         val id = resupply.id.toString()
                         cancelledResupplyTransaction(id)
@@ -101,6 +102,7 @@ class ShowReSupplyTransactionActivity : AppCompatActivity() {
                 "2" -> {
                     btnEditResupply.visibility = View.VISIBLE
                     btnCancelResupply.visibility = View.VISIBLE
+                    noteLayout.visibility = View.GONE
                     btnCancelResupply.setOnClickListener {
                         val id = resupply.id.toString()
                         cancelledResupplyTransaction(id)
@@ -125,10 +127,18 @@ class ShowReSupplyTransactionActivity : AppCompatActivity() {
                 "3" -> {
                     btnCancelResupply.visibility = View.GONE
                     btnEditResupply.visibility = View.GONE
+                    noteLayout.visibility = View.GONE
                 }
                 "4" -> {
                     btnCancelResupply.visibility = View.GONE
                     btnEditResupply.visibility = View.GONE
+                    val note = resupply.note
+                    if (note != null) {
+                        noteLayout.visibility = View.VISIBLE
+                        tvNote.text = note
+                    } else {
+                        noteLayout.visibility = View.GONE
+                    }
                 }
                 else -> {
                     btnCancelResupply.visibility = View.GONE

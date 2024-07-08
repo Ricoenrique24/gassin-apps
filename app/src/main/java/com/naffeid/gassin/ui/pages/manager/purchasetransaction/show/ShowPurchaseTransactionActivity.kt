@@ -75,6 +75,7 @@ class ShowPurchaseTransactionActivity : AppCompatActivity() {
                 "1" -> {
                     btnEditPurchase.visibility = View.VISIBLE
                     btnCancelPurchase.visibility = View.VISIBLE
+                    noteLayout.visibility = View.GONE
                     btnCancelPurchase.setOnClickListener {
                         val id = purchase.id.toString()
                         cancelledPurchaseTransaction(id)
@@ -99,6 +100,7 @@ class ShowPurchaseTransactionActivity : AppCompatActivity() {
                 "2" -> {
                     btnEditPurchase.visibility = View.VISIBLE
                     btnCancelPurchase.visibility = View.VISIBLE
+                    noteLayout.visibility = View.GONE
                     btnCancelPurchase.setOnClickListener {
                         val id = purchase.id.toString()
                         cancelledPurchaseTransaction(id)
@@ -123,10 +125,19 @@ class ShowPurchaseTransactionActivity : AppCompatActivity() {
                 "3" -> {
                     btnCancelPurchase.visibility = View.GONE
                     btnEditPurchase.visibility = View.GONE
+                    noteLayout.visibility = View.GONE
                 }
                 "4" -> {
                     btnCancelPurchase.visibility = View.GONE
                     btnEditPurchase.visibility = View.GONE
+                    val note = purchase.note
+                    if (note != null) {
+                        noteLayout.visibility = View.VISIBLE
+                        tvNote.text = note
+                    } else {
+                        noteLayout.visibility = View.GONE
+                    }
+
                 }
                 else -> {
                     btnCancelPurchase.visibility = View.GONE
