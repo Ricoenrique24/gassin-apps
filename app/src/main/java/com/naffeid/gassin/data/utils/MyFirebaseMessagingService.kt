@@ -34,20 +34,28 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             contentIntent,
             PendingIntent.FLAG_IMMUTABLE
         )
-        val notificationBuilder = NotificationCompat.Builder(applicationContext,
-            NOTIFICATION_CHANNEL_ID
-        )
+
+        val notificationBuilder = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.logo)
             .setContentTitle(title)
             .setContentText(messageBody)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(messageBody)) // Use BigTextStyle to expand the text
             .setContentIntent(contentPendingIntent)
             .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_HIGH) // Ensure high priority for visibility
+            .setDefaults(NotificationCompat.DEFAULT_ALL) // Use default notification settings
+
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT)
-            notificationBuilder.setChannelId(NOTIFICATION_CHANNEL_ID)
+            val channel = NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                NOTIFICATION_CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_HIGH // Ensure high importance for visibility
+            )
             notificationManager.createNotificationChannel(channel)
         }
+
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
     }
 
