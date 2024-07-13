@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
-class UserRepository private constructor(
+class UserRepository(
     private val userPreference: UserPreference
 ) {
 
@@ -29,15 +29,4 @@ class UserRepository private constructor(
         userPreference.logout()
     }
 
-
-    companion object {
-        @Volatile
-        private var instance: UserRepository? = null
-        fun getInstance(
-            userPreference: UserPreference
-        ): UserRepository =
-            instance ?: synchronized(this) {
-                instance ?: UserRepository(userPreference)
-            }.also { instance = it }
-    }
 }

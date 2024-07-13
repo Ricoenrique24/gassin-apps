@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/greyLight"
+tools:context=".ui.pages.manager.choose.store.ChooseStoreActivity">
+
+
+<androidx.cardview.widget.CardView
+    android:id="@+id/appbar"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:elevation="4dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="16dp"
+        android:layout_gravity="start|center_vertical"
+        android:gravity="start|center_horizontal">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/darkGreen"
+            android:padding="2dp"
+            android:layout_marginEnd="8dp"
+            app:cardCornerRadius="8dp"
+            app:strokeWidth="0dp">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_margin="8dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_back_24dp"/>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:textAlignment="center"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:gravity="center_vertical|center_horizontal"
+            android:fontFamily="@font/poppins_semi_bold"
+            android:text="@string/pilih_agen"
+            android:textSize="20sp" />
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
+<com.google.android.material.search.SearchBar
+    android:id="@+id/searchBar"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginTop="16dp"
+    android:hint="@string/cari_agen"
+    app:backgroundTint="@color/white"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/appbar">
+</com.google.android.material.search.SearchBar>
+<com.google.android.material.search.SearchView
+    android:id="@+id/searchView"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:hint="@string/cari_agen"
+    app:backgroundTint="@color/white"
+    app:layout_anchor="@id/searchBar"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+</com.google.android.material.search.SearchView>
+<androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/rv_store"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:layout_margin="16dp"
+    android:clipToPadding="false"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/searchBar"
+    tools:listitem="@layout/item_choose_store">
+
+</androidx.recyclerview.widget.RecyclerView>
+
+<ProgressBar
+    android:id="@+id/progress_bar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+<com.google.android.material.floatingactionbutton.FloatingActionButton
+    android:id="@+id/btn_add_story"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|end"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="16dp"
+    android:contentDescription="@string/tambah_agen"
+    android:backgroundTint="@color/darkGreen"
+    app:tint="@android:color/white"
+    app:srcCompat="@android:drawable/ic_input_add"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

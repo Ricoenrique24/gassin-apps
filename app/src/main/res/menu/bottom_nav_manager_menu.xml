@@ -22,7 +22,7 @@
         android:title="@string/cost" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_more_manager"
         android:icon="@drawable/ic_more_24dp"
-        android:title="@string/title_dashboard" />
+        android:title="@string/lainnya" />
 </menu>

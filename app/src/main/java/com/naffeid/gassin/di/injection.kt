@@ -12,40 +12,75 @@ import com.naffeid.gassin.data.preference.storeDataStore
 import com.naffeid.gassin.data.remote.api.ApiConfig
 import com.naffeid.gassin.data.repository.AuthRepository
 import com.naffeid.gassin.data.repository.CustomerRepository
+import com.naffeid.gassin.data.repository.DashboardRepository
 import com.naffeid.gassin.data.repository.EmployeeRepository
+import com.naffeid.gassin.data.repository.OperationTransactionRepository
+import com.naffeid.gassin.data.repository.PurchaseTransactionRepository
+import com.naffeid.gassin.data.repository.ResupplyTransactionRepository
 import com.naffeid.gassin.data.repository.StoreRepository
+import com.naffeid.gassin.data.repository.TransactionRepository
 import com.naffeid.gassin.data.repository.UserRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 object Injection {
-    fun provideAuthRepository(context: Context): AuthRepository {
+    fun provideAuthRepository(): AuthRepository {
         val apiService = ApiConfig.getApiService()
-        return AuthRepository.getInstance(apiService)
+        return AuthRepository(apiService)
     }
     fun provideUserRepository(context: Context): UserRepository {
         val userPreference = UserPreference.getInstance(context.dataStore)
-        return UserRepository.getInstance(userPreference)
+        return UserRepository(userPreference)
     }
     fun provideEmployeeRepository(context: Context): EmployeeRepository {
         val userPreference = UserPreference.getInstance(context.dataStore)
         val employeePreference = EmployeePreference.getInstance(context.employeeDataStore)
         val user = runBlocking { userPreference.getSession().first() }
-        val apiService = ApiConfig.getApiService(user.token)
-        return EmployeeRepository.getInstance(employeePreference, apiService)
+        val apiService = ApiConfig.getApiService(user.apikey)
+        return EmployeeRepository(employeePreference, apiService)
     }
     fun provideStoreRepository(context: Context): StoreRepository {
         val userPreference = UserPreference.getInstance(context.dataStore)
         val storePreference = StorePreference.getInstance(context.storeDataStore)
         val user = runBlocking { userPreference.getSession().first() }
-        val apiService = ApiConfig.getApiService(user.token)
-        return StoreRepository.getInstance(storePreference, apiService)
+        val apiService = ApiConfig.getApiService(user.apikey)
+        return StoreRepository(storePreference, apiService)
     }
     fun provideCustomerRepository(context: Context): CustomerRepository {
         val userPreference = UserPreference.getInstance(context.dataStore)
         val customerPreference = CustomerPreference.getInstance(context.customerDataStore)
         val user = runBlocking { userPreference.getSession().first() }
-        val apiService = ApiConfig.getApiService(user.token)
-        return CustomerRepository.getInstance(customerPreference, apiService)
+        val apiService = ApiConfig.getApiService(user.apikey)
+        return CustomerRepository(customerPreference, apiService)
+    }
+    fun providePurchaseTransactionRepository(context: Context): PurchaseTransactionRepository {
+        val userPreference = UserPreference.getInstance(context.dataStore)
+        val user = runBlocking { userPreference.getSession().first() }
+        val apiService = ApiConfig.getApiService(user.apikey)
+        return PurchaseTransactionRepository(apiService)
+    }
+    fun provideResupplyTransactionRepository(context: Context): ResupplyTransactionRepository {
+        val userPreference = UserPreference.getInstance(context.dataStore)
+        val user = runBlocking { userPreference.getSession().first() }
+        val apiService = ApiConfig.getApiService(user.apikey)
+        return ResupplyTransactionRepository(apiService)
+    }
+    fun provideTransactionRepository(context: Context): TransactionRepository {
+        val userPreference = UserPreference.getInstance(context.dataStore)
+        val user = runBlocking { userPreference.getSession().first() }
+        val apiService = ApiConfig.getApiService(user.apikey)
+        return TransactionRepository(apiService)
+    }
+    fun provideOperationTransactionRepository(context: Context): OperationTransactionRepository {
+        val userPreference = UserPreference.getInstance(context.dataStore)
+        val user = runBlocking { userPreference.getSession().first() }
+        val apiService = ApiConfig.getApiService(user.apikey)
+        return OperationTransactionRepository(apiService)
+    }
+    fun provideDashboardRepository(context: Context): DashboardRepository {
+        val userPreference = UserPreference.getInstance(context.dataStore)
+        val user = runBlocking { userPreference.getSession().first() }
+        val apiService = ApiConfig.getApiService(user.apikey)
+        return DashboardRepository(apiService)
     }
 }

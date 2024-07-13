@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottomSheetLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/greyLight"
+    android:paddingBottom="40dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Filter Waktu"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="16dp"
+        android:background="@color/white"
+        android:textColor="@color/black"/>
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/radioAll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Semua"/>
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/radioDay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:text="Hari"/>
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/radioWeek"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:text="Minggu"/>
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/radioMonth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:text="Bulan"/>
+</LinearLayout>

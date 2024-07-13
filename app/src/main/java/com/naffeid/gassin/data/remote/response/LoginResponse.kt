@@ -16,12 +16,33 @@ data class LoginResponse(
 
 data class LoginResult(
 
+	@field:SerializedName("role")
+	val role: String? = null,
+
+	@field:SerializedName("apikey")
+	val apikey: String? = null,
+
+	@field:SerializedName("updated_at")
+	val updatedAt: String? = null,
+
+	@field:SerializedName("phone")
+	val phone: String? = null,
+
 	@field:SerializedName("name")
 	val name: String? = null,
 
-	@field:SerializedName("userId")
-	val userId: String? = null,
+	@field:SerializedName("token_fcm")
+	val tokenFcm: String? = null,
 
-	@field:SerializedName("token")
-	val token: String? = null
+	@field:SerializedName("created_at")
+	val createdAt: String? = null,
+
+	@field:SerializedName("id")
+	val id: Int? = null,
+
+	@field:SerializedName("email")
+	val email: String? = null,
+
+	@field:SerializedName("username")
+	val username: String? = null
 )
