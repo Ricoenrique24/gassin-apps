@@ -65,6 +65,9 @@ data class ListOperationItem(
 	val idCategoryTransaction: Int? = null,
 
 	@field:SerializedName("resupply")
-	val resupply: Resupply? = null
+	val resupply: Resupply? = null,
+
+	@field:SerializedName("user")
+	val user: User? = null,
 )
 

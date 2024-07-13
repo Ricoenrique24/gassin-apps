@@ -50,4 +50,7 @@ data class OperationTransaction(
 
 	@field:SerializedName("category_transaction")
 	val categoryTransaction: CategoryTransaction? = null,
+
+	@field:SerializedName("user")
+	val user: User? = null,
 )

@@ -36,15 +36,10 @@ class OperationTransactionAdapter() : ListAdapter<ListOperationItem, OperationTr
             val typeTransaction = transaction.categoryTransaction?.name.toString()
             when (typeTransaction) {
                 "purchase" -> {
-                    binding.tvCustomerName.text = transaction.purchase?.user?.name?.capitalizeWords()
                     binding.ivCategoryTransation.setImageResource(R.drawable.ic_delivery_24dp)
                 }
                 "resupply" -> {
-                    binding.tvCustomerName.text = transaction.resupply?.user?.name?.capitalizeWords()
                     binding.ivCategoryTransation.setImageResource(R.drawable.ic_shop_24dp)
-                }
-                else -> {
-                    binding.tvCustomerName.text = "Tidak ditemukan"
                 }
             }
             val verified = transaction.verified
@@ -61,6 +56,7 @@ class OperationTransactionAdapter() : ListAdapter<ListOperationItem, OperationTr
             }
             val createdAt = transaction.createdAt.toString()
             val totalPayment = transaction.totalPayment?.toDoubleOrNull() ?: 0.0
+            binding.tvCustomerName.text = transaction.user?.name?.capitalizeWords()
             binding.tvTimeTransaction.text = Timestamp.convertToDesiredFormat(createdAt)
             binding.tvQtyGas.text = transaction.note
             binding.tvTotalPayment.text = Rupiah.convertToRupiah(totalPayment)

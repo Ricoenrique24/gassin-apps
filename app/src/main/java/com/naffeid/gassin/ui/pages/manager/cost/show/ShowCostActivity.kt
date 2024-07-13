@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.naffeid.gassin.R
 import com.naffeid.gassin.data.remote.response.OperationTransaction
+import com.naffeid.gassin.data.utils.CapitalizeWords.capitalizeWords
 import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.data.utils.Rupiah
 import com.naffeid.gassin.databinding.ActivityShowCostBinding
@@ -58,11 +59,14 @@ class ShowCostActivity : AppCompatActivity() {
             noteCost.text = operationTransaction.note.toString()
             tvTotalPayment.text = Rupiah.convertToRupiah(operationTransaction.totalPayment?.toDoubleOrNull()!!)
             if (typeTransaction == "purchase") {
-                tvEmployeeName.text = operationTransaction.purchase!!.user?.name.toString()
-                tvEmployeePhone.text = operationTransaction.purchase.user?.phone.toString()
+                tvEmployeeName.text = operationTransaction.purchase?.user?.name?.capitalizeWords()
+                tvEmployeePhone.text = operationTransaction.purchase?.user?.phone.toString()
             } else if (typeTransaction == "resupply") {
-                tvEmployeeName.text = operationTransaction.resupply!!.user?.name.toString()
-                tvEmployeePhone.text = operationTransaction.resupply.user?.phone.toString()
+                tvEmployeeName.text = operationTransaction.resupply?.user?.name?.capitalizeWords()
+                tvEmployeePhone.text = operationTransaction.resupply?.user?.phone.toString()
+            } else {
+                tvEmployeeName.text = operationTransaction.user?.name?.capitalizeWords()
+                tvEmployeePhone.text = operationTransaction.user?.phone.toString()
             }
         }
 
