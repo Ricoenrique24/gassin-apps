@@ -72,7 +72,7 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
         setupCustomer(purchase, updateData)
         setupEmployee(purchase, updateData)
         setupQty(qty, purchase)
-        setupPayment()
+        setupPayment(purchase)
     }
 
     private fun setupCustomer(purchase: Purchase, updateData: Boolean) {
@@ -130,62 +130,89 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupQty(quantity:String?, purchase: Purchase) {
+    private fun setupQty(quantity: String?, purchase: Purchase) {
+        // Set initial quantity
         if (quantity != null) {
             val newQty = quantity.toIntOrNull() ?: 1
-            binding.edQtyGas.setText(quantity)
             viewModel.setQuantity(newQty)
         } else {
             viewModel.setQuantity(purchase.qty!!.toInt())
-            viewModel.quantity.observe(this) { qty ->
-                binding.edQtyGas.setText(qty.toString())
-            }
         }
+
+        // Observe quantity changes and update the UI
+        viewModel.quantity.observe(this) { qty ->
+            binding.edQtyGas.setText(qty.toString())
+        }
+
+        // Set onClick listeners for plus and minus buttons
         binding.btnMinus.setOnClickListener {
-            val newQty = binding.edQtyGas.text.toString().toIntOrNull() ?: 1
-            if (newQty > 1) {
-                viewModel.setQuantity(newQty)
+            val currentQty = binding.edQtyGas.text.toString().toIntOrNull() ?: 1
+            if (currentQty > 1) {
                 viewModel.decreaseQuantity()
-            } else {
-                binding.edQtyGas.setText("1")
             }
         }
 
         binding.btnPlus.setOnClickListener {
-            val newQty = binding.edQtyGas.text.toString().toIntOrNull() ?: 1
+            val currentQty = binding.edQtyGas.text.toString().toIntOrNull() ?: 1
+            val initialQty = purchase.qty!!.toInt()
             val stock = viewModel.getStock()
-            if (stock < newQty+1) {
-                showStockWarningDialog(stock)
-            } else {
-                viewModel.setQuantity(newQty)
+
+            if (currentQty < initialQty) {
+                // Jika quantity lebih kecil dari awal, tambahkan ke stock
                 viewModel.increaseQuantity()
+            } else {
+                // Jika quantity lebih besar dari awal, lakukan pengecekan stock
+                val totalQty = currentQty + 1 - initialQty
+                if (stock >= totalQty) {
+                    viewModel.increaseQuantity()
+                } else {
+                    showStockWarningDialog(stock, currentQty)
+                }
             }
         }
 
         binding.edQtyGas.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 val newQty = binding.edQtyGas.text.toString().toIntOrNull() ?: 1
-                if (newQty > 0) {
-                    viewModel.setQuantity(newQty)
-                } else {
+                val initialQty = purchase.qty!!.toInt()
+                val stock = viewModel.getStock()
+                if (newQty < 1) {
                     binding.edQtyGas.setText("1")
+                    viewModel.setQuantity(1)
+                } else {
+                    if (newQty > initialQty) {
+                        val totalQty = newQty - initialQty
+                        if (stock < totalQty) {
+                            showStockWarningDialog(stock, newQty)
+                        } else {
+                            viewModel.setQuantity(newQty)
+                        }
+                    } else {
+                        viewModel.setQuantity(newQty)
+                    }
                 }
             }
         }
     }
 
-    private fun setupPayment() {
+
+    private fun setupPayment(purchase: Purchase) {
         viewModel.getCustomer().observe(this) { customer ->
-            val price = customer.price.toDoubleOrNull() ?: 0.0
-            binding.tvPriceOneGas.text = Rupiah.convertToRupiah(price)
-
-            viewModel.updateGasPriceFromCustomerPrice(customer.price)
-
-            viewModel.totalPayment.observe(this) { totalPayment ->
-                val total = totalPayment.toDouble()
-                binding.tvTotalPayment.text = Rupiah.convertToRupiah(total)
+            val price: Double = if (customer != null && customer.price != null && customer.price.toDoubleOrNull() ?: 0.0 > 0.0) {
+                customer.price.toDouble()
+            } else {
+                purchase.customer?.price?.toDoubleOrNull() ?: 0.0
             }
+
+            binding.tvPriceOneGas.text = Rupiah.convertToRupiah(price)
+            viewModel.updateGasPriceFromCustomerPrice(price.toString())
         }
+
+        viewModel.totalPayment.observe(this) { totalPayment ->
+            val total = totalPayment.toDouble()
+            binding.tvTotalPayment.text = Rupiah.convertToRupiah(total)
+        }
+
         viewModel.quantity.observe(this) { qty ->
             binding.tvQtyGasTotal.text = qty.toString()
         }
@@ -299,14 +326,7 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
                 is Result.Success -> {
                     showLoading(false)
                     val stock = result.data.stock
-                    if (stock != null) {
-                        if (stock == 0) {
-                            showResupplyWarningDialog()
-                        } else {
-                            viewModel.setStock(stock)
-                        }
-                    }
-
+                    if (stock != null) viewModel.setStock(stock)
                 }
 
                 is Result.Error -> {
@@ -318,7 +338,7 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
         }
     }
 
-    private fun showStockWarningDialog(availableStock: Int) {
+    private fun showStockWarningDialog(availableStock: Int, qty: Int) {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.stok_tidak_cukup))
             .setMessage(
@@ -327,7 +347,7 @@ class EditPurchaseTransactionActivity : AppCompatActivity() {
                     availableStock.toString()
                 ))
             .setPositiveButton(getString(R.string.gunakan_stok)) { _, _ ->
-                viewModel.setQuantity(availableStock)
+                viewModel.setQuantity(qty)
             }
             .setNegativeButton(getString(R.string.resupply)) { _, _ ->
                 navigateToCreateResupplyTransaction()

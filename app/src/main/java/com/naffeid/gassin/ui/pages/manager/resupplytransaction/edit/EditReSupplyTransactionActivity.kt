@@ -70,7 +70,7 @@ class EditReSupplyTransactionActivity : AppCompatActivity() {
         setupStore(resupply, updateData)
         setupEmployee(resupply, updateData)
         setupQty(qty, resupply)
-        setupPayment()
+        setupPayment(resupply)
     }
 
     private fun setupStore(resupply: Resupply, updateData: Boolean) {
@@ -131,55 +131,58 @@ class EditReSupplyTransactionActivity : AppCompatActivity() {
     private fun setupQty(quantity:String?, resupply: Resupply) {
         if (quantity != null) {
             val newQty = quantity.toIntOrNull() ?: 1
-            binding.edQtyGas.setText(quantity)
             viewModel.setQuantity(newQty)
         } else {
             viewModel.setQuantity(resupply.qty!!.toInt())
-            viewModel.quantity.observe(this) { qty ->
-                binding.edQtyGas.setText(qty.toString())
-            }
         }
 
+        // Observe quantity changes and update the UI
+        viewModel.quantity.observe(this) { qty ->
+            binding.edQtyGas.setText(qty.toString())
+        }
+
+        // Set onClick listeners for plus and minus buttons
         binding.btnMinus.setOnClickListener {
-            val newQty = binding.edQtyGas.text.toString().toIntOrNull() ?: 1
-            if (newQty > 1) {
-                viewModel.setQuantity(newQty)
+            val currentQty = binding.edQtyGas.text.toString().toIntOrNull() ?: 1
+            if (currentQty > 1) {
                 viewModel.decreaseQuantity()
-            } else {
-                binding.edQtyGas.setText("1")
             }
         }
 
         binding.btnPlus.setOnClickListener {
-            val newQty = binding.edQtyGas.text.toString().toIntOrNull() ?: 1
-            viewModel.setQuantity(newQty)
             viewModel.increaseQuantity()
         }
 
         binding.edQtyGas.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 val newQty = binding.edQtyGas.text.toString().toIntOrNull() ?: 1
-                if (newQty > 0) {
-                    viewModel.setQuantity(newQty)
-                } else {
+                if (newQty < 1) {
                     binding.edQtyGas.setText("1")
+                    viewModel.setQuantity(1)
+                } else {
+                    viewModel.setQuantity(newQty)
                 }
             }
         }
     }
 
-    private fun setupPayment() {
+    private fun setupPayment(resupply: Resupply) {
         viewModel.getStore().observe(this) { store ->
-            val price = store.price.toDoubleOrNull() ?: 0.0
-            binding.tvPriceOneGas.text = Rupiah.convertToRupiah(price)
-
-            viewModel.updateGasPriceFromStorePrice(store.price)
-
-            viewModel.totalPayment.observe(this) { totalPayment ->
-                val total = totalPayment.toDouble()
-                binding.tvTotalPayment.text = Rupiah.convertToRupiah(total)
+            val price: Double = if (store != null && store.price != null && store.price.toDoubleOrNull() ?: 0.0 > 0.0) {
+                store.price.toDouble()
+            } else {
+                resupply.store?.price?.toDoubleOrNull() ?: 0.0
             }
+
+            binding.tvPriceOneGas.text = Rupiah.convertToRupiah(price)
+            viewModel.updateGasPriceFromStorePrice(price.toString())
         }
+
+        viewModel.totalPayment.observe(this) { totalPayment ->
+            val total = totalPayment.toDouble()
+            binding.tvTotalPayment.text = Rupiah.convertToRupiah(total)
+        }
+
         viewModel.quantity.observe(this) { qty ->
             binding.tvQtyGasTotal.text = qty.toString()
         }
