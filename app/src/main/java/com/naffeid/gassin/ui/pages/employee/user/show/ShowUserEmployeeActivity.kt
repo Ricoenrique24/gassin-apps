@@ -1,6 +1,5 @@
 package com.naffeid.gassin.ui.pages.employee.user.show
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -11,7 +10,6 @@ import com.naffeid.gassin.data.model.User
 import com.naffeid.gassin.data.utils.Result
 import com.naffeid.gassin.databinding.ActivityShowUserEmployeeBinding
 import com.naffeid.gassin.ui.pages.ViewModelFactory
-import com.naffeid.gassin.ui.pages.manager.user.edit.EditUserActivity
 
 class ShowUserEmployeeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShowUserEmployeeBinding
@@ -81,10 +79,10 @@ class ShowUserEmployeeActivity : AppCompatActivity() {
             edUserName.setText(user.name)
             edUserEmail.setText(user.email)
             edUserPhone.setText(user.phone)
-            btnEditProfil.setOnClickListener {
-                val intent = Intent(this@ShowUserEmployeeActivity, EditUserActivity::class.java)
-                startActivity(intent)
-            }
+//            btnEditProfil.setOnClickListener {
+//                val intent = Intent(this@ShowUserEmployeeActivity, EditUserActivity::class.java)
+//                startActivity(intent)
+//            }
         }
     }
 
