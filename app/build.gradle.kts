@@ -20,7 +20,7 @@ android {
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
 		//Server Connection URL
-		buildConfigField("String", "BASE_URL", "\"https://gassin.naffe.online/api/\"")
+		buildConfigField("String", "BASE_URL", "\"https://rumahgas.cloud/api/\"")
 	}
 
 	buildTypes {

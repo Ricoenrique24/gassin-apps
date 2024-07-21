@@ -99,21 +99,18 @@ class CreatePurchaseTransactionActivity : AppCompatActivity() {
     private fun setupQty(quantity:String?) {
         if (quantity != null) {
             val newQty = quantity.toIntOrNull() ?: 1
-            binding.edQtyGas.setText(quantity)
             viewModel.setQuantity(newQty)
-        } else {
-            viewModel.quantity.observe(this) { qty ->
-                binding.edQtyGas.setText(qty.toString())
-            }
         }
 
+        viewModel.quantity.observe(this) { qty ->
+            binding.edQtyGas.setText(qty.toString())
+        }
+
+        // Set onClick listeners for plus and minus buttons
         binding.btnMinus.setOnClickListener {
-            val newQty = binding.edQtyGas.text.toString().toIntOrNull() ?: 1
-            if (newQty > 1) {
-                viewModel.setQuantity(newQty)
+            val currentQty = binding.edQtyGas.text.toString().toIntOrNull() ?: 1
+            if (currentQty > 1) {
                 viewModel.decreaseQuantity()
-            } else {
-                binding.edQtyGas.setText("1")
             }
         }
 
@@ -123,7 +120,6 @@ class CreatePurchaseTransactionActivity : AppCompatActivity() {
             if (stock < newQty+1) {
                 showStockWarningDialog(stock)
             } else {
-                viewModel.setQuantity(newQty)
                 viewModel.increaseQuantity()
             }
         }
